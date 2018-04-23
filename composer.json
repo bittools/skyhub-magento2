@@ -1,4 +1,10 @@
 {
+    "repositories": [
+        {
+            "type": "git",
+            "url": "/Users/tiagosampaio/Sites/e-smart/skyhub/sdk"
+        }
+    ],
     "name": "bittools/skyhub-m2",
     "type": "magento2-module",
     "version": "1.0.0",
@@ -18,6 +24,9 @@
         "email": "suporte@e-smart.com.br"
     },
     "autoload": {
+        "files": [
+            "registration.php"
+        ],
         "psr-4": {
             "BitTools\\SkyHub\\": ""
         }
