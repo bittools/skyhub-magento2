@@ -1,0 +1,17 @@
+{
+    "name": "bittools/skyhub-m2",
+    "type": "magento2-module",
+    "require": {
+        "bittools/skyhub-php": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.1"
+    },
+    "authors": [
+        {
+            "name": "Tiago Sampaio",
+            "email": "tiago@tiagosampaio.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}
