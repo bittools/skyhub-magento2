@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <bittools_skyhub>
+            <general>
+                <enabled>0</enabled>
+            </general>
+            <log>
+                <enabled>0</enabled>
+                <filename>bittools_skyhub_request.log</filename>
+            </log>
+            <service>
+                <base_uri>https://api.skyhub.com.br</base_uri>
+                <email/>
+                <api_key/>
+            </service>
+            <catalog>
+                <immediately_integrate_product_after_sensitive_change>1</immediately_integrate_product_after_sensitive_change>
+                <product_visibility>4</product_visibility>
+            </catalog>
+            <sales_order_status>
+                <new_order_status>processing</new_order_status>
+                <approved_order_status>processing</approved_order_status>
+                <delivered_order_status>customer_delivered</delivered_order_status>
+                <shipment_exception_order_status>shipment_exception</shipment_exception_order_status>
+            </sales_order_status>
+            <!-- CATALOG PRODUCT ATTRIBUTES -->
+            <cron_catalog_product_attributes>
+                <enabled>1</enabled>
+                <queue_create>3 2 */1 * *</queue_create>
+                <queue_execute>11 2 */1 * *</queue_execute>
+            </cron_catalog_product_attributes>
+            <!-- CATALOG PRODUCTS -->
+            <cron_catalog_products>
+                <enabled>1</enabled>
+                <queue_create>*/13 * * * *</queue_create>
+                <queue_create_limit>500</queue_create_limit>
+                <queue_execute>*/30 * * * *</queue_execute>
+                <queue_execute_limit>500</queue_execute_limit>
+            </cron_catalog_products>
+            <!-- CATALOG CATEGORIES -->
+            <cron_catalog_categories>
+                <enabled>1</enabled>
+                <queue_create>0 3 */1 * *</queue_create>
+                <queue_execute>10 3 */1 * *</queue_execute>
+            </cron_catalog_categories>
+            <!-- SALES ORDER STATUS QUEUE -->
+            <cron_sales_order_status>
+                <enabled>1</enabled>
+                <queue_create>*/10 * * * *</queue_create>
+                <queue_execute>*/10 * * * *</queue_execute>
+            </cron_sales_order_status>
+            <!-- SALES ORDER QUEUE -->
+            <cron_sales_order_queue>
+                <enabled>1</enabled>
+                <expression>*/10 * * * *</expression>
+            </cron_sales_order_queue>
+        </bittools_skyhub>
+    </default>
+</config>

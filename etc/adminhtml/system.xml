@@ -4,22 +4,242 @@
         <tab id="bittools" translate="label" sortOrder="10">
             <label>Bit Tools</label>
         </tab>
-        <section id="bittools_skyhub" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+        <section id="bittools_skyhub" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>SkyHub Integration</label>
             <tab>bittools</tab>
-            <resource>BitTools_SkyHub::all</resource>
+            <resource>BitTools_SkyHub::skyhub_config</resource>
+
+            <!-- General Settings -->
             <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>General</label>
-                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <label>General Settings</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="0" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
+
+            <!-- Log Settings -->
             <group id="log" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Log Configuration</label>
                 <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="filename" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Log Filename</label>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <!-- API Service Configuration -->
+            <group id="service" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>API Service Configuration</label>
+                <comment>You are only able to configure this section by switching to store scope.</comment>
+                <field id="base_uri" translate="label" type="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Base URI</label>
+                </field>
+                <field id="email" translate="label" type="text" sortOrder="20" showInDefault="0" showInWebsite="1" showInStore="1" canRestore="0">
+                    <label>Email</label>
+                </field>
+                <field id="api_key" translate="label" type="obscure" sortOrder="30" showInDefault="0" showInWebsite="1" showInStore="1" canRestore="0">
+                    <label>API Key</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                </field>
+            </group>
+
+            <!-- Invoice Key Configuration -->
+            <!--
+            <group id="invoice_key" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Invoice Key Configuration</label>
+                <field id="pattern" translate="label" sortOrder="10" showInDefault="0" showInWebsite="1" showInStore="1">
+                    <label>Invoice Key Commit Pattern</label>
+                </field>
+            </group>
+            -->
+
+            <!-- Catalog Integration Settings -->
+            <group id="catalog" translate="label comment" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Catalog Integration Settings</label>
+                <field id="immediately_integrate_product_after_sensitive_change" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Immediately integrate product on sensitive changes (price or stock)</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>After saving a product, it will force real time integration if has changes on attributes: Price, Stock</comment>
+                </field>
+                <field id="product_visibility" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Visibilities for Integration</label>
+                    <source_model>BitTools\SkyHub\Model\Config\Source\Integration\Catalog\Product\Visibilities</source_model>
+                    <comment>Magento will send to Skyhub the products with these visibilities</comment>
+                </field>
+            </group>
+
+            <!-- SALES ORDER STATUS -->
+            <group id="sales_order_status" translate="label comment" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Order Status Configuration</label>
+
+                <field id="new_order_status" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>New Order Status</label>
+                    <source_model>BitTools\SkyHub\Model\Config\Source\Integration\Order\Status\NewOrders</source_model>
+                    <comment>When the order has the NEW status type in SkyHub Magento will put the order in this status.</comment>
+                </field>
+
+                <field id="approved_order_status" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Approved Order Status</label>
+                    <source_model>BitTools\SkyHub\Model\Config\Source\Integration\Order\Status\ApprovedOrders</source_model>
+                    <comment>When the order has the APPROVED status type in SkyHub Magento will put the order in this status.</comment>
+                </field>
+
+                <field id="delivered_order_status" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Delivered Order Status</label>
+                    <source_model>BitTools\SkyHub\Model\Config\Source\Integration\Order\Status\CompleteOrders</source_model>
+                    <comment>When the order has the DELIVERED status type in SkyHub Magento will put the order in this status.</comment>
+                </field>
+
+                <field id="shipment_exception_order_status" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Shipment Exception Order Status</label>
+                    <source_model>BitTools\SkyHub\Model\Config\Source\Integration\Order\Status\CompleteOrders</source_model>
+                    <comment>When the order has the SHIPMENT_EXCEPTION status type in SkyHub Magento will put the order in this status.</comment>
+                </field>
+            </group>
+
+            <!-- CATALOG PRODUCT ATTRIBUTES -->
+            <group id="cron_catalog_product_attributes" translate="label comment" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Product Attributes Cron Configuration</label>
+
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="queue_create" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Product Attributes Queue Generate</label>
+                    <comment>Note that this must be a cron expression format.</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="queue_execute" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Product Attributes Queue Execute</label>
+                    <comment>Note that this must be a cron expression format.</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <!-- CATALOG PRODUCTS -->
+            <group id="cron_catalog_products" translate="label comment" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Product Cron Configuration</label>
+
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="queue_create" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Products Queue Create Expression</label>
+                    <comment>Note that this must be a cron expression format.</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="queue_create_limit" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Products Queue Create Limit</label>
+                    <comment>The amount of products to be queued per time. The default quantity is 500 at time.</comment>
+                    <frontend_class>validate-number validate-greater-than-zero</frontend_class>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="queue_execute" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Products Queue Execute Expression</label>
+                    <comment>Note that this must be a cron expression format.</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="queue_execute_limit" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Products Queue Execute Limit</label>
+                    <comment>The amount of products to be integrated per time. The default quantity is 500 at time.</comment>
+                    <frontend_class>validate-number validate-greater-than-zero</frontend_class>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <!-- CATALOG CATEGORIES -->
+            <group id="cron_catalog_categories" translate="label comment" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Category Cron Configuration</label>
+
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="queue_create" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Categories Queue Create Expression</label>
+                    <comment>Note that this must be a cron expression format.</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="queue_execute" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Categories Queue Execute Expression</label>
+                    <comment>Note that this must be a cron expression format.</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <!-- SALES ORDER STATUS -->
+            <group id="cron_sales_order_status" translate="label comment" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Order Status Cron Configuration</label>
+
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="queue_create" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Queue Create Expression</label>
+                    <comment>Note that this must be a cron expression format.</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="queue_execute" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Queue Execute Expression</label>
+                    <comment>Note that this must be a cron expression format.</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <!-- SALES ORDER QUEUE -->
+            <group id="cron_sales_order_queue" translate="label comment" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Order Import Cron Configuration</label>
+
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="expression" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Queue Execute</label>
+                    <comment>Note that this must be a cron expression format.</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
                 </field>
             </group>
         </section>
