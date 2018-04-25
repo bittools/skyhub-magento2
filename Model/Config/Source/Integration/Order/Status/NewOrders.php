@@ -14,41 +14,8 @@
 
 namespace BitTools\SkyHub\Model\Config\Source\Integration\Order\Status;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Sales\Model\Config\Source\Order\Status\NewStatus;
 
-class NewOrders implements ArrayInterface
+class NewOrders extends NewStatus
 {
-    
-    /**
-     * Options getter
-     *
-     * @return array
-     */
-    public function toOptionArray()
-    {
-        $options = [];
-        
-        foreach ((array) $this->toArray() as $value => $label) {
-            $options[] = [
-                'value' => $value,
-                'label' => $label,
-            ];
-        }
-    
-        return $options;
-    }
-    
-    
-    /**
-     * Get options in "key-value" format
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return [
-            0 => __('No'),
-            1 => __('Yes')
-        ];
-    }
 }

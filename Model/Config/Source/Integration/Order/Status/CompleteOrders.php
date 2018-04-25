@@ -14,41 +14,14 @@
 
 namespace BitTools\SkyHub\Model\Config\Source\Integration\Order\Status;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Sales\Model\Config\Source\Order\Status;
+use Magento\Sales\Model\Order;
 
-class CompleteOrders implements ArrayInterface
+class CompleteOrders extends Status
 {
     
     /**
-     * Options getter
-     *
-     * @return array
+     * @var string
      */
-    public function toOptionArray()
-    {
-        $options = [];
-        
-        foreach ((array) $this->toArray() as $value => $label) {
-            $options[] = [
-                'value' => $value,
-                'label' => $label,
-            ];
-        }
-    
-        return $options;
-    }
-    
-    
-    /**
-     * Get options in "key-value" format
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return [
-            0 => __('No'),
-            1 => __('Yes')
-        ];
-    }
+    protected $_stateStatuses = Order::STATE_COMPLETE;
 }

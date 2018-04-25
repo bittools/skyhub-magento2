@@ -19,7 +19,7 @@
                 <product_visibility>4</product_visibility>
             </catalog>
             <sales_order_status>
-                <new_order_status>processing</new_order_status>
+                <new_order_status>pending</new_order_status>
                 <approved_order_status>processing</approved_order_status>
                 <delivered_order_status>customer_delivered</delivered_order_status>
                 <shipment_exception_order_status>shipment_exception</shipment_exception_order_status>
