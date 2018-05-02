@@ -82,7 +82,8 @@ class InstallSchema implements InstallSchemaInterface
             ->addColumn('validation', Table::TYPE_TEXT, null, [
                 'nullable' => true,
             ])
-            ->addColumn('attribute_id', Table::TYPE_INTEGER, 255, [
+            ->addColumn('attribute_id', Table::TYPE_SMALLINT, 5, [
+                'unsigned' => true,
                 'nullable' => true,
                 'default' => null,
             ])
