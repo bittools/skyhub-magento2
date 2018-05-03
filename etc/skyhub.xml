@@ -61,7 +61,6 @@
             <attribute code="status" cast_type="boolean" required="true">
                 <label>Product Status</label>
                 <description>The product status that identifies if the product is enabled or disabled.</description>
-                <validation/>
                 <attribute_install_config>
                     <attribute_code>status</attribute_code>
                     <label>Product Status</label>
@@ -75,8 +74,6 @@
             <attribute code="qty" cast_type="float" type="varchar" input="text" required="true" enabled="true" editable="false">
                 <label>Product Stock Quantity</label>
                 <description>The products stock quantity available in store.</description>
-                <validation/>
-                <attribute_install_config/>
             </attribute>
             <attribute code="price" cast_type="float" required="true">
                 <label>Product Price</label>

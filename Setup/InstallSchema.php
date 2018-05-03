@@ -54,6 +54,9 @@ class InstallSchema implements InstallSchemaInterface
     {
         $tableName = $setup->getTable('bittools_skyhub_product_attributes_mapping');
         
+        /** Drop the table first. */
+        $setup->getConnection()->dropTable($tableName);
+        
         /** @var Table $table */
         $table = $setup->getConnection()
             ->newTable($tableName)
@@ -124,6 +127,9 @@ class InstallSchema implements InstallSchemaInterface
     protected function installEntityIdTable(SchemaSetupInterface $setup)
     {
         $tableName = $setup->getTable('bittools_skyhub_entity_id');
+    
+        /** Drop the table first. */
+        $setup->getConnection()->dropTable($tableName);
         
         /** @var Table $table */
         $table = $setup->getConnection()
@@ -181,6 +187,9 @@ class InstallSchema implements InstallSchemaInterface
     protected function installQueueTable(SchemaSetupInterface $setup)
     {
         $tableName = $setup->getTable('bittools_skyhub_queue');
+    
+        /** Drop the table first. */
+        $setup->getConnection()->dropTable($tableName);
         
         /** @var Table $table */
         $table = $setup->getConnection()

@@ -17,11 +17,27 @@ use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Sales\Model\Order;
+use BitTools\SkyHub\Model\Config\SkyhubAttributes\Data as SkyhubConfigData;
 
 class InstallData implements InstallDataInterface
 {
     
     use Functions;
+    
+    /** @var SkyhubConfigData */
+    protected $skyhubConfigData;
+    
+    
+    /**
+     * InstallData constructor.
+     *
+     * @param SkyhubConfigData $configData
+     */
+    public function __construct(SkyhubConfigData $configData)
+    {
+        $this->skyhubConfigData = $configData;
+    }
+    
     
     
     /**
@@ -48,21 +64,11 @@ class InstallData implements InstallDataInterface
     
     
     /**
-     * @return array
-     */
-    public function getSkyHubFixedAttributes()
-    {
-        //        return $this->getSkyHubConfig()->getSkyHubFixedAttributes();
-        return [];
-    }
-    
-    
-    /**
      * @param ModuleDataSetupInterface $setup
      */
     protected function installSkyHubRequiredAttributes(ModuleDataSetupInterface $setup)
     {
-        $attributes = (array)  $this->getSkyHubFixedAttributes();
+        $attributes = (array)  $this->skyhubConfigData->getAttributes();
         $table      = (string) $setup->getTable('bittools_skyhub_product_attributes_mapping');
     
         /** @var array $attribute */

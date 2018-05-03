@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="SkyhubReader" type="Magento\Framework\Config\Reader\Filesystem">
+        <arguments>
+            <argument name="converter" xsi:type="object">BitTools\SkyHub\Model\Config\SkyhubAttributes\Converter</argument>
+            <argument name="schemaLocator" xsi:type="object">BitTools\SkyHub\Model\Config\SkyhubAttributes\SchemaLocator</argument>
+            <argument name="fileName" xsi:type="string">skyhub.xml</argument>
+        </arguments>
+    </virtualType>
+    <type name="BitTools\SkyHub\Model\Config\SkyhubAttributes\Data">
+        <arguments>
+            <argument name="reader" xsi:type="object">SkyhubReader</argument>
+            <argument name="cacheId" xsi:type="string">bittools_skyhub_attributes_cache</argument>
+        </arguments>
+    </type>
+</config>

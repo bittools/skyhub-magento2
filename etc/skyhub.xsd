@@ -48,15 +48,15 @@
             <xs:element minOccurs="1" maxOccurs="1" name="label" type="xs:string" nillable="false"/>
             <xs:element minOccurs="0" maxOccurs="1" name="description"/>
             <xs:element minOccurs="0" maxOccurs="1" name="validation" nillable="false"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="attribute_install_config" type="attributeInstallConfig"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="attribute_install_config" type="attributeInstallConfig" />
         </xs:sequence>
         <xs:attribute name="code" type="xs:string" use="required"/>
         <xs:attribute name="type" type="attributeTypes" />
         <xs:attribute name="input" type="inputTypes" />
         <xs:attribute name="cast_type" type="castTypes" default="string" />
-        <xs:attribute name="required" type="boolean" default="false" />
-        <xs:attribute name="enabled" type="boolean" default="false" />
-        <xs:attribute name="editable" type="boolean" default="false" />
+        <xs:attribute name="required" type="xs:boolean" default="false" />
+        <xs:attribute name="enabled" type="xs:boolean" default="false" />
+        <xs:attribute name="editable" type="xs:boolean" default="false" />
     </xs:complexType>
     <xs:complexType name="attributeInstallConfig">
         <xs:sequence>
@@ -66,18 +66,12 @@
             <xs:element name="type"/>
             <xs:element name="input" type="inputTypes"/>
             <xs:element name="source_model"/>
-            <xs:element name="required" type="boolean"/>
+            <xs:element name="required" type="xs:boolean"/>
             <xs:element name="source" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
     <!-- REUSABLE SIMPLE TYPES -->
-    <xs:simpleType name="boolean">
-        <xs:restriction base="xs:boolean">
-            <xs:enumeration value="false"/>
-            <xs:enumeration value="true"/>
-        </xs:restriction>
-    </xs:simpleType>
     <xs:simpleType name="castTypes">
         <xs:restriction base="xs:string">
             <xs:enumeration value="string"/>
