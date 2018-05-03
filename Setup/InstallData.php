@@ -12,12 +12,14 @@ namespace BitTools\SkyHub\Setup;
 
 use BitTools\SkyHub\Functions;
 use BitTools\SkyHub\Model\Catalog\Product\Attributes\Mapping;
+use Magento\Catalog\Model\Product;
 use Magento\Framework\Module\Setup\Migration;
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Sales\Model\Order;
 use BitTools\SkyHub\Model\Config\SkyhubAttributes\Data as SkyhubConfigData;
+use Magento\Eav\Model\ResourceModel\Entity\AttributeFactory;
 
 class InstallData implements InstallDataInterface
 {
@@ -27,15 +29,19 @@ class InstallData implements InstallDataInterface
     /** @var SkyhubConfigData */
     protected $skyhubConfigData;
     
+    /** @var AttributeFactory */
+    protected $attributeFactory;
+    
     
     /**
      * InstallData constructor.
      *
      * @param SkyhubConfigData $configData
      */
-    public function __construct(SkyhubConfigData $configData)
+    public function __construct(SkyhubConfigData $configData, AttributeFactory $attributeFactory)
     {
         $this->skyhubConfigData = $configData;
+        $this->attributeFactory = $attributeFactory;
     }
     
     
@@ -100,9 +106,9 @@ class InstallData implements InstallDataInterface
             $installConfig = (array) $this->arrayExtract($data, 'attribute_install_config', []);
             $magentoCode   = $this->arrayExtract($installConfig, 'attribute_code');
         
-            /** @var \Magento\Eav\Model\Entity\Attribute $attribute */
-            if ($attribute = $this->getAttributeByCode($magentoCode)) {
-                $attributeData['attribute_id'] = $attribute->getId();
+            /** @var int $attributeId */
+            if ($attributeId = (int) $this->getAttributeIdByCode($magentoCode)) {
+                $attributeData['attribute_id'] = $attributeId;
             }
         
             $setup->getConnection()->beginTransaction();
@@ -140,6 +146,27 @@ class InstallData implements InstallDataInterface
     public function createAssociatedSalesOrderStatuses(array $states = [])
     {
         return $this;
+    }
+    
+    
+    /**
+     * @param $code
+     *
+     * @return int|null
+     */
+    protected function getAttributeIdByCode($code)
+    {
+        $attributeId = null;
+        
+        try {
+            /** @var \Magento\Eav\Model\ResourceModel\Entity\Attribute $attribute */
+            $attribute   = $this->attributeFactory->create();
+            $attributeId = $attribute->getIdByCode(Product::ENTITY, $code);
+        } catch (\Exception $e) {
+        
+        }
+        
+        return $attributeId;
     }
     
     
