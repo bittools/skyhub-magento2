@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="config">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="1" maxOccurs="unbounded" name="skyhub" type="skyhubConfig" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="skyhubConfig">
+        <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="unbounded" name="attributes" type="attributesList" />
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="catalog" type="catalogParameters" />
+        </xs:sequence>
+    </xs:complexType>
+    <!-- CATALOG -->
+    <xs:complexType name="catalogParameters">
+        <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="unbounded" name="product" type="productConfig" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="productConfig">
+        <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="unbounded" name="attributes" type="productAttributes"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="productAttributes">
+        <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="unbounded" name="blacklist" type="blacklistedAttributes" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="blacklistedAttributes">
+        <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="unbounded" name="attribute" type="blacklistedAttributeConfig" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="blacklistedAttributeConfig">
+        <xs:attribute name="code" type="xs:string" use="required"/>
+    </xs:complexType>
+    <!-- ATTRIBUTES LIST -->
+    <xs:complexType name="attributesList">
+        <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="unbounded" name="attribute" type="attributeData" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="attributeData">
+        <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="label" type="xs:string" nillable="false"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="description"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="validation" nillable="false"/>
+            <xs:element minOccurs="1" maxOccurs="1" name="attribute_install_config" type="attributeInstallConfig"/>
+        </xs:sequence>
+        <xs:attribute name="code" type="xs:string" use="required"/>
+        <xs:attribute name="type" type="attributeTypes" />
+        <xs:attribute name="input" type="inputTypes" />
+        <xs:attribute name="cast_type" type="castTypes" default="string" />
+        <xs:attribute name="required" type="boolean" default="false" />
+        <xs:attribute name="enabled" type="boolean" default="false" />
+        <xs:attribute name="editable" type="boolean" default="false" />
+    </xs:complexType>
+    <xs:complexType name="attributeInstallConfig">
+        <xs:sequence>
+            <xs:element name="attribute_code" type="xs:string"/>
+            <xs:element name="label" type="xs:string"/>
+            <xs:element name="backend_model"/>
+            <xs:element name="type"/>
+            <xs:element name="input" type="inputTypes"/>
+            <xs:element name="source_model"/>
+            <xs:element name="required" type="boolean"/>
+            <xs:element name="source" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- REUSABLE SIMPLE TYPES -->
+    <xs:simpleType name="boolean">
+        <xs:restriction base="xs:boolean">
+            <xs:enumeration value="false"/>
+            <xs:enumeration value="true"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="castTypes">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="string"/>
+            <xs:enumeration value="boolean"/>
+            <xs:enumeration value="float"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="attributeTypes">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="varchar"/>
+            <xs:enumeration value="decimal"/>
+            <xs:enumeration value="int"/>
+            <xs:enumeration value="datetime"/>
+            <xs:enumeration value="static"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="inputTypes">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="text"/>
+            <xs:enumeration value="select"/>
+            <xs:enumeration value="multiselect"/>
+            <xs:enumeration value="checkbox"/>
+            <xs:enumeration value="radio"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>
