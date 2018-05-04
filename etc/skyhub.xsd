@@ -56,7 +56,7 @@
         <xs:attribute name="cast_type" type="castTypes" default="string" />
         <xs:attribute name="required" type="xs:boolean" default="false" />
         <xs:attribute name="enabled" type="xs:boolean" default="false" />
-        <xs:attribute name="editable" type="xs:boolean" default="false" />
+        <xs:attribute name="editable" type="xs:boolean" default="true" />
     </xs:complexType>
     <xs:complexType name="attributeInstallConfig">
         <xs:sequence>

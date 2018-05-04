@@ -102,6 +102,10 @@ class InstallSchema implements InstallSchemaInterface
                 'nullable' => true,
                 'unsigned' => true,
             ])
+            ->addColumn('updated_at', Table::TYPE_DATETIME, null, [
+                'nullable' => true,
+                'unsigned' => true,
+            ])
             ->setComment('SkyHub Product Attributes Mapping.')
         ;;
         

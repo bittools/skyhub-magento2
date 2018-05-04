@@ -87,6 +87,7 @@ class InstallData implements InstallDataInterface
             $enabled     = (bool) $this->arrayExtract($data, 'required', true);
             $required    = (bool) $this->arrayExtract($data, 'required', true);
             $editable    = (bool) $this->arrayExtract($data, 'editable', true);
+            $createdAt   = date('Y-m-d H:i:s');
         
             if (empty($skyhubCode) || empty($castType)) {
                 continue;
@@ -101,6 +102,7 @@ class InstallData implements InstallDataInterface
                 'validation'         => $validation,
                 'required'           => $required,
                 'editable'           => $editable,
+                'created_at'         => $createdAt,
             ];
         
             $installConfig = (array) $this->arrayExtract($data, 'attribute_install_config', []);
