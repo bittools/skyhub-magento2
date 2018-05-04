@@ -20,7 +20,7 @@
 
         <!-- Product Attributes -->
         <add id="BitTools_SkyHub::product_attributes"         title="Product Attributes"        translate="title" module="BitTools_SkyHub" sortOrder="10" parent="BitTools_SkyHub::skyhub"             resource="BitTools_SkyHub::skyhub_product_attributes"/>
-        <add id="BitTools_SkyHub::product_attributes_mapping" title="Attributes Mapping"        translate="title" module="BitTools_SkyHub" sortOrder="10" parent="BitTools_SkyHub::product_attributes" resource="BitTools_SkyHub::skyhub_product_attributes_mapping"/>
+        <add id="BitTools_SkyHub::product_attributes_mapping" title="Attributes Mapping"        translate="title" module="BitTools_SkyHub" sortOrder="10" parent="BitTools_SkyHub::product_attributes" resource="BitTools_SkyHub::skyhub_product_attributes_mapping" action="bittools_skyhub/catalog_product_attributes/mapping"/>
 
         <!-- Queues -->
         <add id="BitTools_SkyHub::queues"                     title="Queues"                    translate="title" module="BitTools_SkyHub" sortOrder="20" parent="BitTools_SkyHub::skyhub"             resource="BitTools_SkyHub::queues"/>
