@@ -17,6 +17,15 @@ use Magento\Framework\View\Result\PageFactory;
 
 class Mapping extends Action implements ViewInterface
 {
+    
+    /**
+     * Authorization level of a basic admin session
+     *
+     * @see _isAllowed()
+     */
+    const ADMIN_RESOURCE = 'BitTools_SkyHub::skyhub_product_attributes_mapping';
+    
+    
     /** @var PageFactory */
     protected $resultPageFactory;
 
@@ -40,6 +49,9 @@ class Mapping extends Action implements ViewInterface
     public function execute()
     {
         $resultPage = $this->resultPageFactory->create();
+        $title = $resultPage->getConfig()->getTitle();
+        $title->prepend(__('SkyHub'));
+        $title->prepend(__('Attributes Mapping'));
         return $resultPage;
     }
 }

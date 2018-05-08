@@ -21,6 +21,6 @@ class Mapping extends AbstractDb
      */
     protected function _construct()
     {
-        $this->_init('table_name', 'field_name');
+        $this->_init('bittools_skyhub_product_attributes_mapping', 'id');
     }
 }
