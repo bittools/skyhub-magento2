@@ -6,7 +6,7 @@
                 <resource id="BitTools_SkyHub::bittools" title="BitTools" translate="title" sortOrder="90">
                     <resource id="BitTools_SkyHub::skyhub" title="SkyHub Integration" translate="title" sortOrder="10">
                         <resource id="BitTools_SkyHub::skyhub_product_attributes" title="Product Attributes" translate="title" sortOrder="10">
-                            <resource id="BitTools_SkyHub::skyhub_product_attributes_mapping" title="Product Attributes" translate="title" sortOrder="10"/>
+                            <resource id="BitTools_SkyHub::skyhub_product_attributes_mapping" title="Product Attributes Mapping" translate="title" sortOrder="10"/>
                         </resource>
                         <resource id="BitTools_SkyHub::skyhub_queues" title="Queues" translate="title" sortOrder="20">
                             <resource id="BitTools_SkyHub::skyhub_queues_products_queue" title="Product Attributes" translate="title" sortOrder="10"/>

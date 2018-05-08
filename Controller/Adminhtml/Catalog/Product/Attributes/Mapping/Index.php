@@ -8,14 +8,13 @@
  * @author Tiago Sampaio <tiago@tiagosampaio.com>
  */
 
-namespace BitTools\SkyHub\Controller\Adminhtml\Catalog\Product\Attributes;
+namespace BitTools\SkyHub\Controller\Adminhtml\Catalog\Product\Attributes\Mapping;
 
-use Magento\Catalog\Controller\Product\View\ViewInterface;
-use Magento\Framework\App\Action\Action;
+use BitTools\SkyHub\Controller\AbstractController;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
 
-class Mapping extends Action implements ViewInterface
+class Index extends AbstractController
 {
     
     /**

@@ -10,10 +10,11 @@
 
 namespace BitTools\SkyHub\Model\Catalog\Product\Attributes;
 
+use BitTools\SkyHub\Api\Data\ProductAttributeMappingInterface;
 use BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping as ResourceModel;
 use Magento\Framework\Model\AbstractModel;
 
-class Mapping extends AbstractModel
+class Mapping extends AbstractModel implements ProductAttributeMappingInterface
 {
     
     const DATA_TYPE_STRING   = 'string';

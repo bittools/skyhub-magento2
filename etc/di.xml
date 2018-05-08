@@ -27,4 +27,7 @@
             <argument name="resourceModel" xsi:type="string">BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping</argument>
         </arguments>
     </virtualType>
+
+    <preference for="BitTools\SkyHub\Api\ProductAttributeMappingRepositoryInterface" type="BitTools\SkyHub\Model\Catalog\Product\Attributes\MappingRepository"/>
+    <preference for="BitTools\SkyHub\Api\Data\ProductAttributeMappingInterface" type="BitTools\SkyHub\Model\Catalog\Product\Attributes\Mapping"/>
 </config>

@@ -60,13 +60,23 @@
         <settings>
             <editorConfig>
                 <param name="clientConfig" xsi:type="array">
-                    <item name="saveUrl" xsi:type="url" path="cms/page/inlineEdit"/>
+                    <item name="saveUrl" xsi:type="url" path="bittools_skyhub/catalog_product_attributes_mapping/inlineEdit"/>
                     <item name="validateBeforeSave" xsi:type="boolean">false</item>
                 </param>
                 <param name="indexField" xsi:type="string">id</param>
                 <param name="enabled" xsi:type="boolean">true</param>
                 <param name="selectProvider" xsi:type="string">bittools_skyhub_attributes_mapping_listing.bittools_skyhub_attributes_mapping_listing.attributes_mapping_columns.ids</param>
             </editorConfig>
+            <childDefaults>
+                <param name="fieldAction" xsi:type="array">
+                    <item name="provider" xsi:type="string">bittools_skyhub_attributes_mapping_listing.bittools_skyhub_attributes_mapping_listing.attributes_mapping_columns_editor</item>
+                    <item name="target" xsi:type="string">startEdit</item>
+                    <item name="params" xsi:type="array">
+                        <item name="0" xsi:type="string">${ $.$data.rowIndex }</item>
+                        <item name="1" xsi:type="boolean">true</item>
+                    </item>
+                </param>
+            </childDefaults>
         </settings>
         <selectionsColumn name="ids">
             <settings>
@@ -87,36 +97,26 @@
         <column name="skyhub_code">
             <settings>
                 <filter>text</filter>
-                <editor>
-                    <validation>
-                        <rule name="required-entry" xsi:type="boolean">true</rule>
-                    </validation>
-                    <editorType>text</editorType>
-                </editor>
                 <label translate="true">SkyHub Code</label>
             </settings>
         </column>
         <column name="attribute_id">
             <settings>
-                <filter>text</filter>
+                <options class="\BitTools\SkyHub\Model\Config\Source\Catalog\Product\Attributes" />
+                <filter>select</filter>
+                <dataType>select</dataType>
                 <editor>
                     <validation>
                         <rule name="required-entry" xsi:type="boolean">false</rule>
                     </validation>
-                    <editorType>text</editorType>
+                    <editorType>select</editorType>
                 </editor>
-                <label translate="true">Magento Code</label>
+                <label translate="true">Magento Attribute ID</label>
             </settings>
         </column>
         <column name="skyhub_label">
             <settings>
                 <filter>text</filter>
-                <editor>
-                    <validation>
-                        <rule name="required-entry" xsi:type="boolean">true</rule>
-                    </validation>
-                    <editorType>text</editorType>
-                </editor>
                 <label translate="true">SkyHub Label</label>
             </settings>
         </column>
@@ -136,13 +136,16 @@
             <settings>
                 <options class="Magento\Config\Model\Config\Source\Yesno"/>
                 <filter>select</filter>
+                <!--
                 <editor>
                     <editorType>select</editorType>
                 </editor>
+                -->
                 <dataType>select</dataType>
                 <label translate="true">Required</label>
             </settings>
         </column>
+        <!--
         <actionsColumn name="actions" class="BitTools\SkyHub\Ui\Component\Listing\Column\Product\Attributes\MappingActions">
             <settings>
                 <indexField>id</indexField>
@@ -150,5 +153,6 @@
                 <resizeDefaultWidth>107</resizeDefaultWidth>
             </settings>
         </actionsColumn>
+        -->
     </columns>
 </listing>
