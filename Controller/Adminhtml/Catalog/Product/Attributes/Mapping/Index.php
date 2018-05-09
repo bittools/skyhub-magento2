@@ -10,7 +10,7 @@
 
 namespace BitTools\SkyHub\Controller\Adminhtml\Catalog\Product\Attributes\Mapping;
 
-use BitTools\SkyHub\Controller\AbstractController;
+use BitTools\SkyHub\Controller\Adminhtml\AbstractController;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
 

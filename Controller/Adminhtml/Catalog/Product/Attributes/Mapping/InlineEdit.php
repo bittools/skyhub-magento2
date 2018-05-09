@@ -11,9 +11,9 @@
 namespace BitTools\SkyHub\Controller\Adminhtml\Catalog\Product\Attributes\Mapping;
 
 use BitTools\SkyHub\Api\ProductAttributeMappingRepositoryInterface;
-use BitTools\SkyHub\Controller\AbstractController;
+use BitTools\SkyHub\Controller\Adminhtml\AbstractController;
 use BitTools\SkyHub\Model\Catalog\Product\Attributes\Mapping;
-use Magento\Framework\App\Action\Context;
+use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
 
@@ -49,7 +49,9 @@ class InlineEdit extends AbstractController
     
     
     /**
-     * @return \Magento\Framework\Controller\ResultInterface
+     * @return \Magento\Framework\App\ResponseInterface|Json|\Magento\Framework\Controller\ResultInterface
+     *
+     * @throws \Magento\Framework\Exception\InputException
      */
     public function execute()
     {
@@ -68,10 +70,15 @@ class InlineEdit extends AbstractController
         $mapping->setData('attribute_id', $attributeId);
         $this->productAttributeMappingRepository->save($mapping);
         
+        $messages = [
+            __('Yhe attribute was successfully saved.')
+        ];
+        
         /** @var Json $resultJson */
         $resultJson = $this->resultFactory->create(\Magento\Framework\Controller\ResultFactory::TYPE_JSON);
-        $resultJson->setData(['success' => true]);
-        
-        return $resultJson;
+        return $resultJson->setData([
+            'messages' => $messages,
+            'error'    => false
+        ]);
     }
 }

@@ -32,6 +32,9 @@ class InstallData implements InstallDataInterface
     /** @var AttributeFactory */
     protected $attributeFactory;
     
+    /** @var ModuleDataSetupInterface */
+    protected $setup;
+    
     
     /**
      * InstallData constructor.
@@ -51,31 +54,26 @@ class InstallData implements InstallDataInterface
      */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
-        $installer = $setup;
-        $installer->startSetup();
+        $this->setup = $setup;
+        $setup->startSetup();
     
         /**
          * Install bseller_skyhub_product_attributes_mapping data.
          */
-        $this->installSkyHubRequiredAttributes($setup);
+        $this->installSkyHubRequiredAttributes();
+        $this->createAssociatedSalesOrderStatuses($this->getStatuses());
     
-//        $this->createAssociatedSalesOrderStatuses($this->getStatuses());
-        
-        /**
-         * @todo Add your logic right here...
-         */
-
-        $installer->endSetup();
+        $setup->endSetup();
     }
     
     
     /**
      * @param ModuleDataSetupInterface $setup
      */
-    protected function installSkyHubRequiredAttributes(ModuleDataSetupInterface $setup)
+    protected function installSkyHubRequiredAttributes()
     {
         $attributes = (array)  $this->skyhubConfigData->getAttributes();
-        $table      = (string) $setup->getTable('bittools_skyhub_product_attributes_mapping');
+        $table      = (string) $this->setup->getTable('bittools_skyhub_product_attributes_mapping');
     
         /** @var array $attribute */
         foreach ($attributes as $identifier => $data) {
@@ -112,29 +110,29 @@ class InstallData implements InstallDataInterface
             if ($attributeId = (int) $this->getAttributeIdByCode($magentoCode)) {
                 $attributeData['attribute_id'] = $attributeId;
             }
-        
-            $setup->getConnection()->beginTransaction();
+    
+            $this->getConnection()->beginTransaction();
         
             try {
                 /** @var \Magento\Framework\DB\Select $select */
-                $select = $setup->getConnection()
+                $select = $this->getConnection()
                     ->select()
                     ->from($table, 'id')
                     ->where('skyhub_code = :skyhub_code')
                     ->limit(1);
             
-                $id = $setup->getConnection()->fetchOne($select, [':skyhub_code' => $skyhubCode]);
+                $id = $this->getConnection()->fetchOne($select, [':skyhub_code' => $skyhubCode]);
             
                 if ($id) {
-                    $setup->getConnection()->update($table, $attributeData, "id = {$id}");
-                    $setup->getConnection()->commit();
+                    $this->getConnection()->update($table, $attributeData, "id = {$id}");
+                    $this->getConnection()->commit();
                     continue;
                 }
     
-                $setup->getConnection()->insert($table, $attributeData);
-                $setup->getConnection()->commit();
+                $this->getConnection()->insert($table, $attributeData);
+                $this->getConnection()->commit();
             } catch (\Exception $e) {
-                $setup->getConnection()->rollBack();
+                $this->getConnection()->rollBack();
             }
         }
     }
@@ -147,6 +145,61 @@ class InstallData implements InstallDataInterface
      */
     public function createAssociatedSalesOrderStatuses(array $states = [])
     {
+        foreach ($states as $stateCode => $statuses) {
+            $this->createSalesOrderStatus($stateCode, $statuses);
+        }
+        
+        return $this;
+    }
+    
+    
+    /**
+     * @param string $state
+     * @param array  $status
+     *
+     * @return $this
+     */
+    public function createSalesOrderStatus($state, array $status)
+    {
+        foreach ($status as $statusCode => $statusLabel) {
+            $statusData = [
+                'status' => $statusCode,
+                'label'  => $statusLabel
+            ];
+            
+            $this->getConnection()->insertOnDuplicate($this->getSalesOrderStatusTable(), $statusData, [
+                'status', 'label'
+            ]);
+            
+            $this->associateStatusToState($state, $statusCode);
+        }
+        
+        return $this;
+    }
+    
+    
+    /**
+     * @param string $state
+     * @param string $status
+     * @param int    $isDefault
+     *
+     * @return $this
+     */
+    public function associateStatusToState($state, $status, $isDefault = 0)
+    {
+        $associationData = [
+            'status'     => (string) $status,
+            'state'      => (string) $state,
+            'is_default' => (int)    $isDefault,
+        ];
+        
+        $this->getConnection()
+            ->insertOnDuplicate($this->getSalesOrderStatusStateTable(), $associationData, [
+                'status',
+                'state',
+                'is_default',
+            ]);
+        
         return $this;
     }
     
@@ -185,5 +238,32 @@ class InstallData implements InstallDataInterface
         ];
         
         return $statuses;
+    }
+    
+    
+    /**
+     * @return \Magento\Framework\DB\Adapter\AdapterInterface
+     */
+    protected function getConnection()
+    {
+        return $this->setup->getConnection();
+    }
+    
+    
+    /**
+     * @return string
+     */
+    protected function getSalesOrderStatusTable()
+    {
+        return $this->setup->getTable('sales_order_status');
+    }
+    
+    
+    /**
+     * @return string
+     */
+    protected function getSalesOrderStatusStateTable()
+    {
+        return $this->setup->getTable('sales_order_status_state');
     }
 }
