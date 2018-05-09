@@ -24,16 +24,13 @@ use Magento\Eav\Model\ResourceModel\Entity\AttributeFactory;
 class InstallData implements InstallDataInterface
 {
     
-    use Functions;
+    use Functions, Setup;
     
     /** @var SkyhubConfigData */
     protected $skyhubConfigData;
     
     /** @var AttributeFactory */
     protected $attributeFactory;
-    
-    /** @var ModuleDataSetupInterface */
-    protected $setup;
     
     
     /**
@@ -55,7 +52,7 @@ class InstallData implements InstallDataInterface
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
         $this->setup = $setup;
-        $setup->startSetup();
+        $this->setup()->startSetup();
     
         /**
          * Install bseller_skyhub_product_attributes_mapping data.
@@ -63,17 +60,19 @@ class InstallData implements InstallDataInterface
         $this->installSkyHubRequiredAttributes();
         $this->createAssociatedSalesOrderStatuses($this->getStatuses());
     
-        $setup->endSetup();
+        $this->setup()->endSetup();
     }
     
     
     /**
-     * @param ModuleDataSetupInterface $setup
+     * Install SkyHub required attributes.
+     *
+     * @return $this
      */
     protected function installSkyHubRequiredAttributes()
     {
         $attributes = (array)  $this->skyhubConfigData->getAttributes();
-        $table      = (string) $this->setup->getTable('bittools_skyhub_product_attributes_mapping');
+        $table      = (string) $this->getTable('bittools_skyhub_product_attributes_mapping');
     
         /** @var array $attribute */
         foreach ($attributes as $identifier => $data) {
@@ -135,6 +134,8 @@ class InstallData implements InstallDataInterface
                 $this->getConnection()->rollBack();
             }
         }
+        
+        return $this;
     }
     
     
@@ -242,20 +243,11 @@ class InstallData implements InstallDataInterface
     
     
     /**
-     * @return \Magento\Framework\DB\Adapter\AdapterInterface
-     */
-    protected function getConnection()
-    {
-        return $this->setup->getConnection();
-    }
-    
-    
-    /**
      * @return string
      */
     protected function getSalesOrderStatusTable()
     {
-        return $this->setup->getTable('sales_order_status');
+        return $this->getTable('sales_order_status');
     }
     
     
@@ -264,6 +256,6 @@ class InstallData implements InstallDataInterface
      */
     protected function getSalesOrderStatusStateTable()
     {
-        return $this->setup->getTable('sales_order_status_state');
+        return $this->getTable('sales_order_status_state');
     }
 }

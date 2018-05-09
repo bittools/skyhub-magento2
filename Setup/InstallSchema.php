@@ -31,15 +31,16 @@ class InstallSchema implements InstallSchemaInterface
      */
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
-        $installer = $setup;
-        $installer->startSetup();
+        $this->setup = $setup;
+        
+        $this->setup()->startSetup();
         
         // $this->updateTablesColumns($setup);
-        $this->installProductsAttributeMappingTable($setup);
-        $this->installEntityIdTable($setup);
-        $this->installQueueTable($setup);
-        
-        $installer->endSetup();
+        $this->installProductsAttributeMappingTable();
+        $this->installEntityIdTable();
+        $this->installQueueTable();
+    
+        $this->setup()->endSetup();
     }
     
     
@@ -50,15 +51,15 @@ class InstallSchema implements InstallSchemaInterface
      *
      * @throws \Zend_Db_Exception
      */
-    protected function installProductsAttributeMappingTable(SchemaSetupInterface $setup)
+    protected function installProductsAttributeMappingTable()
     {
-        $tableName = $setup->getTable('bittools_skyhub_product_attributes_mapping');
+        $tableName = $this->getTable('bittools_skyhub_product_attributes_mapping');
         
         /** Drop the table first. */
-        $setup->getConnection()->dropTable($tableName);
+        $this->getConnection()->dropTable($tableName);
         
         /** @var Table $table */
-        $table = $setup->getConnection()
+        $table = $this->getConnection()
             ->newTable($tableName)
             ->addColumn('id', Table::TYPE_INTEGER, 10, [
                 'identity' => true,
@@ -110,12 +111,12 @@ class InstallSchema implements InstallSchemaInterface
         ;;
         
         /** Add Unique Index */
-        $this->addTableIndex($setup, $table, ['skyhub_code', 'attribute_id'], AdapterInterface::INDEX_TYPE_UNIQUE);
+        $this->addTableIndex($table, ['skyhub_code', 'attribute_id'], AdapterInterface::INDEX_TYPE_UNIQUE);
         
         /** Add Foreign Key */
-        $this->addTableForeignKey($setup, $table, 'attribute_id', 'eav_attribute', 'attribute_id');
+        $this->addTableForeignKey($table, 'attribute_id', 'eav_attribute', 'attribute_id');
         
-        $setup->getConnection()->createTable($table);
+        $this->getConnection()->createTable($table);
         
         return $this;
     }
@@ -128,15 +129,15 @@ class InstallSchema implements InstallSchemaInterface
      *
      * @throws \Zend_Db_Exception
      */
-    protected function installEntityIdTable(SchemaSetupInterface $setup)
+    protected function installEntityIdTable()
     {
-        $tableName = $setup->getTable('bittools_skyhub_entity_id');
+        $tableName = $this->getTable('bittools_skyhub_entity_id');
     
         /** Drop the table first. */
-        $setup->getConnection()->dropTable($tableName);
+        $this->getConnection()->dropTable($tableName);
         
         /** @var Table $table */
-        $table = $setup->getConnection()
+        $table = $this->getConnection()
             ->newTable($tableName)
             ->addColumn('id', Table::TYPE_INTEGER, 10, [
                 'identity' => true,
@@ -168,14 +169,14 @@ class InstallSchema implements InstallSchemaInterface
         ;
         
         /** Add Store ID foreign key. */
-        $this->addTableForeignKey($setup, $table, 'store_id', 'core_store', 'store_id');
+        $this->addTableForeignKey($table, 'store_id', 'core_store', 'store_id');
         
         /** Add indexes */
-        $this->addTableIndex($setup, $table, 'entity_id')
-            ->addTableIndex($setup, $table, 'entity_type')
-            ->addTableIndex($setup, $table, ['entity_id', 'entity_type'], AdapterInterface::INDEX_TYPE_UNIQUE);
+        $this->addTableIndex($table, 'entity_id')
+            ->addTableIndex($table, 'entity_type')
+            ->addTableIndex($table, ['entity_id', 'entity_type'], AdapterInterface::INDEX_TYPE_UNIQUE);
         
-        $setup->getConnection()->createTable($table);
+        $this->getConnection()->createTable($table);
         
         return $this;
     }
@@ -188,15 +189,15 @@ class InstallSchema implements InstallSchemaInterface
      *
      * @throws \Zend_Db_Exception
      */
-    protected function installQueueTable(SchemaSetupInterface $setup)
+    protected function installQueueTable()
     {
-        $tableName = $setup->getTable('bittools_skyhub_queue');
+        $tableName = $this->getTable('bittools_skyhub_queue');
     
         /** Drop the table first. */
-        $setup->getConnection()->dropTable($tableName);
+        $this->getConnection()->dropTable($tableName);
         
         /** @var Table $table */
-        $table = $setup->getConnection()
+        $table = $this->getConnection()
             ->newTable($tableName)
             ->addColumn('entity_id', Table::TYPE_INTEGER, 10, [
                 'nullable' => true,
@@ -245,34 +246,27 @@ class InstallSchema implements InstallSchemaInterface
             ])
         ;
         
-        $this->addTableForeignKey($setup, $table, 'store_id', 'core_store', 'store_id');
+        $this->addTableForeignKey($table, 'store_id', 'core_store', 'store_id');
         
-        $this->addTableIndex($setup, $table, 'entity_id')
-            ->addTableIndex($setup, $table, 'entity_type')
-            ->addTableIndex(
-                $setup,
-                $table,
-                ['entity_id', 'entity_type', 'store_id'],
-                AdapterInterface::INDEX_TYPE_UNIQUE
-            );
+        $this->addTableIndex($table, 'entity_id')
+            ->addTableIndex($table, 'entity_type')
+            ->addTableIndex($table, ['entity_id', 'entity_type', 'store_id'], AdapterInterface::INDEX_TYPE_UNIQUE);
         
-        $setup->getConnection()->createTable($table);
+        $this->getConnection()->createTable($table);
         
         return $this;
     }
     
     
     /**
-     * @param SchemaSetupInterface $setup
-     *
      * @return $this
      */
-    protected function updateTablesColumns(SchemaSetupInterface $setup)
+    protected function updateTablesColumns()
     {
-        foreach ($this->getUpdatableTables($setup) as $tableName => $columns) {
+        foreach ($this->getUpdatableTables() as $tableName => $columns) {
             foreach ($columns as $columnName => $definition) {
-                $setup->getConnection()
-                    ->addColumn($setup->getTable($tableName), $columnName, $definition);
+                $this->setup->getConnection()
+                    ->addColumn($this->setup->getTable($tableName), $columnName, $definition);
             }
         }
         
@@ -281,17 +275,15 @@ class InstallSchema implements InstallSchemaInterface
     
     
     /**
-     * @param SchemaSetupInterface $setup
-     *
      * @return array
      */
-    protected function getUpdatableTables(SchemaSetupInterface $setup)
+    protected function getUpdatableTables()
     {
         return [
-            $setup->getTable('sales_quote') => [
+            $this->setup->getTable('sales_quote') => [
                 'bseller_skyhub_interest' => $this->getInterestField()
             ],
-            $setup->getTable('sales_order') => [
+            $this->setup->getTable('sales_order') => [
                 'bseller_skyhub' => [
                     'type' => Table::TYPE_BOOLEAN,
                     'nullable' => true,

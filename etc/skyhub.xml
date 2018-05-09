@@ -57,11 +57,11 @@
                     <required>true</required>
                 </attribute_install_config>
             </attribute>
-            <attribute code="qty" cast_type="float" type="varchar" input="text" enabled="true" required="true" editable="false">
+            <attribute code="qty" cast_type="float" type="varchar" input="text" enabled="false" required="false" editable="false">
                 <label>Product Stock Quantity</label>
                 <description>The products stock quantity available in store.</description>
             </attribute>
-            <attribute code="price" enabled="true" cast_type="float" required="true">
+            <attribute code="price" enabled="true" cast_type="float" required="true" editable="true">
                 <label>Product Price</label>
                 <description>The products current price.</description>
                 <validation/>

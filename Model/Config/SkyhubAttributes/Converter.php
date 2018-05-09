@@ -96,7 +96,20 @@ class Converter implements ConverterInterface
      */
     protected function _getAttributeValue(\DOMNode $input, $attributeName, $default = null)
     {
-        $node = $input->attributes->getNamedItem($attributeName);
-        return $node ? $node->nodeValue : $default;
+        $node  = $input->attributes->getNamedItem($attributeName);
+        $value = $default;
+        
+        if ($node) {
+            switch ($node->nodeValue) {
+                case 'false':
+                    $value = false;
+                    break;
+                case 'true':
+                    $value = true;
+                    break;
+            }
+        }
+        
+        return $value;
     }
 }

@@ -9,6 +9,9 @@ use Magento\Framework\Setup\SchemaSetupInterface;
 trait SetupHelper
 {
     
+    use Setup;
+    
+    
     /**
      * @param SchemaSetupInterface $setup
      * @param Table                $table
@@ -19,14 +22,13 @@ trait SetupHelper
      * @throws \Zend_Db_Exception
      */
     protected function addTableIndex(
-        SchemaSetupInterface $setup,
         Table $table,
         $field,
         $type = AdapterInterface::INDEX_TYPE_INDEX
     )
     {
         $table->addIndex(
-            $setup->getIdxName($table->getName(), $field, $type),
+            $this->setup()->getIdxName($table->getName(), $field, $type),
             $field,
             [
                 'type' => $type
@@ -48,7 +50,6 @@ trait SetupHelper
      * @throws \Zend_Db_Exception
      */
     protected function addTableForeignKey(
-        SchemaSetupInterface $setup,
         Table $table,
         $column,
         $referenceTable,
@@ -56,12 +57,13 @@ trait SetupHelper
         $onDelete = Table::ACTION_CASCADE
     )
     {
-        $fkName = $setup->getFkName($table->getName(), $column, $setup->getTable($referenceTable), $referenceColumn);
+        $fkName = $this->setup
+            ->getFkName($table->getName(), $column, $this->setup->getTable($referenceTable), $referenceColumn);
         
         $table->addForeignKey(
             $fkName,
             $column,
-            $setup->getTable($referenceTable),
+            $this->setup->getTable($referenceTable),
             $referenceColumn,
             $onDelete
         );
