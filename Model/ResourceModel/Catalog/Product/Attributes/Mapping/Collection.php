@@ -25,4 +25,49 @@ class Collection extends AbstractCollection
     {
         $this->_init(Mapping::class, ResourceModel::class);
     }
+    
+    
+    /**
+     * @param string $code
+     *
+     * @return \BitTools\SkyHub\Model\Catalog\Product\Attributes\Mapping
+     */
+    public function getBySkyHubCode($code)
+    {
+        /** @var \BitTools\SkyHub\Model\Catalog\Product\Attributes\Mapping|null $mapping */
+        $mapping = $this->getItemByColumnValue('skyhub_code', $code);
+        return $mapping;
+    }
+    
+    
+    /**
+     * @return $this
+     */
+    public function setMappedAttributesFilter()
+    {
+        $this->addFieldToFilter(
+            [
+                'attribute_id',
+                'editable',
+            ],
+            [
+                ['notnull' => true],
+                ['eq' => 0]
+            ]
+        );
+        
+        return $this;
+    }
+    
+    
+    /**
+     * @return $this
+     */
+    public function setPendingAttributesFilter()
+    {
+        $this->addFieldToFilter('attribute_id', ['null' => true]);
+        $this->addFieldToFilter('editable', 1);
+        
+        return $this;
+    }
 }

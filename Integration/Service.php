@@ -1,9 +1,9 @@
 <?php
 
-namespace BitTools\SkyHub\Model;
+namespace BitTools\SkyHub\Integration;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
-use BitTools\SkyHub\StoreConfig\Config;
+use BitTools\SkyHub\StoreConfig\Context as ConfigContext;
 use SkyHub\Api;
 
 class Service
@@ -12,8 +12,8 @@ class Service
     /** @var Api */
     protected $api;
     
-    /** @var Config */
-    protected $config;
+    /** @var ConfigContext */
+    protected $configContext;
     
     /** @var DirectoryList */
     protected $directoryList;
@@ -22,12 +22,12 @@ class Service
     /**
      * Service constructor.
      *
-     * @param Config        $config
+     * @param ConfigContext $config
      * @param DirectoryList $directoryList
      */
-    public function __construct(Config $config, DirectoryList $directoryList)
+    public function __construct(ConfigContext $configContext, DirectoryList $directoryList)
     {
-        $this->config        = $config;
+        $this->configContext = $configContext;
         $this->directoryList = $directoryList;
         
         $this->initApi();
@@ -61,17 +61,17 @@ class Service
      */
     public function initApi()
     {
-        $email  = $this->config->service()->getServiceEmail();
-        $apiKey = $this->config->service()->getServiceApiKey();
+        $email  = $this->configContext->service()->getServiceEmail();
+        $apiKey = $this->configContext->service()->getServiceApiKey();
         
         $this->api = new Api($email, $apiKey, 'bZa6Ml0zgS');
         
-        if ($this->config->log()->isEnabled()) {
+        if ($this->configContext->log()->isEnabled()) {
             /**
              * If the log does not work properly for any case it can't stop the integration process.
              */
             try {
-                $logFileName = $this->config->log()->getFilename();
+                $logFileName = $this->configContext->log()->getFilename();
                 $logFilePath = $this->directoryList->getPath(DirectoryList::VAR_DIR);
     
                 $this->apiService()
