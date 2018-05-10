@@ -11,8 +11,6 @@
 namespace BitTools\SkyHub\Controller\Adminhtml\Catalog\Product\Attributes\Mapping;
 
 use BitTools\SkyHub\Controller\Adminhtml\AbstractController;
-use Magento\Framework\App\Action\Context;
-use Magento\Framework\View\Result\PageFactory;
 
 class Index extends AbstractController
 {
@@ -23,21 +21,6 @@ class Index extends AbstractController
      * @see _isAllowed()
      */
     const ADMIN_RESOURCE = 'BitTools_SkyHub::skyhub_product_attributes_mapping';
-    
-    
-    /** @var PageFactory */
-    protected $resultPageFactory;
-
-
-    /**
-     * @var Context $context
-     * @var PageFactory $resultPageFactory
-     */
-    public function __construct(Context $context, PageFactory $resultPageFactory)
-    {
-        parent::__construct($context);
-        $this->resultPageFactory = $resultPageFactory;
-    }
 
 
     /**
@@ -47,10 +30,13 @@ class Index extends AbstractController
      */
     public function execute()
     {
-        $resultPage = $this->resultPageFactory->create();
+        /** @var \Magento\Framework\View\Result\Page $resultPage */
+        $resultPage = $this->resultFactory->create(\Magento\Framework\Controller\ResultFactory::TYPE_PAGE);
+        
         $title = $resultPage->getConfig()->getTitle();
         $title->prepend(__('SkyHub'));
         $title->prepend(__('Attributes Mapping'));
+        
         return $resultPage;
     }
 }
