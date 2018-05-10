@@ -4,6 +4,7 @@ namespace BitTools\SkyHub\Integration\Integrator\Catalog;
 
 use BitTools\SkyHub\Integration\Context;
 use Magento\Catalog\Model\Product as ProductModel;
+use BitTools\SkyHub\Integration\Transformer\Catalog\ProductFactory as ProductTransformerFactory;
 
 class Product extends AbstractCatalog
 {
@@ -14,11 +15,20 @@ class Product extends AbstractCatalog
     /** @var ProductValidation */
     protected $productValidation;
     
+    /** @var ProductTransformerFactory */
+    protected $transformerFactory;
     
-    public function __construct(Context $context, ProductValidation $productValidation)
+    
+    public function __construct(
+        Context $context,
+        ProductValidation $productValidation,
+        ProductTransformerFactory $transformerFactory
+    )
     {
         parent::__construct($context);
+        
         $this->productValidation = $productValidation;
+        $this->transformerFactory = $transformerFactory;
     }
     
     
@@ -26,6 +36,8 @@ class Product extends AbstractCatalog
      * @param ProductModel $product
      *
      * @return bool|\SkyHub\Api\Handler\Response\HandlerInterface
+     *
+     * @throws \Exception
      */
     public function createOrUpdate(ProductModel $product)
     {
@@ -60,6 +72,8 @@ class Product extends AbstractCatalog
      * @param ProductModel $product
      *
      * @return bool|\SkyHub\Api\Handler\Response\HandlerInterface
+     *
+     * @throws \Exception
      */
     public function create(ProductModel $product)
     {
@@ -68,8 +82,7 @@ class Product extends AbstractCatalog
         }
         
         /** @var \SkyHub\Api\EntityInterface\Catalog\Product $interface */
-        $interface = $this->productTransformer()
-            ->convert($product);
+        $interface = $this->productTransformer()->convert($product);
         
         $this->eventMethod = 'create';
         $this->eventParams = [
@@ -87,9 +100,11 @@ class Product extends AbstractCatalog
     
     
     /**
-     * @param \Magento\Catalog\Model\Product $product
+     * @param ProductModel $product
      *
      * @return bool|\SkyHub\Api\Handler\Response\HandlerInterface
+     *
+     * @throws \Exception
      */
     public function update(\Magento\Catalog\Model\Product $product)
     {
@@ -228,5 +243,14 @@ class Product extends AbstractCatalog
         }
         
         return true;
+    }
+    
+    
+    /**
+     * @return \BitTools\SkyHub\Integration\Transformer\Catalog\Product
+     */
+    protected function productTransformer()
+    {
+        return $this->transformerFactory->create();
     }
 }

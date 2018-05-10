@@ -96,18 +96,15 @@ class Product extends AbstractTransformer
      */
     protected function prepareProductVariations(CatalogProduct $product, ProductEntityInterface $interface)
     {
-        /**
-         * @todo Create these transformers.
-         */
         switch($product->getTypeId()) {
             case \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE:
-                /** @var BSeller_SkyHub_Model_Transformer_Catalog_Product_Variation_Type_Configurable $variation */
-                $variation = Mage::getModel('bseller_skyhub/transformer_catalog_product_variation_type_configurable');
+                /** @var Product\Variation\Type\Configurable $variation */
+                $variation = $this->context->objectManager()->create(Product\Variation\Type\Configurable::class);
                 $variation->create($product, $interface);
                 break;
             case \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE:
-                /** @var BSeller_SkyHub_Model_Transformer_Catalog_Product_Variation_Type_Grouped $variation */
-                $variation = Mage::getModel('bseller_skyhub/transformer_catalog_product_variation_type_grouped');
+                /** @var Product\Variation\Type\Grouped $variation */
+                $variation = $this->context->objectManager()->create(Product\Variation\Type\Grouped::class);
                 $variation->create($product, $interface);
                 break;
             case \Magento\Bundle\Model\Product\Type::TYPE_CODE:
