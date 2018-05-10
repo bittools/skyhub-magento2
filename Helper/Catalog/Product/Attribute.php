@@ -1,16 +1,19 @@
 <?php
 
-namespace BitTools\SkyHub\Traits\Catalog\Product;
+namespace BitTools\SkyHub\Helper\Catalog\Product;
 
+use BitTools\SkyHub\Helper\AbstractHelper;
+use BitTools\SkyHub\Helper\Context;
 use Magento\Eav\Model\Entity\Attribute as EntityAttribute;
-use Magento\Catalog\Model\Product;
-use Magento\Eav\Model\ResourceModel\Entity\Attribute\Collection as AttributeCollection;
+use Magento\Eav\Model\ResourceModel\Entity\Attribute\Collection as EntityAttributeCollection;
+use Magento\Catalog\Model\Product as CatalogProduct;
 use Magento\Eav\Model\ResourceModel\Entity\Attribute\Set\Collection as AttributeSetCollection;
+use Magento\Eav\Setup\EavSetupFactory;
 
-trait Attribute
+class Attribute extends AbstractHelper
 {
     
-    /** @var AttributeCollection */
+    /** @var AttributeSetCollection */
     protected $attributeCollection;
     
     /** @var array */
@@ -22,8 +25,19 @@ trait Attribute
     /** @var array */
     protected $entityTypes         = [];
     
-    /** @var Product */
+    /** @var CatalogProduct */
     protected $product;
+    
+    /** @var EavSetupFactory */
+    protected $eavSetupFactory;
+    
+    
+    public function __construct(Context $context, EavSetupFactory $eavSetupFactory)
+    {
+        parent::__construct($context);
+        
+        $this->eavSetupFactory = $eavSetupFactory;
+    }
     
     
     /**
@@ -31,7 +45,7 @@ trait Attribute
      *
      * @return bool
      */
-    protected function getAttributeByCode($attributeCode)
+    public function getAttributeByCode($attributeCode)
     {
         $this->initProductAttributes();
         
@@ -48,7 +62,7 @@ trait Attribute
      *
      * @return bool|EntityAttribute
      */
-    protected function getAttributeById($attributeId)
+    public function getAttributeById($attributeId)
     {
         $this->initProductAttributes();
         
@@ -66,7 +80,7 @@ trait Attribute
     /**
      * @return array
      */
-    protected function getAllAttributeIds()
+    public function getAllAttributeIds()
     {
         $attributeIds = [];
         
@@ -82,7 +96,7 @@ trait Attribute
     /**
      * @return array
      */
-    protected function initProductAttributes()
+    public function initProductAttributes()
     {
         if (!empty($this->productAttributes)) {
             return $this->productAttributes;
@@ -98,13 +112,13 @@ trait Attribute
     
     
     /**
-     * @return AttributeCollection
+     * @return EntityAttributeCollection
      */
-    protected function getProductAttributesCollection()
+    public function getProductAttributesCollection()
     {
-        /** @var AttributeCollection $collection */
-        $collection = Mage::getResourceModel('eav/entity_attribute_collection');
-        $collection->setEntityTypeFilter($this->getEntityType(Product::ENTITY));
+        /** @var EntityAttributeCollection $collection */
+        $collection = $this->context->objectManager()->create(EntityAttributeCollection::class);
+        $collection->setEntityTypeFilter($this->getEntityType(CatalogProduct::ENTITY));
         
         return $collection;
     }
@@ -113,7 +127,7 @@ trait Attribute
     /**
      * @return array
      */
-    protected function getIntegrableProductAttributes()
+    public function getIntegrableProductAttributes()
     {
         $integrable = [];
         
@@ -136,7 +150,7 @@ trait Attribute
      *
      * @return array
      */
-    protected function getProductAttributes(array $ids = [], array $excludeIds = [])
+    public function getProductAttributes(array $ids = [], array $excludeIds = [])
     {
         $this->initProductAttributes();
         
@@ -167,14 +181,14 @@ trait Attribute
      *
      * @return \Magento\Eav\Model\Entity\Type
      */
-    protected function getEntityType($code)
+    public function getEntityType($code)
     {
         if (isset($this->entityTypes[$code])) {
             return $this->entityTypes[$code];
         }
         
         /** @var \Magento\Eav\Model\Entity\Type $type */
-        $type = Mage::getModel('eav/entity_type');
+        $type = $this->context->objectManager()->create(\Magento\Eav\Model\Entity\Type::class);
         $type->loadByCode($code);
         
         $this->entityTypes[$code] = $type;
@@ -184,26 +198,15 @@ trait Attribute
     
     
     /**
-     * @return array
-     */
-    protected function getProductAttributeBlacklist()
-    {
-        /** @var BSeller_SkyHub_Model_Config $config */
-        $config = Mage::getSingleton('bseller_skyhub/config');
-        return $config->getBlacklistedAttributes();
-    }
-    
-    
-    /**
      * @param string $attributeCode
      *
      * @return bool
      */
-    protected function isAttributeCodeInBlacklist($attributeCode)
+    public function isAttributeCodeInBlacklist($attributeCode)
     {
-        /** @var BSeller_SkyHub_Model_Config $config */
-        $config = Mage::getSingleton('bseller_skyhub/config');
-        return $config->isAttributeCodeInBlacklist($attributeCode);
+        return $this->context
+            ->skyhubConfig()
+            ->isAttributeCodeInBlacklist($attributeCode);
     }
     
     
@@ -213,30 +216,31 @@ trait Attribute
      *
      * @return EntityAttribute
      *
-     * @throws Mage_Core_Exception
+     * @throws \Exception
      */
-    protected function createProductAttribute($code, array $attributeData)
+    public function createProductAttribute($code, array $attributeData)
     {
         $groupName = 'BSeller SkyHub';
         
-        /** @var BSeller_SkyHub_Model_Resource_Eav_Entity_Attribute_Set $resource */
-        $resource = Mage::getResourceModel('bseller_skyhub/eav_entity_attribute_set');
-        $result   = $resource->setupEntityAttributeGroups(
-            $this->getEntityType(Mage_Catalog_Model_Product::ENTITY)->getId(),
+        /** @var \BitTools\SkyHub\Model\ResourceModel\Eav\Entity\Attribute\Set $resource */
+        $resource = $this->context
+            ->objectManager()
+            ->create(\BitTools\SkyHub\Model\ResourceModel\Eav\Entity\Attribute\Set::class);
+        
+        $result = $resource->setupEntityAttributeGroups(
+            $this->getEntityType(CatalogProduct::ENTITY)->getId(),
             $groupName
         );
         
         if (!$result) {
-            Mage::throwException(__('The attribute group could not be created.'));
+            throw new \Exception(__('The attribute group could not be created.'));
         }
         
         $attributeData['group'] = $groupName;
         
-        /** @var Mage_Eav_Model_Entity_Setup $installer */
-        $installer = Mage::getModel('eav/entity_setup', 'core_setup');
-        $installer->startSetup();
-        $installer->addAttribute(Product::ENTITY, $code, $attributeData);
-        $installer->endSetup();
+        /** @var \Magento\Eav\Setup\EavSetup $installer */
+        $installer = $this->eavSetupFactory->create();;
+        $installer->addAttribute(CatalogProduct::ENTITY, $code, $attributeData);
         
         return $this->loadProductAttribute($code);
     }
@@ -247,17 +251,17 @@ trait Attribute
      *
      * @return $this
      */
-    protected function initSkyHubAttributeGroup($groupName)
+    public function initSkyHubAttributeGroup($groupName)
     {
-        /** @var AttributeSetCollection $setCollection */
-        $setCollection = Mage::getResourceModel('eav/entity_attribute_set_collection');
-        $setCollection->setEntityTypeFilter($this->getEntityType(Product::ENTITY)->getId());
+        /** @var AttributeSetCollection $collection */
+        $collection = $this->context->objectManager()->create(AttributeSetCollection::class);;
+        $collection->setEntityTypeFilter($this->getEntityType(CatalogProduct::ENTITY)->getId());
         
         /** @var \Magento\Eav\Model\Entity\Attribute\Set $attributeSet */
-        foreach ($setCollection as $attributeSet) {
+        foreach ($collection as $attributeSet) {
             try {
-                /** @var \Magento\Eav\Model\Entity\Attribute\Group $group */
-                $group = Mage::getModel('eav/entity_attribute_group');
+                /** @var \Magento\Eav\Model\Entity\Attribute\Group Mage_Eav_Model_Entity_Attribute_Group $group */
+                $group = $this->context->objectManager()->create(\Magento\Eav\Model\Entity\Attribute\Group::class);
                 $group->setAttributeSetId($attributeSet->getId())
                     ->setAttributeGroupName($groupName)
                     ->setSortOrder(900)
@@ -265,7 +269,7 @@ trait Attribute
                 
                 $group->save();
             } catch (\Exception $e) {
-                throw new $e;
+                $this->context->logger()->critical($e);
             }
         }
         
@@ -274,16 +278,18 @@ trait Attribute
     
     
     /**
-     * @param $code
+     * @param string $code
      *
      * @return EntityAttribute
      *
      * @throws \Exception
      */
-    protected function loadProductAttribute($code)
+    public function loadProductAttribute($code)
     {
         /** @var EntityAttribute $attribute */
-        $attribute = Mage::getModel('eav/entity_attribute')->loadByCode(Product::ENTITY, $code);
+        $attribute = $this->context->objectManager()->create(EntityAttribute::class);
+        $attribute->loadByCode(CatalogProduct::ENTITY, $code);
+        
         return $attribute;
     }
     
@@ -293,7 +299,7 @@ trait Attribute
      *
      * @return bool
      */
-    protected function validateAttributeForIntegration(EntityAttribute $attribute)
+    public function validateAttributeForIntegration(EntityAttribute $attribute)
     {
         if (!$attribute->getStoreLabel()) {
             return false;

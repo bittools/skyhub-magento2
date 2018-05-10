@@ -23,6 +23,21 @@ class CatalogConfig extends AbstractConfig
      */
     public function getProductVisibilities()
     {
-        return $this->getSkyHubModuleConfigAsArray('product_visibility');
+        return (array) $this->getSkyHubModuleConfigAsArray('product_visibility');
+    }
+    
+    
+    /**
+     * @param int $visibility
+     *
+     * @return bool
+     */
+    public function hasAllowedVisibility($visibility)
+    {
+        if (in_array($visibility, $this->getProductVisibilities())) {
+            return true;
+        }
+        
+        return false;
     }
 }

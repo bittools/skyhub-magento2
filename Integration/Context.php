@@ -58,4 +58,13 @@ class Context implements \Magento\Framework\ObjectManager\ContextInterface
     {
         return $this->helperContext->objectManager();
     }
+    
+    
+    /**
+     * @return HelperContext
+     */
+    public function helperContext()
+    {
+        return $this->helperContext;
+    }
 }

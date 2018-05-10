@@ -2,12 +2,61 @@
 
 namespace BitTools\SkyHub\Integration\Transformer\Catalog;
 
+use BitTools\SkyHub\Helper\Catalog\Product\Attribute\Mapping as AttributeMappingHelper;
+use BitTools\SkyHub\Helper\Catalog\Product as ProductHelper;
+use BitTools\SkyHub\Helper\Eav\Option as EavOptionHelper;
+use BitTools\SkyHub\Helper\Catalog\Product\Attribute as AttributeHelper;
+use BitTools\SkyHub\Integration\Context;
 use BitTools\SkyHub\Integration\Transformer\AbstractTransformer;
+use BitTools\SkyHub\Model\Config\SkyhubAttributes\Data;
 use SkyHub\Api\EntityInterface\Catalog\Product as ProductEntityInterface;
 use Magento\Catalog\Model\Product as CatalogProduct;
+use BitTools\SkyHub\Model\Catalog\Product\Attributes\Mapping as AttributesMapping;
+use Magento\Eav\Model\Entity\Attribute as EntityAttribute;
+use Magento\CatalogInventory\Model\StockState;
 
 class Product extends AbstractTransformer
 {
+    
+    /** @var StockState */
+    protected $stockState;
+    
+    /** @var Data */
+    protected $skyhubConfig;
+    
+    /** @var ProductHelper */
+    protected $productHelper;
+    
+    /** @var AttributeHelper */
+    protected $attributesHelper;
+    
+    /** @var AttributeMappingHelper */
+    protected $attributeMappingHelper;
+    
+    /** @var EavOptionHelper */
+    protected $eavOptionHelper;
+    
+    
+    public function __construct(
+        Context $context,
+        StockState $stockState,
+        ProductHelper $productHelper,
+        AttributeHelper $attributesHelper,
+        AttributeMappingHelper $attributeMappingHelper,
+        EavOptionHelper $eavOptionHelper,
+        Data $skyhubConfig
+    )
+    {
+        parent::__construct($context);
+        
+        $this->stockState             = $stockState;
+        $this->productHelper          = $productHelper;
+        $this->attributesHelper       = $attributesHelper;
+        $this->attributeMappingHelper = $attributeMappingHelper;
+        $this->eavOptionHelper        = $eavOptionHelper;
+        $this->skyhubConfig           = $skyhubConfig;
+    }
+    
     
     /**
      * @param CatalogProduct $product
@@ -18,7 +67,7 @@ class Product extends AbstractTransformer
      */
     public function convert(CatalogProduct $product)
     {
-        $this->initProductAttributes();
+        $this->attributesHelper->initProductAttributes();
         
         /** @var ProductEntityInterface $interface */
         $interface = $this->context->api()->product()->entityInterface();
@@ -145,14 +194,15 @@ class Product extends AbstractTransformer
          * Let's get the processed attributes to exclude'em from the specification list.
          */
         $processedAttributeIds = (array) $product->getData('processed_attributes');
-        $remainingAttributes   = (array) $this->getProductAttributes([], array_keys($processedAttributeIds));
+        $remainingAttributes   = (array) $this->attributesHelper
+            ->getProductAttributes([], array_keys($processedAttributeIds));
         
-        /** @var Mage_Eav_Model_Entity_Attribute $specificationAttribute */
+        /** @var EntityAttribute $specificationAttribute */
         foreach ($remainingAttributes as $attribute) {
             /**
              * If the specification attribute is not valid then skip.
              *
-             * @var Mage_Eav_Model_Entity_Attribute $attribute
+             * @var EntityAttribute $attribute
              */
             if (!$attribute || !$this->validateSpecificationAttribute($attribute)) {
                 continue;
@@ -167,8 +217,8 @@ class Product extends AbstractTransformer
                 
                 //                $interface->addSpecification($attribute->getFrontend()->getLabel(), $value);
                 $interface->addSpecification($attribute->getAttributeCode(), $value);
-            } catch (Exception $e) {
-                Mage::logException($e);
+            } catch (\Exception $e) {
+                $this->context->helperContext()->logger()->critical($e);
             }
         }
         
@@ -177,13 +227,13 @@ class Product extends AbstractTransformer
     
     
     /**
-     * @param Mage_Eav_Model_Entity_Attribute $attribute
+     * @param EntityAttribute $attribute
      *
      * @return bool
      */
-    public function validateSpecificationAttribute(Mage_Eav_Model_Entity_Attribute $attribute)
+    public function validateSpecificationAttribute(EntityAttribute $attribute)
     {
-        if ($this->isAttributeCodeInBlacklist($attribute->getAttributeCode())) {
+        if ($this->skyhubConfig->isAttributeCodeInBlacklist($attribute->getAttributeCode())) {
             return false;
         }
         
@@ -196,14 +246,21 @@ class Product extends AbstractTransformer
      * @param ProductEntityInterface $interface
      *
      * @return $this
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function prepareMappedAttributes(CatalogProduct $product, ProductEntityInterface $interface)
     {
-        /** @var BSeller_SkyHub_Model_Catalog_Product_Attributes_Mapping $mappedAttribute */
-        foreach ($this->getMappedAttributes() as $mappedAttribute) {
+        /** @var \BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping\Collection $collection */
+        $collection = $this->context
+            ->objectManager()
+            ->create(\BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping\Collection::class);
+        
+        /** @var AttributesMapping $mappedAttribute */
+        foreach ($collection as $mappedAttribute) {
             /** @var string $code */
             $code   = (string) $mappedAttribute->getSkyhubCode();
-            $method = 'set'.preg_replace('/[^a-zA-Z]/', null, uc_words($code));
+            $method = 'set'.preg_replace('/[^a-zA-Z]/', null, ucwords($code)); /** @todo Check this ucwords() method. */
             
             if (!method_exists($interface, $method)) {
                 continue;
@@ -215,8 +272,11 @@ class Product extends AbstractTransformer
                 case 'promotional_price':
                     continue;
                 default:
-                    /** @var Mage_Eav_Model_Entity_Attribute|bool $attribute */
-                    if (!$attribute = $this->getAttributeById($mappedAttribute->getAttributeId())) {
+                    /** @var AttributeHelper $helper */
+                    $helper = $this->context->objectManager()->get(AttributeHelper::class);
+                    
+                    /** @var EntityAttribute|bool $attribute */
+                    if (!$attribute = $helper->getAttributeById($mappedAttribute->getAttributeId())) {
                         $attribute = $mappedAttribute->getAttribute();
                     }
                     
@@ -244,23 +304,23 @@ class Product extends AbstractTransformer
      * @param ProductEntityInterface $interface
      *
      * @return $this
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     protected function prepareProductQty(CatalogProduct $product, ProductEntityInterface $interface)
     {
-        /** @var BSeller_SkyHub_Model_Catalog_Product_Attributes_Mapping $mappedAttribute */
+        /** @var AttributesMapping $mappedAttribute */
+        /**
+         * @todo Confirm if it's really unnecessary.
         $mappedAttribute = $this->getMappedAttribute('qty');
         
         if (!$mappedAttribute || !$mappedAttribute->getId()) {
             return $this;
         }
+        */
         
-        /** @var Mage_CatalogInventory_Model_Stock_Item $stockItem */
-        $stockItem = Mage::getModel('cataloginventory/stock_item');
-        $stockItem->loadByProduct($product);
-        
-        $value = (float) $stockItem->getQty();
-        
-        $interface->setQty($value);
+        $qty = (float) $this->stockState->getStockQty($product->getId());
+        $interface->setQty($qty);
         
         return $this;
     }
@@ -275,11 +335,11 @@ class Product extends AbstractTransformer
     protected function prepareProductPrices(CatalogProduct $product, ProductEntityInterface $interface)
     {
         /**
-         * @var BSeller_SkyHub_Model_Catalog_Product_Attributes_Mapping $mappedPrice
-         * @var BSeller_SkyHub_Model_Catalog_Product_Attributes_Mapping $mappedPromoPrice
+         * @var AttributesMapping $mappedPrice
+         * @var AttributesMapping $mappedPromoPrice
          */
-        $mappedPrice      = $this->getMappedAttribute('price');
-        $mappedPromoPrice = $this->getMappedAttribute('promotional_price');
+        $mappedPrice      = $this->attributeMappingHelper->getMappedAttribute('price');
+        $mappedPromoPrice = $this->attributeMappingHelper->getMappedAttribute('promotional_price');
         
         $priceCode        = $mappedPrice->getAttribute()->getAttributeCode();
         $specialPriceCode = $mappedPromoPrice->getAttribute()->getAttributeCode();
@@ -287,7 +347,7 @@ class Product extends AbstractTransformer
         /**
          * Add Price.
          */
-        $price = $this->extractProductPrice($product, $priceCode);
+        $price = $this->productHelper->extractProductPrice($product, $priceCode);
         
         if (!empty($price)) {
             $price = (float) $price;
@@ -302,7 +362,7 @@ class Product extends AbstractTransformer
         /**
          * Add Promotional Price.
          */
-        $specialPrice = $this->extractProductSpecialPrice($product, $specialPriceCode, $price);
+        $specialPrice = $this->productHelper->extractProductSpecialPrice($product, $specialPriceCode, $price);
         
         if (!empty($specialPrice)) {
             $specialPrice = (float) $specialPrice;
@@ -319,15 +379,12 @@ class Product extends AbstractTransformer
     
     
     /**
-     * @param CatalogProduct      $product
-     * @param Mage_Eav_Model_Entity_Attribute $attribute
+     * @param CatalogProduct  $product
+     * @param EntityAttribute $attribute
      *
      * @return $this
      */
-    protected function addProcessedAttribute(
-        CatalogProduct $product,
-        Mage_Eav_Model_Entity_Attribute $attribute = null
-    )
+    protected function addProcessedAttribute(CatalogProduct $product, EntityAttribute $attribute = null)
     {
         if (!$attribute) {
             return $this;
@@ -343,17 +400,13 @@ class Product extends AbstractTransformer
     
     
     /**
-     * @param CatalogProduct      $product
-     * @param Mage_Eav_Model_Entity_Attribute $attribute
+     * @param CatalogProduct  $product
+     * @param EntityAttribute $attribute
      * @param null|string                     $type
      *
      * @return array|bool|float|int|mixed|string
      */
-    public function getProductAttributeValue(
-        CatalogProduct $product,
-        Mage_Eav_Model_Entity_Attribute $attribute,
-        $type = null
-    )
+    public function getProductAttributeValue(CatalogProduct $product, EntityAttribute $attribute, $type = null)
     {
         if (!$attribute) {
             return false;
@@ -367,14 +420,14 @@ class Product extends AbstractTransformer
     
     
     /**
-     * @param CatalogProduct      $product
-     * @param Mage_Eav_Model_Entity_Attribute $attribute
+     * @param CatalogProduct  $product
+     * @param EntityAttribute $attribute
      *
      * @return array|bool|mixed|string
      */
-    public function extractProductData(CatalogProduct $product, Mage_Eav_Model_Entity_Attribute $attribute)
+    public function extractProductData(CatalogProduct $product, EntityAttribute $attribute)
     {
-        $data = $this->productAttributeRawValue($product, $attribute);
+        $data = $this->productHelper->productAttributeRawValue($product, $attribute);
         
         if ((false === $data) || is_null($data)) {
             return false;
@@ -382,11 +435,11 @@ class Product extends AbstractTransformer
         
         switch ($attribute->getAttributeCode()) {
             case 'status':
-                if ($data == Mage_Catalog_Model_Product_Status::STATUS_ENABLED) {
+                if ($data == \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED) {
                     return true;
                 }
                 
-                if ($data == Mage_Catalog_Model_Product_Status::STATUS_DISABLED) {
+                if ($data == \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_DISABLED) {
                     return false;
                 }
                 
@@ -398,9 +451,9 @@ class Product extends AbstractTransformer
          */
         if (in_array($attribute->getFrontend()->getInputType(), ['select', 'multiselect'])) {
             try {
-                $data = $this->extractAttributeOptionValue($attribute, $data, $this->getStore());
+                $data = $this->eavOptionHelper->extractAttributeOptionValue($attribute, $data, $this->getStore());
             } catch (\Exception $e) {
-                // Mage::logException($e);
+                $this->context->helperContext()->logger()->critical($e);
             }
         }
         
@@ -421,16 +474,16 @@ class Product extends AbstractTransformer
     protected function castValue($value, $type)
     {
         switch ($type) {
-            case BSeller_SkyHub_Model_Catalog_Product_Attributes_Mapping::DATA_TYPE_INTEGER:
+            case AttributesMapping::DATA_TYPE_INTEGER:
                 return (int) $value;
                 break;
-            case BSeller_SkyHub_Model_Catalog_Product_Attributes_Mapping::DATA_TYPE_DECIMAL:
+            case AttributesMapping::DATA_TYPE_DECIMAL:
                 return (float) $value;
                 break;
-            case BSeller_SkyHub_Model_Catalog_Product_Attributes_Mapping::DATA_TYPE_BOOLEAN:
+            case AttributesMapping::DATA_TYPE_BOOLEAN:
                 return (bool) $value;
                 break;
-            case BSeller_SkyHub_Model_Catalog_Product_Attributes_Mapping::DATA_TYPE_STRING:
+            case AttributesMapping::DATA_TYPE_STRING:
             default:
                 return (string) $value;
         }
@@ -438,12 +491,15 @@ class Product extends AbstractTransformer
     
     
     /**
-     * @return Mage_Core_Model_Store
+     * @return \Magento\Store\Api\Data\StoreInterface
      *
-     * @throws Mage_Core_Model_Store_Exception
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     protected function getStore()
     {
-        return Mage::app()->getStore();
+        return $this->context
+            ->helperContext()
+            ->storeManager()
+            ->getStore();
     }
 }
