@@ -96,6 +96,9 @@ class Product extends AbstractTransformer
      */
     protected function prepareProductVariations(CatalogProduct $product, ProductEntityInterface $interface)
     {
+        /**
+         * @todo Create these transformers.
+         */
         switch($product->getTypeId()) {
             case \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE:
                 /** @var BSeller_SkyHub_Model_Transformer_Catalog_Product_Variation_Type_Configurable $variation */
