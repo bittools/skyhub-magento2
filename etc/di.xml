@@ -36,7 +36,7 @@
         </arguments>
     </type>
 
-    <virtualType name="VirtualEntityResourceModel" type="BitTools\SkyHub\Model\ResourceModel\Entity">
+    <virtualType name="BitTools\SkyHub\Model\ResourceModel\Entity\Virtual" type="BitTools\SkyHub\Model\ResourceModel\Entity">
         <arguments>
             <argument name="context" xsi:type="object">Magento\Framework\Model\ResourceModel\Db\Context</argument>
             <argument name="connectionName" xsi:type="string">default</argument>

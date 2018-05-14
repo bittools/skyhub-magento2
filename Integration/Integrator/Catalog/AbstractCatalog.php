@@ -15,7 +15,7 @@ abstract class AbstractCatalog extends AbstractIntegrator
     protected function getEntityResource()
     {
         /** @var EntityResourceModel $resource */
-        $resource = $this->context->objectManager()->get('VirtualEntityResourceModel');
+        $resource = $this->context->objectManager()->get('BitTools\SkyHub\Model\ResourceModel\Entity\Virtual');
         return $resource;
     }
     
