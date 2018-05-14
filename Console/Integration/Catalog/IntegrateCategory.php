@@ -63,7 +63,12 @@ class IntegrateCategory extends Command
     
     
     /**
-     * {@inheritdoc}
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     *
+     * @return int|null|void
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

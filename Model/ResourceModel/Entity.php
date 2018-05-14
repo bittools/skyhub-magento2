@@ -30,7 +30,7 @@ class Entity extends AbstractDb
      * @param \Magento\Framework\Model\ResourceModel\Db\Context $context
      * @param null                                              $connectionName
      * @param LoggerInterface                                   $logger
-     * @param StoreManagementInterface                          $storeManagement
+     * @param StoreRepositoryInterface                          $storeRepository
      */
     public function __construct(
         \Magento\Framework\Model\ResourceModel\Db\Context $context,
