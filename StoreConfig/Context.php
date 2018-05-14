@@ -2,9 +2,7 @@
 
 namespace BitTools\SkyHub\StoreConfig;
 
-use Magento\Framework\App\Config\ScopeConfigInterface;
-
-class Context extends AbstractConfig
+class Context
 {
     
     /** @var GeneralConfig */
@@ -21,20 +19,20 @@ class Context extends AbstractConfig
     
     
     /**
-     * Service constructor.
+     * Context constructor.
      *
-     * @param ScopeConfigInterface $scopeConfig
+     * @param GeneralConfig $generalConfig
+     * @param ServiceConfig $serviceConfig
+     * @param LogConfig     $logConfig
+     * @param CatalogConfig $catalogConfig
      */
     public function __construct(
-        ScopeConfigInterface $scopeConfig,
         GeneralConfig $generalConfig,
         ServiceConfig $serviceConfig,
         LogConfig $logConfig,
         CatalogConfig $catalogConfig
     )
     {
-        parent::__construct($scopeConfig);
-        
         $this->general = $generalConfig;
         $this->service = $serviceConfig;
         $this->log     = $logConfig;

@@ -3,12 +3,17 @@
 namespace BitTools\SkyHub\StoreConfig;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface as StoreScopeInterface;
+use Magento\Framework\Encryption\EncryptorInterface;
 
 abstract class AbstractConfig
 {
     
     /** @var ScopeConfigInterface */
     protected $scopeConfig;
+    
+    /** @var EncryptorInterface */
+    protected $encryptor;
     
     /** @var string */
     protected $group = 'general';
@@ -19,9 +24,10 @@ abstract class AbstractConfig
      *
      * @param ScopeConfigInterface $scopeConfig
      */
-    public function __construct(ScopeConfigInterface $scopeConfig)
+    public function __construct(ScopeConfigInterface $scopeConfig, EncryptorInterface $encryptor)
     {
         $this->scopeConfig = $scopeConfig;
+        $this->encryptor   = $encryptor;
     }
     
     
@@ -61,7 +67,7 @@ abstract class AbstractConfig
         $field,
         $group = null,
         $scopeCode = null,
-        $scope = ScopeConfigInterface::SCOPE_TYPE_DEFAULT
+        $scope = StoreScopeInterface::SCOPE_STORE
     )
     {
         if (empty($group)) {

@@ -32,7 +32,10 @@ class ServiceConfig extends AbstractConfig
      */
     public function getServiceApiKey()
     {
-        return (string) $this->getSkyHubModuleConfig('api_key');
+        $key = (string) $this->getSkyHubModuleConfig('api_key');
+        $key = $this->encryptor->decrypt($key);
+        
+        return $key;
     }
     
     

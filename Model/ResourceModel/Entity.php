@@ -80,8 +80,8 @@ class Entity extends AbstractDb
                 'entity_id'   => (int)    $entityId,
                 'entity_type' => (string) $entityType,
                 'store_id'    => (int)    $this->getStore($storeId),
-                'created_at'  => time(),
-                'updated_at'  => time(),
+                'created_at'  => date('Y-m-d H:i:s'),
+                'updated_at'  => date('Y-m-d H:i:s'),
             ]);
             $this->commit();
             

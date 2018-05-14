@@ -152,29 +152,29 @@ class InstallSchema implements InstallSchemaInterface
             ->addColumn('entity_type', Table::TYPE_TEXT, 255, [
                 'nullable' => false,
             ])
-            ->addColumn('store_id', Table::TYPE_INTEGER, 10, [
+            ->addColumn('store_id', Table::TYPE_SMALLINT, 5, [
                 'unsigned' => true,
                 'nullable' => false,
                 'primary' => true,
                 'default' => 0,
             ])
-            ->addColumn('editable', Table::TYPE_BOOLEAN, 1, [
-                'nullable' => false,
-                'default' => true,
-            ])
             ->addColumn('created_at', Table::TYPE_DATETIME, null, [
+                'nullable' => true,
+                'unsigned' => true,
+            ])
+            ->addColumn('updated_at', Table::TYPE_DATETIME, null, [
                 'nullable' => true,
                 'unsigned' => true,
             ])
         ;
         
         /** Add Store ID foreign key. */
-        $this->addTableForeignKey($table, 'store_id', 'core_store', 'store_id');
+        $this->addTableForeignKey($table, 'store_id', 'store', 'store_id');
         
         /** Add indexes */
         $this->addTableIndex($table, 'entity_id')
             ->addTableIndex($table, 'entity_type')
-            ->addTableIndex($table, ['entity_id', 'entity_type'], AdapterInterface::INDEX_TYPE_UNIQUE);
+            ->addTableIndex($table, ['entity_id', 'entity_type', 'store_id'], AdapterInterface::INDEX_TYPE_UNIQUE);
         
         $this->getConnection()->createTable($table);
         
@@ -226,7 +226,7 @@ class InstallSchema implements InstallSchemaInterface
                 'nullable' => false,
                 'default' => 0,
             ])
-            ->addColumn('store_id', Table::TYPE_INTEGER, 10, [
+            ->addColumn('store_id', Table::TYPE_SMALLINT, 5, [
                 'unsigned' => true,
                 'nullable' => false,
                 'primary' => true,
@@ -246,7 +246,7 @@ class InstallSchema implements InstallSchemaInterface
             ])
         ;
         
-        $this->addTableForeignKey($table, 'store_id', 'core_store', 'store_id');
+        $this->addTableForeignKey($table, 'store_id', 'store', 'store_id');
         
         $this->addTableIndex($table, 'entity_id')
             ->addTableIndex($table, 'entity_type')

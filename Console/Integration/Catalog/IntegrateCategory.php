@@ -91,14 +91,16 @@ class IntegrateCategory extends Command
             
             if ($response && $response->success()) {
                 $style->success(__('Category ID %1 was successfully integrated.', $categoryId));
+                continue;
             }
             
             if ($response && $response->exception()) {
                 $style->error(__('Category ID %1 was not integrated. Message: %2', $categoryId, $response->message()));
+                continue;
             }
+            
+            $style->warning(__('Something went wrong on this integration...'));
         }
-        
-        $output->writeln($categoryId);
     }
     
     
