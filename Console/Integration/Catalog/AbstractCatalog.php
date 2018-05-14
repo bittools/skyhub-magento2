@@ -4,9 +4,13 @@ namespace BitTools\SkyHub\Console\Integration\Catalog;
 
 use BitTools\SkyHub\Helper\Context;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
 
 abstract class AbstractCatalog extends Command
 {
+    
+    /** @var string */
+    const INPUT_KEY_STORE_ID = 'store_id';
     
     /** @var Context */
     protected $context;
@@ -57,5 +61,20 @@ abstract class AbstractCatalog extends Command
     protected function getStore($storeId = null)
     {
         return $this->context->storeManager()->getStore($storeId);
+    }
+    
+    
+    /**
+     * @return InputOption
+     */
+    protected function getStoreIdOption()
+    {
+        return new InputOption(
+            self::INPUT_KEY_STORE_ID,
+            's',
+            InputOption::VALUE_OPTIONAL,
+            'The store ID',
+            \Magento\Store\Model\Store::DEFAULT_STORE_ID
+        );
     }
 }

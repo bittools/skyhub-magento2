@@ -31,8 +31,12 @@
     <type name="BitTools\SkyHub\Console\Integration\Catalog\IntegrateCategory">
         <arguments>
             <argument name="name" xsi:type="string">bittools_skyhub_integrate_category</argument>
-            <argument name="categoryRepository" xsi:type="object">Magento\Catalog\Api\CategoryRepositoryInterface</argument>
-            <argument name="categoryIntegrator" xsi:type="object">BitTools\SkyHub\Integration\Integrator\Catalog\Category</argument>
+        </arguments>
+    </type>
+
+    <type name="BitTools\SkyHub\Console\Integration\Catalog\IntegrateProduct">
+        <arguments>
+            <argument name="name" xsi:type="string">bittools_skyhub_integrate_product</argument>
         </arguments>
     </type>
 
@@ -48,8 +52,8 @@
     <type name="Magento\Framework\Console\CommandListInterface">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <!--<item name="integrateProduct" xsi:type="object">Magento\Cron\Console\Command\CronCommand</item>-->
                 <item name="integrateCatalogCategory" xsi:type="object">BitTools\SkyHub\Console\Integration\Catalog\IntegrateCategory</item>
+                <item name="integrateCatalogProduct" xsi:type="object">BitTools\SkyHub\Console\Integration\Catalog\IntegrateProduct</item>
             </argument>
         </arguments>
     </type>

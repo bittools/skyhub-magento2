@@ -3,44 +3,46 @@
 namespace BitTools\SkyHub\Console\Integration\Catalog;
 
 use BitTools\SkyHub\Helper\Context;
-use BitTools\SkyHub\Integration\Integrator\Catalog\Category as CategoryIntegrator;
-use Magento\Catalog\Api\CategoryRepositoryInterface;
+use BitTools\SkyHub\Integration\Integrator\Catalog\Product as ProductIntegrator;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class IntegrateCategory extends AbstractCatalog
+class IntegrateProduct extends AbstractCatalog
 {
     
     /** @var string */
-    const INPUT_KEY_CATEGORY_ID = 'category_id';
+    const INPUT_KEY_PRODUCT_ID = 'product_id';
     
-    /** @var CategoryRepositoryInterface */
-    protected $categoryRepository;
+    /** @var ProductRepositoryInterface */
+    protected $productRepository;
     
-    /** @var CategoryIntegrator */
-    protected $categoryIntegrator;
+    /** @var ProductIntegrator */
+    protected $productIntegrator;
     
     
     /**
      * IntegrateCategory constructor.
      *
-     * @param CategoryRepositoryInterface $categoryFactory
-     * @param null|string                 $name
+     * @param null                       $name
+     * @param Context                    $context
+     * @param ProductRepositoryInterface $productRepository
+     * @param ProductIntegrator          $productIntegrator
      */
     public function __construct(
         $name = null,
         Context $context,
-        CategoryRepositoryInterface $categoryRepository,
-        CategoryIntegrator $categoryIntegrator
+        ProductRepositoryInterface $productRepository,
+        ProductIntegrator $productIntegrator
     )
     {
         parent::__construct($name, $context);
         
-        $this->categoryRepository = $categoryRepository;
-        $this->categoryIntegrator = $categoryIntegrator;
+        $this->productRepository = $productRepository;
+        $this->productIntegrator = $productIntegrator;
     }
     
     
@@ -49,14 +51,14 @@ class IntegrateCategory extends AbstractCatalog
      */
     protected function configure()
     {
-        $this->setName('skyhub:integrate:category')
-            ->setDescription('Integrate categories from store catalog.')
+        $this->setName('skyhub:integrate:product')
+            ->setDescription('Integrate products from store catalog.')
             ->setDefinition([
                 new InputOption(
-                    self::INPUT_KEY_CATEGORY_ID,
-                    'c',
+                    self::INPUT_KEY_PRODUCT_ID,
+                    'p',
                     InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-                    'The category IDs for integration.'
+                    'The product IDs for integration.'
                 ),
                 $this->getStoreIdOption(),
             ]);
@@ -71,37 +73,37 @@ class IntegrateCategory extends AbstractCatalog
      *
      * @return int|null|void
      *
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $categoryIds = array_unique($input->getOption(self::INPUT_KEY_CATEGORY_ID));
-        $categoryIds = array_filter($categoryIds);
+        $productIds = array_unique($input->getOption(self::INPUT_KEY_PRODUCT_ID));
+        $productIds = array_filter($productIds);
         $storeId     = $input->getOption(self::INPUT_KEY_STORE_ID);
         
         $this->prepareStore($storeId);
     
         $style = new SymfonyStyle($input, $output);
         
-        /** @var int $categoryId */
-        foreach ($categoryIds as $categoryId) {
-            /** @var \Magento\Catalog\Model\Category $category */
-            $category = $this->getCategory($categoryId);
+        /** @var int $productId */
+        foreach ($productIds as $productId) {
+            /** @var \Magento\Catalog\Model\Product $product */
+            $product = $this->getProduct($productId);
             
-            if (!$category) {
+            if (!$product) {
                 continue;
             }
             
             /** @var \SkyHub\Api\Handler\Response\HandlerInterfaceSuccess|\SkyHub\Api\Handler\Response\HandlerInterfaceException $response */
-            $response = $this->categoryIntegrator->createOrUpdate($category);
+            $response = $this->productIntegrator->createOrUpdate($product);
             
             if ($response && $response->success()) {
-                $style->success(__('Category ID %1 was successfully integrated.', $categoryId));
+                $style->success(__('Product ID %1 was successfully integrated.', $productId));
                 continue;
             }
             
             if ($response && $response->exception()) {
-                $style->error(__('Category ID %1 was not integrated. Message: %2', $categoryId, $response->message()));
+                $style->error(__('Product ID %1 was not integrated. Message: %2', $productId, $response->message()));
                 continue;
             }
             
@@ -111,17 +113,17 @@ class IntegrateCategory extends AbstractCatalog
     
     
     /**
-     * @param integer $categoryId
+     * @param integer $productId
      *
-     * @return \Magento\Catalog\Model\Category|null
+     * @return \Magento\Catalog\Model\Product|null
      */
-    protected function getCategory($categoryId)
+    protected function getProduct($productId)
     {
         try {
-            /** @var \Magento\Catalog\Model\Category $category */
-            $category = $this->categoryRepository->get($categoryId);
+            /** @var \Magento\Catalog\Model\Product $product */
+            $product = $this->productRepository->get($productId);
     
-            return $category;
+            return $product;
         } catch (NoSuchEntityException $e) {
         } catch (\Exception $e) {
         }
