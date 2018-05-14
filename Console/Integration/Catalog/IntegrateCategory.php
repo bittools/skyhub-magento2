@@ -2,17 +2,16 @@
 
 namespace BitTools\SkyHub\Console\Integration\Catalog;
 
+use BitTools\SkyHub\Helper\Context;
 use BitTools\SkyHub\Integration\Integrator\Catalog\Category as CategoryIntegrator;
 use Magento\Catalog\Api\CategoryRepositoryInterface;
-use Magento\Store\Model\StoreManagerInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class IntegrateCategory extends Command
+class IntegrateCategory extends AbstractCatalog
 {
     
     /** @var string */
@@ -27,9 +26,6 @@ class IntegrateCategory extends Command
     /** @var CategoryIntegrator */
     protected $categoryIntegrator;
     
-    /** @var StoreManagerInterface */
-    protected $storeManager;
-    
     
     /**
      * IntegrateCategory constructor.
@@ -39,16 +35,15 @@ class IntegrateCategory extends Command
      */
     public function __construct(
         $name = null,
+        Context $context,
         CategoryRepositoryInterface $categoryRepository,
-        CategoryIntegrator $categoryIntegrator,
-        StoreManagerInterface $storeManager
+        CategoryIntegrator $categoryIntegrator
     )
     {
-        parent::__construct($name);
+        parent::__construct($name, $context);
         
         $this->categoryRepository = $categoryRepository;
         $this->categoryIntegrator = $categoryIntegrator;
-        $this->storeManager       = $storeManager;
     }
     
     
@@ -93,9 +88,7 @@ class IntegrateCategory extends Command
         $categoryIds = array_filter($categoryIds);
         $storeId     = $input->getOption(self::INPUT_KEY_STORE_ID);
         
-        if ($storeId) {
-            $this->storeManager->setCurrentStore($this->storeManager->getStore($storeId));
-        }
+        $this->prepareStore($storeId);
     
         $style = new SymfonyStyle($input, $output);
         

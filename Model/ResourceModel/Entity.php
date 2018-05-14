@@ -14,6 +14,7 @@ use Magento\Framework\Model\ResourceModel\Db\Context;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
+use BitTools\SkyHub\Helper\Context as HelperContext;
 
 class Entity extends AbstractDb
 {
@@ -21,8 +22,8 @@ class Entity extends AbstractDb
     /** @var LoggerInterface */
     protected $logger;
     
-    /** @var StoreManagerInterface */
-    protected $storeManager;
+    /** @var HelperContext */
+    protected $helperContext;
     
     
     /**
@@ -37,13 +38,13 @@ class Entity extends AbstractDb
         \Magento\Framework\Model\ResourceModel\Db\Context $context,
         $connectionName = null,
         LoggerInterface $logger,
-        StoreManagerInterface $storeManager
+        HelperContext $helperContext
     )
     {
         parent::__construct($context, $connectionName);
         
-        $this->logger       = $logger;
-        $this->storeManager = $storeManager;
+        $this->logger        = $logger;
+        $this->helperContext = $helperContext;
     }
     
     
@@ -174,7 +175,7 @@ class Entity extends AbstractDb
     
     
     /**
-     * @param $entityType
+     * @param string $entityType
      *
      * @return $this
      *
@@ -197,6 +198,6 @@ class Entity extends AbstractDb
      */
     protected function getStoreId($storeId = null)
     {
-        return $this->storeManager->getStore($storeId)->getId();
+        return $this->helperContext->storeManager()->getStore($storeId)->getId();
     }
 }
