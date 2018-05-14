@@ -2,100 +2,119 @@
 
 namespace BitTools\SkyHub\Integration\Integrator\Catalog;
 
+use BitTools\SkyHub\Model\Entity as EntityModel;
+use BitTools\SkyHub\Model\ResourceModel\Entity as EntityResourceModel;
 use BitTools\SkyHub\Integration\Integrator\AbstractIntegrator;
 
 abstract class AbstractCatalog extends AbstractIntegrator
 {
     
     /**
-     * @return BSeller_SkyHub_Model_Resource_Entity
+     * @return EntityResourceModel
      */
     protected function getEntityResource()
     {
-        return Mage::getResourceSingleton('bseller_skyhub/entity');
+        /** @var EntityResourceModel $resource */
+        $resource = $this->context->objectManager()->get('VirtualEntityResourceModel');
+        return $resource;
     }
     
     
     /**
-     * @param int $id
+     * @param integer $id
      *
      * @return bool
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     protected function registerProductEntity($id)
     {
         return (bool) $this->getEntityResource()
-            ->createEntity((int) $id, BSeller_SkyHub_Model_Entity::TYPE_CATALOG_PRODUCT);
+            ->createEntity((int) $id, EntityModel::TYPE_CATALOG_PRODUCT);
     }
     
     
     /**
-     * @param int $id
+     * @param integer $id
      *
      * @return bool
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     protected function registerProductAttributeEntity($id)
     {
         return (bool) $this->getEntityResource()
-            ->createEntity((int) $id, BSeller_SkyHub_Model_Entity::TYPE_CATALOG_PRODUCT_ATTRIBUTE);
+            ->createEntity((int) $id, EntityModel::TYPE_CATALOG_PRODUCT_ATTRIBUTE);
     }
     
     
     /**
-     * @param int $id
+     * @param integer $id
      *
      * @return bool
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     protected function registerCategoryEntity($id)
     {
         return (bool) $this->getEntityResource()
-            ->createEntity((int) $id, BSeller_SkyHub_Model_Entity::TYPE_CATALOG_CATEGORY);
+            ->createEntity((int) $id, EntityModel::TYPE_CATALOG_CATEGORY);
     }
     
     
     /**
-     * @param int $id
+     * @param integer $id
      *
      * @return bool
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     protected function productExists($id)
     {
         return (bool) $this->getEntityResource()
-            ->entityExists((int) $id, BSeller_SkyHub_Model_Entity::TYPE_CATALOG_PRODUCT);
+            ->entityExists((int) $id, EntityModel::TYPE_CATALOG_PRODUCT);
     }
     
     
     /**
-     * @param int $id
+     * @param integer $id
      *
      * @return bool
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     protected function productAttributeExists($id)
     {
         return (bool) $this->getEntityResource()
-            ->entityExists((int) $id, BSeller_SkyHub_Model_Entity::TYPE_CATALOG_PRODUCT_ATTRIBUTE);
+            ->entityExists((int) $id, EntityModel::TYPE_CATALOG_PRODUCT_ATTRIBUTE);
     }
     
     
     /**
-     * @param int $id
+     * @param integer $id
      *
      * @return bool
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     protected function categoryExists($id)
     {
         return (bool) $this->getEntityResource()
-            ->entityExists((int) $id, BSeller_SkyHub_Model_Entity::TYPE_CATALOG_CATEGORY);
+            ->entityExists((int) $id, EntityModel::TYPE_CATALOG_CATEGORY);
     }
     
     
     /**
-     * @param int $id
+     * @param integer $id
      *
      * @return bool
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     protected function updateProductEntity($id)
     {
         return (bool) $this->getEntityResource()
-            ->updateEntity((int) $id, BSeller_SkyHub_Model_Entity::TYPE_CATALOG_PRODUCT);
+            ->updateEntity((int) $id, EntityModel::TYPE_CATALOG_PRODUCT);
     }
 }

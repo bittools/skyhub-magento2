@@ -28,6 +28,32 @@
         </arguments>
     </virtualType>
 
+    <type name="BitTools\SkyHub\Console\Integration\Catalog\IntegrateCategory">
+        <arguments>
+            <argument name="name" xsi:type="string">bittools_skyhub_integrate_category</argument>
+            <argument name="categoryRepository" xsi:type="object">Magento\Catalog\Api\CategoryRepositoryInterface</argument>
+            <argument name="categoryIntegrator" xsi:type="object">BitTools\SkyHub\Integration\Integrator\Catalog\Category</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="VirtualEntityResourceModel" type="BitTools\SkyHub\Model\ResourceModel\Entity">
+        <arguments>
+            <argument name="context" xsi:type="object">Magento\Framework\Model\ResourceModel\Db\Context</argument>
+            <argument name="connectionName" xsi:type="string">default</argument>
+            <argument name="logger" xsi:type="object">Psr\Log\LoggerInterface</argument>
+            <argument name="storeRepository" xsi:type="object">Magento\Store\Api\StoreRepositoryInterface</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <!--<item name="integrateProduct" xsi:type="object">Magento\Cron\Console\Command\CronCommand</item>-->
+                <item name="integrateCatalogCategory" xsi:type="object">BitTools\SkyHub\Console\Integration\Catalog\IntegrateCategory</item>
+            </argument>
+        </arguments>
+    </type>
+
     <preference for="BitTools\SkyHub\Api\ProductAttributeMappingRepositoryInterface" type="BitTools\SkyHub\Model\Catalog\Product\Attributes\MappingRepository"/>
     <preference for="BitTools\SkyHub\Api\Data\ProductAttributeMappingInterface" type="BitTools\SkyHub\Model\Catalog\Product\Attributes\Mapping"/>
 </config>

@@ -13,7 +13,7 @@ class Product extends AbstractCatalog
     protected $eventType = 'catalog_product';
     
     /** @var ProductValidation */
-    protected $productValidation;
+    protected $validator;
     
     /** @var ProductTransformerFactory */
     protected $transformerFactory;
@@ -27,7 +27,7 @@ class Product extends AbstractCatalog
     {
         parent::__construct($context);
         
-        $this->productValidation = $productValidation;
+        $this->validator          = $productValidation;
         $this->transformerFactory = $transformerFactory;
     }
     
@@ -77,7 +77,7 @@ class Product extends AbstractCatalog
      */
     public function create(ProductModel $product)
     {
-        if (!$this->productValidation->canIntegrateProduct($product)) {
+        if (!$this->validator->canIntegrateProduct($product)) {
             return false;
         }
         
@@ -108,7 +108,7 @@ class Product extends AbstractCatalog
      */
     public function update(\Magento\Catalog\Model\Product $product)
     {
-        if (!$this->productValidation->canIntegrateProduct($product)) {
+        if (!$this->validator->canIntegrateProduct($product)) {
             return false;
         }
         
