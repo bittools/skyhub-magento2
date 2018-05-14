@@ -10,8 +10,9 @@
 
 namespace BitTools\SkyHub\Model\ResourceModel;
 
+use Magento\Framework\Model\ResourceModel\Db\Context;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
-use Magento\Store\Api\StoreRepositoryInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 
 class Entity extends AbstractDb
@@ -20,29 +21,29 @@ class Entity extends AbstractDb
     /** @var LoggerInterface */
     protected $logger;
     
-    /** @var StoreRepositoryInterface */
-    protected $storeRepository;
+    /** @var StoreManagerInterface */
+    protected $storeManager;
     
     
     /**
      * Entity constructor.
      *
-     * @param \Magento\Framework\Model\ResourceModel\Db\Context $context
-     * @param null                                              $connectionName
-     * @param LoggerInterface                                   $logger
-     * @param StoreRepositoryInterface                          $storeRepository
+     * @param Context               $context
+     * @param null|string           $connectionName
+     * @param LoggerInterface       $logger
+     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         \Magento\Framework\Model\ResourceModel\Db\Context $context,
         $connectionName = null,
         LoggerInterface $logger,
-        StoreRepositoryInterface $storeRepository
+        StoreManagerInterface $storeManager
     )
     {
         parent::__construct($context, $connectionName);
         
-        $this->logger          = $logger;
-        $this->storeRepository = $storeRepository;
+        $this->logger       = $logger;
+        $this->storeManager = $storeManager;
     }
     
     
@@ -66,7 +67,7 @@ class Entity extends AbstractDb
      *
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function createEntity($entityId, $entityType, $storeId = 0)
+    public function createEntity($entityId, $entityType, $storeId = null)
     {
         $entityExists = $this->entityExists($entityId, $entityType);
         
@@ -79,7 +80,7 @@ class Entity extends AbstractDb
             $this->getConnection()->insert($this->getMainTable(), [
                 'entity_id'   => (int)    $entityId,
                 'entity_type' => (string) $entityType,
-                'store_id'    => (int)    $this->getStore($storeId),
+                'store_id'    => (int)    $this->getStoreId($storeId),
                 'created_at'  => date('Y-m-d H:i:s'),
                 'updated_at'  => date('Y-m-d H:i:s'),
             ]);
@@ -105,7 +106,7 @@ class Entity extends AbstractDb
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function updateEntity($entityId, $entityType, $storeId = 0)
+    public function updateEntity($entityId, $entityType, $storeId = null)
     {
         $entityExists = $this->entityExists($entityId, $entityType);
         
@@ -120,7 +121,7 @@ class Entity extends AbstractDb
         $where = array(
             'entity_id = ?'   => (int)    $entityId,
             'entity_type = ?' => (string) $entityType,
-            'store_id = ?'    => (int)    $this->getStore($storeId),
+            'store_id = ?'    => (int)    $this->getStoreId($storeId),
         );
         
         try {
@@ -147,7 +148,7 @@ class Entity extends AbstractDb
      *
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function entityExists($entityId, $entityType, $storeId = 0)
+    public function entityExists($entityId, $entityType, $storeId = null)
     {
         /** @var \Magento\Framework\DB\Select $select */
         $select = $this->getConnection()
@@ -155,7 +156,7 @@ class Entity extends AbstractDb
             ->from($this->getMainTable(), 'entity_id')
             ->where('entity_id = ?', (int) $entityId)
             ->where('entity_type = ?', (string) $entityType)
-            ->where('store_id = ?', (int) $this->getStore($storeId))
+            ->where('store_id = ?', (int) $this->getStoreId($storeId))
             ->limit(1);
         
         try {
@@ -194,8 +195,8 @@ class Entity extends AbstractDb
      *
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    protected function getStore($storeId = 0)
+    protected function getStoreId($storeId = null)
     {
-        return $this->storeRepository->get($storeId)->getId();
+        return $this->storeManager->getStore($storeId)->getId();
     }
 }

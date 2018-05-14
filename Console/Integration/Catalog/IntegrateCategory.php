@@ -4,6 +4,7 @@ namespace BitTools\SkyHub\Console\Integration\Catalog;
 
 use BitTools\SkyHub\Integration\Integrator\Catalog\Category as CategoryIntegrator;
 use Magento\Catalog\Api\CategoryRepositoryInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Command\Command;
@@ -17,11 +18,17 @@ class IntegrateCategory extends Command
     /** @var string */
     const INPUT_KEY_CATEGORY_ID = 'category_id';
     
+    /** @var string */
+    const INPUT_KEY_STORE_ID    = 'store_id';
+    
     /** @var CategoryRepositoryInterface */
     protected $categoryRepository;
     
     /** @var CategoryIntegrator */
     protected $categoryIntegrator;
+    
+    /** @var StoreManagerInterface */
+    protected $storeManager;
     
     
     /**
@@ -33,12 +40,15 @@ class IntegrateCategory extends Command
     public function __construct(
         $name = null,
         CategoryRepositoryInterface $categoryRepository,
-        CategoryIntegrator $categoryIntegrator
+        CategoryIntegrator $categoryIntegrator,
+        StoreManagerInterface $storeManager
     )
     {
         parent::__construct($name);
+        
         $this->categoryRepository = $categoryRepository;
         $this->categoryIntegrator = $categoryIntegrator;
+        $this->storeManager       = $storeManager;
     }
     
     
@@ -55,7 +65,14 @@ class IntegrateCategory extends Command
                     'c',
                     InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
                     'The category IDs for integration.'
-                )
+                ),
+                new InputOption(
+                    self::INPUT_KEY_STORE_ID,
+                    's',
+                    InputOption::VALUE_OPTIONAL,
+                    'The store ID',
+                    \Magento\Store\Model\Store::DEFAULT_STORE_ID
+                ),
             ]);
         
         parent::configure();
@@ -74,6 +91,11 @@ class IntegrateCategory extends Command
     {
         $categoryIds = array_unique($input->getOption(self::INPUT_KEY_CATEGORY_ID));
         $categoryIds = array_filter($categoryIds);
+        $storeId     = $input->getOption(self::INPUT_KEY_STORE_ID);
+        
+        if ($storeId) {
+            $this->storeManager->setCurrentStore($this->storeManager->getStore($storeId));
+        }
     
         $style = new SymfonyStyle($input, $output);
         
