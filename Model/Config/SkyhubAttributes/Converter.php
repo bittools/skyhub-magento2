@@ -89,18 +89,21 @@ class Converter implements ConverterInterface
     /**
      * Get attribute value
      *
-     * @param \DOMNode $input
+     * @param \DOMElement $input
      * @param string $attributeName
      * @param string|null $default
      * @return null|string
      */
-    protected function _getAttributeValue(\DOMNode $input, $attributeName, $default = null)
+    protected function _getAttributeValue(\DOMElement $input, $attributeName, $default = null)
     {
-        $node  = $input->attributes->getNamedItem($attributeName);
-        $value = $default;
+        $value = $input->getAttribute($attributeName);
         
-        if ($node) {
-            switch ($node->nodeValue) {
+        if (!$value) {
+            $value = $default;
+        }
+        
+        if ($value) {
+            switch ($value) {
                 case 'false':
                     $value = false;
                     break;

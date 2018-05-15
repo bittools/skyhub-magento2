@@ -9,7 +9,6 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 class IntegrateCategory extends AbstractCatalog
 {
@@ -73,15 +72,10 @@ class IntegrateCategory extends AbstractCatalog
      *
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function processExecute(InputInterface $input, OutputInterface $output)
     {
         $categoryIds = array_unique($input->getOption(self::INPUT_KEY_CATEGORY_ID));
         $categoryIds = array_filter($categoryIds);
-        $storeId     = $input->getOption(self::INPUT_KEY_STORE_ID);
-        
-        $this->prepareStore($storeId);
-    
-        $style = new SymfonyStyle($input, $output);
         
         /** @var int $categoryId */
         foreach ($categoryIds as $categoryId) {
@@ -89,6 +83,7 @@ class IntegrateCategory extends AbstractCatalog
             $category = $this->getCategory($categoryId);
             
             if (!$category) {
+                $this->style()->error(__('The category ID %1 does not exist.', $categoryId));
                 continue;
             }
             
@@ -96,16 +91,17 @@ class IntegrateCategory extends AbstractCatalog
             $response = $this->categoryIntegrator->createOrUpdate($category);
             
             if ($response && $response->success()) {
-                $style->success(__('Category ID %1 was successfully integrated.', $categoryId));
+                $this->style()->success(__('Category ID %1 was successfully integrated.', $categoryId));
                 continue;
             }
             
             if ($response && $response->exception()) {
-                $style->error(__('Category ID %1 was not integrated. Message: %2', $categoryId, $response->message()));
+                $this->style()
+                    ->error(__('Category ID %1 was not integrated. Message: %2', $categoryId, $response->message()));
                 continue;
             }
-            
-            $style->warning(__('Something went wrong on this integration...'));
+    
+            $this->style()->warning(__('Something went wrong on this integration...'));
         }
     }
     

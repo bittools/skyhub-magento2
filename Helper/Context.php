@@ -3,6 +3,7 @@
 namespace BitTools\SkyHub\Helper;
 
 use BitTools\SkyHub\Model\Config\SkyhubAttributes\Data as SkyHubConfig;
+use Magento\Framework\App\State;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -26,13 +27,17 @@ class Context implements \Magento\Framework\ObjectManager\ContextInterface
     /** @var LoggerInterface */
     protected $logger;
     
+    /** @var State */
+    protected $state;
+    
     
     public function __construct(
         SkyHubConfig $skyhubConfig,
         StoreManagerInterface $storeManager,
         ManagerInterface $eventManager,
         LoggerInterface $logger,
-        ObjectManagerInterface $objectManager
+        ObjectManagerInterface $objectManager,
+        State $state
     )
     {
         $this->skyhubConfig  = $skyhubConfig;
@@ -40,6 +45,7 @@ class Context implements \Magento\Framework\ObjectManager\ContextInterface
         $this->eventManager  = $eventManager;
         $this->objectManager = $objectManager;
         $this->logger        = $logger;
+        $this->state         = $state;
     }
     
     
@@ -85,5 +91,14 @@ class Context implements \Magento\Framework\ObjectManager\ContextInterface
     public function skyhubConfig()
     {
         return $this->skyhubConfig;
+    }
+    
+    
+    /**
+     * @return State
+     */
+    public function appState()
+    {
+        return $this->state;
     }
 }

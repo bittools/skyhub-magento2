@@ -9,7 +9,6 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 class IntegrateProduct extends AbstractCatalog
 {
@@ -71,43 +70,37 @@ class IntegrateProduct extends AbstractCatalog
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
-     * @return int|null|void
-     *
      * @throws \Exception
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function processExecute(InputInterface $input, OutputInterface $output)
     {
-        $productIds = array_unique($input->getOption(self::INPUT_KEY_PRODUCT_ID));
-        $productIds = array_filter($productIds);
-        $storeId     = $input->getOption(self::INPUT_KEY_STORE_ID);
-        
-        $this->prepareStore($storeId);
-    
-        $style = new SymfonyStyle($input, $output);
+        $productIds = $this->getProductIds($input, $output);
         
         /** @var int $productId */
         foreach ($productIds as $productId) {
             /** @var \Magento\Catalog\Model\Product $product */
             $product = $this->getProduct($productId);
-            
+        
             if (!$product) {
+                $this->style()->error(__('The product ID %1 does not exist.', $productId));
                 continue;
             }
-            
+        
             /** @var \SkyHub\Api\Handler\Response\HandlerInterfaceSuccess|\SkyHub\Api\Handler\Response\HandlerInterfaceException $response */
             $response = $this->productIntegrator->createOrUpdate($product);
-            
+        
             if ($response && $response->success()) {
-                $style->success(__('Product ID %1 was successfully integrated.', $productId));
+                $this->style()->success(__('Product ID %1 was successfully integrated.', $productId));
                 continue;
             }
-            
+        
             if ($response && $response->exception()) {
-                $style->error(__('Product ID %1 was not integrated. Message: %2', $productId, $response->message()));
+                $this->style()
+                    ->error(__('Product ID %1 was not integrated. Message: %2', $productId, $response->message()));
                 continue;
             }
-            
-            $style->warning(__('Something went wrong on this integration...'));
+    
+            $this->style()->warning(__('Something went wrong on this integration...'));
         }
     }
     
@@ -121,7 +114,7 @@ class IntegrateProduct extends AbstractCatalog
     {
         try {
             /** @var \Magento\Catalog\Model\Product $product */
-            $product = $this->productRepository->get($productId);
+            $product = $this->productRepository->getById($productId, false, $this->getStoreId());
     
             return $product;
         } catch (NoSuchEntityException $e) {
@@ -129,5 +122,20 @@ class IntegrateProduct extends AbstractCatalog
         }
         
         return null;
+    }
+    
+    
+    /**
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     *
+     * @return array
+     */
+    protected function getProductIds(InputInterface $input, OutputInterface $output)
+    {
+        $productIds = array_unique($input->getOption(self::INPUT_KEY_PRODUCT_ID));
+        $productIds = array_filter($productIds);
+        
+        return (array) $productIds;
     }
 }

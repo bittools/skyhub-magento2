@@ -14,19 +14,19 @@
         </arguments>
     </type>
 
-    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
-        <arguments>
-            <argument name="collections" xsi:type="array">
-                <item name="bittools_skyhub_attributes_mapping_listing_data_source" xsi:type="string">BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping\Collection</item>
-            </argument>
-        </arguments>
-    </type>
-    <virtualType name="BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+    <virtualType name="BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping\Collection\Virtual" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
             <argument name="mainTable" xsi:type="string">bittools_skyhub_product_attributes_mapping</argument>
             <argument name="resourceModel" xsi:type="string">BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping</argument>
         </arguments>
     </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="bittools_skyhub_attributes_mapping_listing_data_source" xsi:type="string">BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping\Collection\Virtual</item>
+            </argument>
+        </arguments>
+    </type>
 
     <type name="BitTools\SkyHub\Console\Integration\Catalog\IntegrateCategory">
         <arguments>
