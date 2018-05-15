@@ -15,11 +15,19 @@ class MappingActions extends Column
     
     
     /** @var string */
-    const URL_PATH_EDIT = 'bittools_skyhub/catalog_product_attributes_mapping/edit';
+    const URL_PATH_EDIT        = 'bittools_skyhub/catalog_product_attributes_mapping/edit';
+    const URL_PATH_CREATE      = 'bittools_skyhub/catalog_product_attributes_mapping/autoCreate';
+    const URL_PATH_UNASSOCIATE = 'bittools_skyhub/catalog_product_attributes_mapping/unassociate';
     
     
     /** @var string */
     protected $editUrl;
+    
+    /** @var string */
+    protected $createUrl = self::URL_PATH_CREATE;
+    
+    /** @var string */
+    protected $unnassociateUrl = self::URL_PATH_UNASSOCIATE;
     
     /** @var UrlInterface */
     protected $urlBuilder;
@@ -65,9 +73,26 @@ class MappingActions extends Column
         
         /** @var array $item */
         foreach ($items as &$item) {
-            $item[$this->getName()]['edit'] = [
-                'href'  => $this->urlBuilder->getUrl($this->editUrl, ['id' => $item['id']]),
-                'label' => __('Edit')
+            $id          = $item['id'];
+            $attributeId = $item['attribute_id'];
+            $editable    = $item['editable'];
+            
+            if (!$editable) {
+                continue;
+            }
+    
+            if ($attributeId) {
+                $item[$this->getName()]['unassociate'] = [
+                    'href'  => $this->urlBuilder->getUrl($this->unnassociateUrl, ['id' => $id]),
+                    'label' => __('Remove Association')
+                ];
+                
+                continue;
+            }
+            
+            $item[$this->getName()]['create_automatically'] = [
+                'href'  => $this->urlBuilder->getUrl($this->createUrl, ['id' => $id]),
+                'label' => __('Create & Associate')
             ];
         }
     

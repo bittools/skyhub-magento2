@@ -10,14 +10,11 @@
 
 namespace BitTools\SkyHub\Controller\Adminhtml\Catalog\Product\Attributes\Mapping;
 
-use BitTools\SkyHub\Api\ProductAttributeMappingRepositoryInterface;
-use BitTools\SkyHub\Controller\Adminhtml\AbstractController;
 use BitTools\SkyHub\Model\Catalog\Product\Attributes\Mapping;
-use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
 
-class InlineEdit extends AbstractController
+class InlineEdit extends AbstractMapping
 {
     
     /**
@@ -29,23 +26,6 @@ class InlineEdit extends AbstractController
     
     /** @var JsonFactory */
     protected $resultJsonFactory;
-    
-    /** @var ProductAttributeMappingRepositoryInterface */
-    protected $productAttributeMappingRepository;
-
-
-    /**
-     * @var Context $context
-     * @var JsonFactory $resultJsonFactory
-     */
-    public function __construct(
-        Context                                    $context,
-        ProductAttributeMappingRepositoryInterface $productAttributeMappingRepository
-    )
-    {
-        parent::__construct($context);
-        $this->productAttributeMappingRepository = $productAttributeMappingRepository;
-    }
     
     
     /**

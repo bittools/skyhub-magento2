@@ -10,9 +10,7 @@
 
 namespace BitTools\SkyHub\Controller\Adminhtml\Catalog\Product\Attributes\Mapping;
 
-use BitTools\SkyHub\Controller\Adminhtml\AbstractController;
-
-class Index extends AbstractController
+class Index extends AbstractMapping
 {
     
     /**

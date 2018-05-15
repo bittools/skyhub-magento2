@@ -145,7 +145,6 @@
                 <label translate="true">Required</label>
             </settings>
         </column>
-        <!--
         <actionsColumn name="actions" class="BitTools\SkyHub\Ui\Component\Listing\Column\Product\Attributes\MappingActions">
             <settings>
                 <indexField>id</indexField>
@@ -153,6 +152,5 @@
                 <resizeDefaultWidth>107</resizeDefaultWidth>
             </settings>
         </actionsColumn>
-        -->
     </columns>
 </listing>
