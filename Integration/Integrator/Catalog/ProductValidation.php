@@ -52,7 +52,7 @@ class ProductValidation
         /**
          * 
          */
-        if ($this->canShowAttributesNotificiationBlock()) {
+        if ($this->canShowAttributesNotificationBlock()) {
             return false;
         }
         
@@ -114,7 +114,7 @@ class ProductValidation
     /**
      * @return bool
      */
-    public function canShowAttributesNotificiationBlock()
+    public function canShowAttributesNotificationBlock()
     {
         return (bool) ($this->getPendingAttributesCollection()->getSize() > 0);
     }

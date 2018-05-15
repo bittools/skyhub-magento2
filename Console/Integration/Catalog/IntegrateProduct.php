@@ -88,13 +88,18 @@ class IntegrateProduct extends AbstractCatalog
         
             /** @var \SkyHub\Api\Handler\Response\HandlerInterfaceSuccess|\SkyHub\Api\Handler\Response\HandlerInterfaceException $response */
             $response = $this->productIntegrator->createOrUpdate($product);
+            
+            if (false == $response) {
+                $this->style()->warning(__('The product ID %1 cannot be integrated.', $productId));
+                continue;
+            }
         
-            if ($response && $response->success()) {
+            if ($response->success()) {
                 $this->style()->success(__('Product ID %1 was successfully integrated.', $productId));
                 continue;
             }
         
-            if ($response && $response->exception()) {
+            if ($response->exception()) {
                 $this->style()
                     ->error(__('Product ID %1 was not integrated. Message: %2', $productId, $response->message()));
                 continue;

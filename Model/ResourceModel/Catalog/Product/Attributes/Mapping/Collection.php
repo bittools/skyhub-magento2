@@ -65,9 +65,41 @@ class Collection extends AbstractCollection
      */
     public function setPendingAttributesFilter()
     {
-        $this->addFieldToFilter('attribute_id', ['null' => true]);
-        $this->addFieldToFilter('editable', 1);
+        $this->addFieldToFilter('attribute_id', ['null' => true])
+            ->setEditableFilter()
+            ->setEnabledFilter()
+            ->setRequiredFilter();
         
+        return $this;
+    }
+    
+    
+    /**
+     * @return $this
+     */
+    public function setEditableFilter()
+    {
+        $this->addFieldToFilter('editable', 1);
+        return $this;
+    }
+    
+    
+    /**
+     * @return $this
+     */
+    public function setEnabledFilter()
+    {
+        $this->addFieldToFilter('enabled', 1);
+        return $this;
+    }
+    
+    
+    /**
+     * @return $this
+     */
+    public function setRequiredFilter()
+    {
+        $this->addFieldToFilter('required', 1);
         return $this;
     }
 }

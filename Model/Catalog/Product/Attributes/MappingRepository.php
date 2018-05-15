@@ -14,9 +14,7 @@ class MappingRepository implements ProductAttributeMappingRepositoryInterface
     protected $mappingFactory;
     
     
-    public function __construct(
-        MappingFactory $mappingFactory
-    )
+    public function __construct(MappingFactory $mappingFactory)
     {
         $this->mappingFactory = $mappingFactory;
     }

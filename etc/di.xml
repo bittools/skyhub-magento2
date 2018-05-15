@@ -14,6 +14,14 @@
         </arguments>
     </type>
 
+    <type name="BitTools\SkyHub\Model\Catalog\Product\Attributes\Mapping">
+        <arguments>
+            <argument name="resource" xsi:type="object">BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping</argument>
+            <argument name="resourceCollection" xsi:type="object">BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping\Collection</argument>
+            <argument name="data" xsi:type="array"/>
+        </arguments>
+    </type>
+
     <virtualType name="BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping\Collection\Virtual" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
             <argument name="mainTable" xsi:type="string">bittools_skyhub_product_attributes_mapping</argument>
