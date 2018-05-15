@@ -56,6 +56,10 @@ class Product extends AbstractHelper
                 $store    = $this->context->storeManager()->getStore();
                 $data     = $resource->getAttributeRawValue($product->getId(), $attribute, $store);
                 
+                if (empty($data) && is_array($data)) {
+                    $data = null;
+                }
+                
                 return $data;
             } catch (\Exception $e) {
                 $this->context->logger()->critical($e);
@@ -129,7 +133,9 @@ class Product extends AbstractHelper
             $attributeCode = 'special_from_date';
         }
         
-        return (string) $this->productAttributeRawValue($product, $attributeCode);
+        $value = $this->productAttributeRawValue($product, $attributeCode);
+        
+        return (string) $value;
     }
     
     

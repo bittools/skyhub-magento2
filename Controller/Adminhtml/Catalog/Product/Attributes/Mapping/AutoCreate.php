@@ -11,7 +11,6 @@
 namespace BitTools\SkyHub\Controller\Adminhtml\Catalog\Product\Attributes\Mapping;
 
 use BitTools\SkyHub\Model\Catalog\Product\Attributes\Mapping;
-use Magento\Framework\ObjectManager\ObjectManager;
 
 class AutoCreate extends AbstractMapping
 {
