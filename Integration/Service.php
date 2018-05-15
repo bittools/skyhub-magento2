@@ -72,7 +72,7 @@ class Service
              */
             try {
                 $logFileName = $this->configContext->log()->getFilename();
-                $logFilePath = $this->directoryList->getPath(DirectoryList::VAR_DIR);
+                $logFilePath = $this->directoryList->getPath(DirectoryList::LOG);
     
                 $this->apiService()
                     ->setLogAllowed(true)
