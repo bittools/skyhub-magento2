@@ -199,6 +199,12 @@ class InstallSchema implements InstallSchemaInterface
         /** @var Table $table */
         $table = $this->getConnection()
             ->newTable($tableName)
+            ->addColumn('id', Table::TYPE_INTEGER, 10, [
+                'identity' => true,
+                'unsigned' => true,
+                'primary' => true,
+                'nullable' => false,
+            ])
             ->addColumn('entity_id', Table::TYPE_INTEGER, 10, [
                 'nullable' => true,
             ])
