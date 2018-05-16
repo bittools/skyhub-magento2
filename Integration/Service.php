@@ -4,6 +4,7 @@ namespace BitTools\SkyHub\Integration;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
 use BitTools\SkyHub\StoreConfig\Context as ConfigContext;
+use BitTools\SkyHub\Helper\Context as HelperContext;
 use SkyHub\Api;
 
 class Service
@@ -15,18 +16,30 @@ class Service
     /** @var ConfigContext */
     protected $configContext;
     
+    /** @var HelperContext */
+    protected $helperContext;
+    
     /** @var DirectoryList */
     protected $directoryList;
+    
+    /** @var string  */
+    protected $xAccountKey = 'bZa6Ml0zgS';
     
     
     /**
      * Service constructor.
      *
+     * @param HelperContext $helperContext
      * @param ConfigContext $config
      * @param DirectoryList $directoryList
      */
-    public function __construct(ConfigContext $configContext, DirectoryList $directoryList)
+    public function __construct(
+        HelperContext $helperContext,
+        ConfigContext $configContext,
+        DirectoryList $directoryList
+    )
     {
+        $this->helperContext = $helperContext;
         $this->configContext = $configContext;
         $this->directoryList = $directoryList;
         
@@ -64,7 +77,7 @@ class Service
         $email  = $this->configContext->service()->getServiceEmail();
         $apiKey = $this->configContext->service()->getServiceApiKey();
         
-        $this->api = new Api($email, $apiKey, 'bZa6Ml0zgS');
+        $this->api = new Api($email, $apiKey, $this->xAccountKey);
         
         if ($this->configContext->log()->isEnabled()) {
             /**
@@ -80,7 +93,7 @@ class Service
                     ->setLogFilePath($logFilePath)
                 ;
             } catch (\Exception $e) {
-                /** @todo Create the error logic here if really necessary. */
+                $this->helperContext->logger()->critical($e);
             }
         }
         
