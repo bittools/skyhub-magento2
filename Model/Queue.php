@@ -10,11 +10,34 @@
 
 namespace BitTools\SkyHub\Model;
 
+use BitTools\SkyHub\Functions;
 use BitTools\SkyHub\Model\ResourceModel\Queue as ResourceModel;
 use Magento\Framework\Model\AbstractModel;
 
+/**
+ * @method $this setReference(\string $reference)
+ * @method $this setEntityType(\string $type)
+ * @method $this setStatus(\int $status)
+ * @method $this setMessages(\string $message)
+ * @method $this setCanProcess(\boolean $flag)
+ * @method $this setProcessAfter(\string $datetime)
+ * @method $this setCreatedAt(\string $datetime)
+ * @method $this setUpdatedAt(\string $datetime)
+ *
+ * @method string  getReference()
+ * @method string  getEntityType()
+ * @method int     getStatus()
+ * @method string  getMessages()
+ * @method boolean getCanProcess()
+ * @method string  getProcessAfter()
+ * @method string  getCreatedAt()
+ * @method string  getUpdatedAt()
+ */
 class Queue extends AbstractModel
 {
+    
+    use Functions;
+    
     
     const STATUS_PENDING       = 1;
     const STATUS_FAIL          = 2;
@@ -32,5 +55,38 @@ class Queue extends AbstractModel
     protected function _construct()
     {
         $this->_init(ResourceModel::class);
+    }
+    
+    
+    /**
+     * @param int           $entityId
+     * @param string        $entityType
+     * @param bool          $canProcess
+     * @param null|string   $processAfter
+     * @return $this
+     */
+    public function queue($entityId, $entityType, $canProcess = true, $processAfter = null)
+    {
+        $this->setEntityId($entityId)
+            ->setEntityType($entityType)
+            ->setCanProcess((bool) $canProcess)
+            ->setProcessAfter($processAfter);
+        
+        return $this;
+    }
+    
+    
+    /**
+     * @return $this
+     */
+    public function beforeSave()
+    {
+        if (!$this->getProcessAfter()) {
+            $this->setProcessAfter($this->now());
+        }
+        
+        parent::beforeSave();
+        
+        return $this;
     }
 }

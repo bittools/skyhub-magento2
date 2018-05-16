@@ -16,6 +16,11 @@ use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
 class Collection extends AbstractCollection
 {
+    
+    /** @var string */
+    const FIELD_ENTITY_TYPE = 'entity_type';
+    
+    
     /**
      * Initialize resource model
      *
@@ -24,5 +29,17 @@ class Collection extends AbstractCollection
     protected function _construct()
     {
         $this->_init(Queue::class, ResourceModel::class);
+    }
+    
+    
+    /**
+     * @param string $type
+     *
+     * @return $this
+     */
+    public function setEntityTypeFilter($type)
+    {
+        $this->addFieldToFilter(self::FIELD_ENTITY_TYPE, $type);
+        return $this;
     }
 }

@@ -29,7 +29,7 @@ class Index extends AbstractMapping
     public function execute()
     {
         /** @var \Magento\Framework\View\Result\Page $resultPage */
-        $resultPage = $this->resultFactory->create(\Magento\Framework\Controller\ResultFactory::TYPE_PAGE);
+        $resultPage = $this->createPageResult();
         
         $title = $resultPage->getConfig()->getTitle();
         $title->prepend(__('SkyHub'));

@@ -10,6 +10,7 @@
 
 namespace BitTools\SkyHub\Model\ResourceModel;
 
+use BitTools\SkyHub\Functions;
 use Magento\Framework\Model\ResourceModel\Db\Context;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Store\Model\StoreManagerInterface;
@@ -18,6 +19,9 @@ use BitTools\SkyHub\Helper\Context as HelperContext;
 
 class Entity extends AbstractDb
 {
+    
+    use Functions;
+    
     
     /** @var LoggerInterface */
     protected $logger;
@@ -82,8 +86,8 @@ class Entity extends AbstractDb
                 'entity_id'   => (int)    $entityId,
                 'entity_type' => (string) $entityType,
                 'store_id'    => (int)    $this->getStoreId($storeId),
-                'created_at'  => date('Y-m-d H:i:s'),
-                'updated_at'  => date('Y-m-d H:i:s'),
+                'created_at'  => $this->now(),
+                'updated_at'  => $this->now(),
             ]);
             $this->commit();
             
@@ -116,7 +120,7 @@ class Entity extends AbstractDb
         }
         
         $data = array(
-            'updated_at'  => time(),
+            'updated_at' => $this->now(),
         );
         
         $where = array(

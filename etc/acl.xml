@@ -5,16 +5,14 @@
             <resource id="Magento_Backend::admin">
                 <resource id="BitTools_SkyHub::bittools" title="BitTools" translate="title" sortOrder="90">
                     <resource id="BitTools_SkyHub::skyhub" title="SkyHub Integration" translate="title" sortOrder="10">
-                        <resource id="BitTools_SkyHub::skyhub_product_attributes" title="Product Attributes Mapping" translate="title" sortOrder="10">
-                            <resource id="BitTools_SkyHub::skyhub_product_attributes_mapping" title="View List" translate="title" sortOrder="10"/>
-                            <resource id="BitTools_SkyHub::skyhub_product_attributes_mapping_save" title="Save Mapping" translate="title" sortOrder="20"/>
-                        </resource>
-                        <resource id="BitTools_SkyHub::skyhub_customer_attributes" title="Customer Attributes Mapping" translate="title" sortOrder="20">
-                            <resource id="BitTools_SkyHub::skyhub_customer_attributes_mapping" title="View List" translate="title" sortOrder="10"/>
-                            <resource id="BitTools_SkyHub::skyhub_customer_attributes_mapping_save" title="Save Mapping" translate="title" sortOrder="20"/>
+                        <resource id="BitTools_SkyHub::skyhub_attributes_mapping" title="Attributes Mapping" translate="title" sortOrder="10">
+                            <resource id="BitTools_SkyHub::skyhub_product_attributes_mapping" title="View Product Attributes Mapping" translate="title" sortOrder="10"/>
+                            <resource id="BitTools_SkyHub::skyhub_product_attributes_mapping_save" title="Save Product Attributes Mapping" translate="title" sortOrder="20"/>
+                            <resource id="BitTools_SkyHub::skyhub_customer_attributes_mapping" title="View Customer Attributes Mapping" translate="title" sortOrder="30"/>
+                            <resource id="BitTools_SkyHub::skyhub_customer_attributes_mapping_save" title="Save Customer Attributes Mapping" translate="title" sortOrder="40"/>
                         </resource>
                         <resource id="BitTools_SkyHub::skyhub_queues" title="Queues" translate="title" sortOrder="30">
-                            <resource id="BitTools_SkyHub::skyhub_queues_products_queue" title="Product Attributes" translate="title" sortOrder="10"/>
+                            <resource id="BitTools_SkyHub::skyhub_queues_products_queue" title="View Products Queue" translate="title" sortOrder="10"/>
                         </resource>
                         <resource id="BitTools_SkyHub::orders_import" title="Orders Importation" translate="title" sortOrder="40">
                             <resource id="BitTools_SkyHub::manual_import" title="Manual Import" translate="title" sortOrder="10"/>

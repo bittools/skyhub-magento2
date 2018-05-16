@@ -1,19 +1,5 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <virtualType name="SkyhubReader" type="Magento\Framework\Config\Reader\Filesystem">
-        <arguments>
-            <argument name="converter" xsi:type="object">BitTools\SkyHub\Model\Config\SkyhubAttributes\Converter</argument>
-            <argument name="schemaLocator" xsi:type="object">BitTools\SkyHub\Model\Config\SkyhubAttributes\SchemaLocator</argument>
-            <argument name="fileName" xsi:type="string">skyhub.xml</argument>
-        </arguments>
-    </virtualType>
-    <type name="BitTools\SkyHub\Model\Config\SkyhubAttributes\Data">
-        <arguments>
-            <argument name="reader" xsi:type="object">SkyhubReader</argument>
-            <argument name="cacheId" xsi:type="string">bittools_skyhub_attributes_cache</argument>
-        </arguments>
-    </type>
-
     <type name="BitTools\SkyHub\Model\Catalog\Product\Attributes\Mapping">
         <arguments>
             <argument name="resource" xsi:type="object">BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping</argument>
@@ -22,16 +8,57 @@
         </arguments>
     </type>
 
-    <virtualType name="BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping\Collection\Virtual" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+    <virtualType name="BitTools\SkyHub\Model\ResourceModel\Queue\Virtual" type="BitTools\SkyHub\Model\ResourceModel\Queue">
         <arguments>
-            <argument name="mainTable" xsi:type="string">bittools_skyhub_product_attributes_mapping</argument>
-            <argument name="resourceModel" xsi:type="string">BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping</argument>
+            <argument name="connectionName" xsi:type="string">default</argument>
         </arguments>
     </virtualType>
-    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+
+    <virtualType name="BitTools\SkyHub\Model\ResourceModel\Entity\Virtual" type="BitTools\SkyHub\Model\ResourceModel\Entity">
         <arguments>
-            <argument name="collections" xsi:type="array">
-                <item name="bittools_skyhub_attributes_mapping_listing_data_source" xsi:type="string">BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping\Collection\Virtual</item>
+            <argument name="context" xsi:type="object">Magento\Framework\Model\ResourceModel\Db\Context</argument>
+            <argument name="connectionName" xsi:type="string">default</argument>
+            <argument name="logger" xsi:type="object">Psr\Log\LoggerInterface</argument>
+            <argument name="storeRepository" xsi:type="object">Magento\Store\Api\StoreRepositoryInterface</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- *********************************************************************************************************** -->
+    <!-- CUSTOM CONFIGURATION DECLARATION (skyhub.xml)                                                               -->
+    <!-- *********************************************************************************************************** -->
+
+    <virtualType name="SkyhubReader" type="Magento\Framework\Config\Reader\Filesystem">
+        <arguments>
+            <argument name="converter" xsi:type="object">BitTools\SkyHub\Model\Config\SkyhubAttributes\Converter</argument>
+            <argument name="schemaLocator" xsi:type="object">BitTools\SkyHub\Model\Config\SkyhubAttributes\SchemaLocator</argument>
+            <argument name="fileName" xsi:type="string">skyhub.xml</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="BitTools\SkyHub\Model\Config\SkyhubAttributes\Data">
+        <arguments>
+            <argument name="reader" xsi:type="object">SkyhubReader</argument>
+            <argument name="cacheId" xsi:type="string">bittools_skyhub_attributes_cache</argument>
+        </arguments>
+    </type>
+
+    <!-- *********************************************************************************************************** -->
+    <!-- SERVICE CONTRACTS DECLARATIONS                                                                              -->
+    <!-- *********************************************************************************************************** -->
+
+    <preference for="BitTools\SkyHub\Api\ProductAttributeMappingRepositoryInterface" type="BitTools\SkyHub\Model\Catalog\Product\Attributes\MappingRepository"/>
+    <preference for="BitTools\SkyHub\Api\Data\ProductAttributeMappingInterface" type="BitTools\SkyHub\Model\Catalog\Product\Attributes\Mapping"/>
+
+    <!-- *********************************************************************************************************** -->
+    <!-- TERMINAL COMMANDS DECLARATIONS                                                                              -->
+    <!-- *********************************************************************************************************** -->
+
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="integrateCatalogCategory" xsi:type="object">BitTools\SkyHub\Console\Integration\Catalog\IntegrateCategory</item>
+                <item name="integrateCatalogProduct" xsi:type="object">BitTools\SkyHub\Console\Integration\Catalog\IntegrateProduct</item>
+                <item name="integrateCatalogProductAttribute" xsi:type="object">BitTools\SkyHub\Console\Integration\Catalog\IntegrateProductAttribute</item>
             </argument>
         </arguments>
     </type>
@@ -54,25 +81,31 @@
         </arguments>
     </type>
 
-    <virtualType name="BitTools\SkyHub\Model\ResourceModel\Entity\Virtual" type="BitTools\SkyHub\Model\ResourceModel\Entity">
+    <!-- *********************************************************************************************************** -->
+    <!--  LISTING UI COMPONENTS                                                                                      -->
+    <!-- *********************************************************************************************************** -->
+
+    <virtualType name="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Attribute\Mapping\Product" type="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult">
         <arguments>
-            <argument name="context" xsi:type="object">Magento\Framework\Model\ResourceModel\Db\Context</argument>
-            <argument name="connectionName" xsi:type="string">default</argument>
-            <argument name="logger" xsi:type="object">Psr\Log\LoggerInterface</argument>
-            <argument name="storeRepository" xsi:type="object">Magento\Store\Api\StoreRepositoryInterface</argument>
+            <argument name="mainTable" xsi:type="string">bittools_skyhub_product_attributes_mapping</argument>
+            <argument name="resourceModel" xsi:type="string">BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping</argument>
         </arguments>
     </virtualType>
 
-    <type name="Magento\Framework\Console\CommandListInterface">
+    <virtualType name="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Product" type="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue">
         <arguments>
-            <argument name="commands" xsi:type="array">
-                <item name="integrateCatalogCategory" xsi:type="object">BitTools\SkyHub\Console\Integration\Catalog\IntegrateCategory</item>
-                <item name="integrateCatalogProduct" xsi:type="object">BitTools\SkyHub\Console\Integration\Catalog\IntegrateProduct</item>
-                <item name="integrateCatalogProductAttribute" xsi:type="object">BitTools\SkyHub\Console\Integration\Catalog\IntegrateProductAttribute</item>
+            <argument name="mainTable" xsi:type="string">bittools_skyhub_queue</argument>
+            <argument name="resourceModel" xsi:type="string">BitTools\SkyHub\Model\ResourceModel\Queue\Virtual</argument>
+            <argument name="entityType" xsi:type="string">catalog_product</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="bittools_skyhub_attributes_mapping_listing_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Attribute\Mapping\Product</item>
+                <item name="bittools_skyhub_queue_product_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Product</item>
             </argument>
         </arguments>
     </type>
-
-    <preference for="BitTools\SkyHub\Api\ProductAttributeMappingRepositoryInterface" type="BitTools\SkyHub\Model\Catalog\Product\Attributes\MappingRepository"/>
-    <preference for="BitTools\SkyHub\Api\Data\ProductAttributeMappingInterface" type="BitTools\SkyHub\Model\Catalog\Product\Attributes\Mapping"/>
 </config>

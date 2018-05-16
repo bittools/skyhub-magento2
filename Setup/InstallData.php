@@ -13,7 +13,6 @@ namespace BitTools\SkyHub\Setup;
 use BitTools\SkyHub\Functions;
 use BitTools\SkyHub\Model\Catalog\Product\Attributes\Mapping;
 use Magento\Catalog\Model\Product;
-use Magento\Framework\Module\Setup\Migration;
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
@@ -84,7 +83,7 @@ class InstallData implements InstallDataInterface
             $enabled     = (bool) $this->arrayExtract($data, 'required', true);
             $required    = (bool) $this->arrayExtract($data, 'required', true);
             $editable    = (bool) $this->arrayExtract($data, 'editable', true);
-            $createdAt   = date('Y-m-d H:i:s');
+            $createdAt   = $this->now();
         
             if (empty($skyhubCode) || empty($castType)) {
                 continue;
