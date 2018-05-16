@@ -48,6 +48,12 @@
         </arguments>
     </type>
 
+    <type name="BitTools\SkyHub\Console\Integration\Catalog\IntegrateProductAttribute">
+        <arguments>
+            <argument name="name" xsi:type="string">bittools_skyhub_integrate_product_attribute</argument>
+        </arguments>
+    </type>
+
     <virtualType name="BitTools\SkyHub\Model\ResourceModel\Entity\Virtual" type="BitTools\SkyHub\Model\ResourceModel\Entity">
         <arguments>
             <argument name="context" xsi:type="object">Magento\Framework\Model\ResourceModel\Db\Context</argument>
@@ -62,6 +68,7 @@
             <argument name="commands" xsi:type="array">
                 <item name="integrateCatalogCategory" xsi:type="object">BitTools\SkyHub\Console\Integration\Catalog\IntegrateCategory</item>
                 <item name="integrateCatalogProduct" xsi:type="object">BitTools\SkyHub\Console\Integration\Catalog\IntegrateProduct</item>
+                <item name="integrateCatalogProductAttribute" xsi:type="object">BitTools\SkyHub\Console\Integration\Catalog\IntegrateProductAttribute</item>
             </argument>
         </arguments>
     </type>

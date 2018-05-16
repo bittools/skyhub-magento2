@@ -130,8 +130,8 @@ abstract class AbstractCatalog extends Command
     {
         $this->style = new SymfonyStyle($input, $output);
         
-        $storeId = $input->getOption(self::INPUT_KEY_STORE_ID);
-        $this->prepareStore($storeId);
+        // $storeId = $input->getOption(self::INPUT_KEY_STORE_ID);
+        // $this->prepareStore($storeId);
         
         return $this;
     }
@@ -174,8 +174,32 @@ abstract class AbstractCatalog extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->beforeExecute($input, $output);
-        $this->processExecute($input, $output);
-        $this->afterExecute($input, $output);
+        /** @var \Magento\Store\Model\Store $store */
+        foreach ($this->getStores($input) as $store) {
+            $this->prepareStore($store);
+            
+            $this->beforeExecute($input, $output);
+            $this->processExecute($input, $output);
+            $this->afterExecute($input, $output);
+        }
+    }
+    
+    
+    /**
+     * @param InputInterface $input
+     *
+     * @return array|\Magento\Store\Api\Data\StoreInterface[]
+     *
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    protected function getStores(InputInterface $input)
+    {
+        $storeId = $input->getOption(self::INPUT_KEY_STORE_ID);
+        
+        if (!empty($storeId)) {
+            return [$this->getStore($storeId)];
+        }
+        
+        return $this->context->storeManager()->getStores();
     }
 }

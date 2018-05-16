@@ -20,8 +20,10 @@ class Attribute extends AbstractTransformer
         $interface = $this->context->api()->productAttribute()->entityInterface();
         
         try {
+            $storeId = $this->context->helperContext()->storeManager()->getStore()->getId();
+            
             $code  = $attribute->getAttributeCode();
-            $label = $attribute->getStoreLabel(Mage::app()->getDefaultStoreView());
+            $label = $attribute->getStoreLabel($storeId);
             
             $interface->setCode($code)
                 ->setLabel($label);
@@ -64,5 +66,20 @@ class Attribute extends AbstractTransformer
         }
         
         return $this;
+    }
+    
+    
+    /**
+     * @return int
+     *
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    protected function getStoreId()
+    {
+        return $this->context
+            ->helperContext()
+            ->storeManager()
+            ->getStore()
+            ->getId();
     }
 }
