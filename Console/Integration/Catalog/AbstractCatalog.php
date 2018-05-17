@@ -33,9 +33,9 @@ abstract class AbstractCatalog extends Command
      * @param null|string $name
      * @param Context     $context
      */
-    public function __construct($name = null, Context $context)
+    public function __construct(Context $context, $name = null)
     {
-        parent::__construct($name);
+        parent::__construct(null);
         
         $this->context = $context;
     }

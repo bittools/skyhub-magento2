@@ -8,21 +8,6 @@
         </arguments>
     </type>
 
-    <virtualType name="BitTools\SkyHub\Model\ResourceModel\Queue\Virtual" type="BitTools\SkyHub\Model\ResourceModel\Queue">
-        <arguments>
-            <argument name="connectionName" xsi:type="string">default</argument>
-        </arguments>
-    </virtualType>
-
-    <virtualType name="BitTools\SkyHub\Model\ResourceModel\Entity\Virtual" type="BitTools\SkyHub\Model\ResourceModel\Entity">
-        <arguments>
-            <argument name="context" xsi:type="object">Magento\Framework\Model\ResourceModel\Db\Context</argument>
-            <argument name="connectionName" xsi:type="string">default</argument>
-            <argument name="logger" xsi:type="object">Psr\Log\LoggerInterface</argument>
-            <argument name="storeRepository" xsi:type="object">Magento\Store\Api\StoreRepositoryInterface</argument>
-        </arguments>
-    </virtualType>
-
     <!-- *********************************************************************************************************** -->
     <!-- CUSTOM CONFIGURATION DECLARATION (skyhub.xml)                                                               -->
     <!-- *********************************************************************************************************** -->
@@ -63,24 +48,6 @@
         </arguments>
     </type>
 
-    <type name="BitTools\SkyHub\Console\Integration\Catalog\IntegrateCategory">
-        <arguments>
-            <argument name="name" xsi:type="string">bittools_skyhub_integrate_category</argument>
-        </arguments>
-    </type>
-
-    <type name="BitTools\SkyHub\Console\Integration\Catalog\IntegrateProduct">
-        <arguments>
-            <argument name="name" xsi:type="string">bittools_skyhub_integrate_product</argument>
-        </arguments>
-    </type>
-
-    <type name="BitTools\SkyHub\Console\Integration\Catalog\IntegrateProductAttribute">
-        <arguments>
-            <argument name="name" xsi:type="string">bittools_skyhub_integrate_product_attribute</argument>
-        </arguments>
-    </type>
-
     <!-- *********************************************************************************************************** -->
     <!--  LISTING UI COMPONENTS                                                                                      -->
     <!-- *********************************************************************************************************** -->
@@ -92,11 +59,24 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Product" type="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue">
+    <virtualType name="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\ProductAttribute" type="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue">
         <arguments>
-            <argument name="mainTable" xsi:type="string">bittools_skyhub_queue</argument>
-            <argument name="resourceModel" xsi:type="string">BitTools\SkyHub\Model\ResourceModel\Queue\Virtual</argument>
-            <argument name="entityType" xsi:type="string">catalog_product</argument>
+            <argument name="resourceModel" xsi:type="string">BitTools\SkyHub\Model\ResourceModel\Queue</argument>
+            <argument name="entityType" xsi:type="string">catalog_product_attribute</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Category" type="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue">
+        <arguments>
+            <argument name="resourceModel" xsi:type="string">BitTools\SkyHub\Model\ResourceModel\Queue</argument>
+            <argument name="entityType" xsi:type="string">catalog_category</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\SalesOrder" type="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue">
+        <arguments>
+            <argument name="resourceModel" xsi:type="string">BitTools\SkyHub\Model\ResourceModel\Queue</argument>
+            <argument name="entityType" xsi:type="string">sales_order</argument>
         </arguments>
     </virtualType>
 
@@ -105,6 +85,9 @@
             <argument name="collections" xsi:type="array">
                 <item name="bittools_skyhub_attributes_mapping_listing_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Attribute\Mapping\Product</item>
                 <item name="bittools_skyhub_queue_product_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Product</item>
+                <item name="bittools_skyhub_queue_product_attribute_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\ProductAttribute</item>
+                <item name="bittools_skyhub_queue_category_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Category</item>
+                <item name="bittools_skyhub_queue_order_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\SalesOrder</item>
             </argument>
         </arguments>
     </type>

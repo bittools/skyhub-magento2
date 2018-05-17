@@ -17,15 +17,13 @@ abstract class AbstractResourceModel extends AbstractDb
      * Queue constructor.
      *
      * @param \Magento\Framework\Model\ResourceModel\Db\Context $context
-     * @param null                                              $connectionName
      */
     public function __construct(
         \Magento\Framework\Model\ResourceModel\Db\Context $context,
-        $connectionName = null,
         HelperContext $helperContext
     )
     {
-        parent::__construct($context, $connectionName);
+        parent::__construct($context);
         $this->helperContext = $helperContext;
     }
     

@@ -16,16 +16,14 @@ class Queue extends SearchResult
     
     
     /**
-     * SearchResult constructor.
+     * Queue constructor.
+     *
      * @param EntityFactory $entityFactory
-     * @param Logger $logger
+     * @param Logger        $logger
      * @param FetchStrategy $fetchStrategy
-     * @param EventManager $eventManager
-     * @param string $mainTable
-     * @param null|string $resourceModel
-     * @param null|string $identifierName
-     * @param null|string $connectionName
-     * @param string|null $entityType
+     * @param EventManager  $eventManager
+     * @param string        $mainTable
+     * @param string        $resourceModel
      *
      * @throws \Magento\Framework\Exception\LocalizedException
      */
@@ -34,24 +32,18 @@ class Queue extends SearchResult
         Logger $logger,
         FetchStrategy $fetchStrategy,
         EventManager $eventManager,
-        $mainTable,
-        $resourceModel = null,
-        $identifierName = null,
-        $connectionName = null,
-        $entityType = null
-    ) {
+        $mainTable = \BitTools\SkyHub\Model\ResourceModel\Queue::MAIN_TABLE,
+        $resourceModel = \BitTools\SkyHub\Model\ResourceModel\Queue::class
+    )
+    {
         parent::__construct(
             $entityFactory,
             $logger,
             $fetchStrategy,
             $eventManager,
             $mainTable,
-            $resourceModel,
-            $identifierName,
-            $connectionName
+            $resourceModel
         );
-        
-        $this->entityType = $entityType;
     }
     
     
@@ -65,6 +57,7 @@ class Queue extends SearchResult
         }
         
         parent::_beforeLoad();
+        
         return $this;
     }
 }

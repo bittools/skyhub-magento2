@@ -27,21 +27,19 @@ class IntegrateProductAttribute extends AbstractCatalog
     
     
     /**
-     * IntegrateCategory constructor.
+     * IntegrateProductAttribute constructor.
      *
-     * @param null                         $name
      * @param Context                      $context
      * @param AttributeRepositoryInterface $attributeRepository
      * @param ProductAttributeIntegrator   $integrator
      */
     public function __construct(
-        $name = null,
         Context $context,
         AttributeRepositoryInterface $attributeRepository,
         ProductAttributeIntegrator $integrator
     )
     {
-        parent::__construct($name, $context);
+        parent::__construct($context);
         
         $this->attributeRepository = $attributeRepository;
         $this->integrator          = $integrator;

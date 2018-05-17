@@ -34,18 +34,16 @@ class Entity extends AbstractDb
      * Entity constructor.
      *
      * @param Context               $context
-     * @param null|string           $connectionName
      * @param LoggerInterface       $logger
      * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         \Magento\Framework\Model\ResourceModel\Db\Context $context,
-        $connectionName = null,
         LoggerInterface $logger,
         HelperContext $helperContext
     )
     {
-        parent::__construct($context, $connectionName);
+        parent::__construct($context);
         
         $this->logger        = $logger;
         $this->helperContext = $helperContext;

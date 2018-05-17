@@ -26,17 +26,17 @@ class IntegrateCategory extends AbstractCatalog
     /**
      * IntegrateCategory constructor.
      *
-     * @param CategoryRepositoryInterface $categoryFactory
-     * @param null|string                 $name
+     * @param Context                     $context
+     * @param CategoryRepositoryInterface $categoryRepository
+     * @param CategoryIntegrator          $categoryIntegrator
      */
     public function __construct(
-        $name = null,
         Context $context,
         CategoryRepositoryInterface $categoryRepository,
         CategoryIntegrator $categoryIntegrator
     )
     {
-        parent::__construct($name, $context);
+        parent::__construct($context);
         
         $this->categoryRepository = $categoryRepository;
         $this->categoryIntegrator = $categoryIntegrator;

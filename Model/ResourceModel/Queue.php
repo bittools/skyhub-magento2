@@ -13,6 +13,9 @@ class Queue extends AbstractResourceModel
     use Functions;
     
     
+    const MAIN_TABLE = 'bittools_skyhub_queue';
+    
+    
     /** @var HelperContext */
     protected $helperContext;
     
@@ -24,7 +27,7 @@ class Queue extends AbstractResourceModel
      */
     protected function _construct()
     {
-        $this->_init('bittools_skyhub_queue', 'id');
+        $this->_init(self::MAIN_TABLE, 'id');
     }
     
     
