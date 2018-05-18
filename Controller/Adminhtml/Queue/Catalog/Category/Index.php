@@ -17,6 +17,8 @@ class Index extends AbstractController
     {
         $page = $this->createPageResult();
     
+        $page->setActiveMenu('BitTools_SkyHub::queue_catalog_category');
+        
         $title = $page->getConfig()->getTitle();
         $title->prepend(__('SkyHub'));
         $title->prepend(__('Queue'));

@@ -29,11 +29,11 @@ abstract class AbstractController extends Action
     
     
     /**
-     * @return \Magento\Framework\View\Result\Page
+     * @return \Magento\Backend\Model\View\Result\Page
      */
     protected function createPageResult()
     {
-        /** @var \Magento\Framework\View\Result\Page $result */
+        /** @var \Magento\Backend\Model\View\Result\Page $result */
         $result = $this->resultFactory->create(ResultFactory::TYPE_PAGE);
         return $result;
     }

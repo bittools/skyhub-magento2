@@ -11,12 +11,15 @@ class Index extends AbstractController
     
     
     /**
-     * @return \Magento\Framework\View\Result\Page
+     * @return \Magento\Backend\Model\View\Result\Page
      */
     public function execute()
     {
+        /** @var \Magento\Backend\Model\View\Result\Page $page */
         $page = $this->createPageResult();
     
+        $page->setActiveMenu('BitTools_SkyHub::queue_sales_order_status');
+        
         $title = $page->getConfig()->getTitle();
         $title->prepend(__('SkyHub'));
         $title->prepend(__('Queues'));
