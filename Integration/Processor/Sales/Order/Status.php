@@ -4,10 +4,33 @@ namespace BitTools\SkyHub\Integration\Processor\Sales\Order;
 
 use BitTools\SkyHub\Model\Config\Source\Skyhub\Status\Type as SkyHubStatusType;
 use BitTools\SkyHub\Integration\Processor\AbstractProcessor;
+use BitTools\SkyHub\Integration\Context as IntegrationContext;
+use BitTools\SkyHub\StoreConfig\Context as ConfigContext;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
+use Magento\Framework\DB\Transaction as DBTransaction;
 
 class Status extends AbstractProcessor
 {
+
+    /** @var OrderRepositoryInterface */
+    protected $orderRepository;
+
+    /** @var ConfigContext */
+    protected $configContext;
+
+
+    public function __construct(
+        ConfigContext $configContext,
+        IntegrationContext $integrationContext,
+        OrderRepositoryInterface $orderRepository
+    )
+    {
+        parent::__construct($integrationContext);
+
+        $this->orderRepository = $orderRepository;
+        $this->configContext   = $configContext;
+    }
 
 
     /**
@@ -28,16 +51,6 @@ class Status extends AbstractProcessor
         $state = $this->getStateBySkyhubStatusType($skyhubStatusType);
 
         if ($order->getState() == $state) {
-            return false;
-        }
-
-        /**
-         * Order is already in the following states:
-         *  - complete
-         *  - closed
-         */
-        if ($order->isStateProtected($state)) {
-            /** State is protected. */
             return false;
         }
 
@@ -69,8 +82,9 @@ class Status extends AbstractProcessor
 
         $message = __('Change automatically by SkyHub. Status %s, Type %s.', $skyhubStatusCode, $skyhubStatusType);
 
-        $order->setState($state, true, $message);
-        $order->save();
+        $order->setState($state)
+            ->addStatusHistoryComment($message, true);
+        $this->orderRepository->save($order);
 
         return true;
     }
@@ -122,13 +136,15 @@ class Status extends AbstractProcessor
     {
         if (!$order->canCancel()) {
             $order->addStatusHistoryComment(__('Order is canceled in SkyHub but could not be canceled in Magento.'));
-            $order->save();
+            $this->orderRepository->save($order);
 
             return false;
         }
 
         $order->addStatusHistoryComment(__('Order canceled automatically by SkyHub.'));
-        $order->cancel()->save();
+        $order->cancel();
+
+        $this->orderRepository->save($order);
 
         return true;
     }
@@ -146,7 +162,7 @@ class Status extends AbstractProcessor
         if (!$order->canInvoice()) {
             $comment = __('This order is APPROVED in SkyHub but cannot be invoiced in Magento.');
             $order->addStatusHistoryComment($comment, true);
-            $order->save();
+            $this->orderRepository->save($order);
 
             return false;
         }
@@ -158,16 +174,29 @@ class Status extends AbstractProcessor
         $comment = __('Invoiced automatically via SkyHub.');
         $invoice->addComment($comment);
 
+        /** @var string $approvedOrdersStatus */
+        $approvedOrdersStatus = $this->configContext->salesOrderStatus()->getApprovedOrdersStatus();
+        
         $order->setIsInProcess(true);
-        $order->setStatus($this->getApprovedOrdersStatus());
+        $order->setStatus($approvedOrdersStatus);
         $order->addStatusHistoryComment($comment, true);
 
-        /** @var \Magento\Framework\DB\Transaction $transaction */
-        $transaction = $this->helperContext()->objectManager()->create(\Magento\Framework\DB\Transaction::class);
-        $transaction->addObject($order)
+        $this->getTransaction()
+            ->addObject($order)
             ->addObject($invoice)
             ->save();
 
         return true;
+    }
+
+
+    /**
+     * @return DBTransaction
+     */
+    protected function getTransaction()
+    {
+        /** @var DBTransaction $transaction */
+        $transaction = $this->helperContext()->objectManager()->create(DBTransaction::class);
+        return $transaction;
     }
 }

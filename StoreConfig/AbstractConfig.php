@@ -23,6 +23,7 @@ abstract class AbstractConfig
      * Service constructor.
      *
      * @param ScopeConfigInterface $scopeConfig
+     * @param EncryptorInterface   $encryptor
      */
     public function __construct(ScopeConfigInterface $scopeConfig, EncryptorInterface $encryptor)
     {
