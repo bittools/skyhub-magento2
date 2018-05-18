@@ -18,4 +18,13 @@ abstract class AbstractHelper
     {
         $this->context = $context;
     }
+
+
+    /**
+     * @return \Magento\Framework\ObjectManagerInterface
+     */
+    public function objectManager()
+    {
+        return $this->context->objectManager();
+    }
 }

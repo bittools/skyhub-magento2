@@ -3,17 +3,23 @@
 namespace BitTools\SkyHub\Helper;
 
 use BitTools\SkyHub\Model\Config\SkyhubAttributes\Data as SkyHubConfig;
+use BitTools\SkyHub\StoreConfig\Context as ConfigContext;
 use Magento\Framework\App\State;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\ObjectManagerInterface;
+use Magento\Framework\Registry;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class Context implements \Magento\Framework\ObjectManager\ContextInterface
 {
     
     /** @var SkyHubConfig */
     protected $skyhubConfig;
+
+    /** @var ConfigContext */
+    protected $configContext;
     
     /** @var StoreManagerInterface */
     protected $storeManager;
@@ -29,23 +35,35 @@ class Context implements \Magento\Framework\ObjectManager\ContextInterface
     
     /** @var State */
     protected $state;
+
+    /** @var Registry */
+    protected $registryManager;
+
+    /** @var ScopeConfigInterface */
+    protected $scopeConfig;
     
     
     public function __construct(
         SkyHubConfig $skyhubConfig,
+        ConfigContext $configContext,
         StoreManagerInterface $storeManager,
         ManagerInterface $eventManager,
         LoggerInterface $logger,
         ObjectManagerInterface $objectManager,
-        State $state
+        State $state,
+        Registry $registry,
+        ScopeConfigInterface $scopeConfig
     )
     {
-        $this->skyhubConfig  = $skyhubConfig;
-        $this->storeManager  = $storeManager;
-        $this->eventManager  = $eventManager;
-        $this->objectManager = $objectManager;
-        $this->logger        = $logger;
-        $this->state         = $state;
+        $this->skyhubConfig    = $skyhubConfig;
+        $this->configContext   = $configContext;
+        $this->storeManager    = $storeManager;
+        $this->eventManager    = $eventManager;
+        $this->objectManager   = $objectManager;
+        $this->logger          = $logger;
+        $this->state           = $state;
+        $this->registryManager = $registry;
+        $this->scopeConfig     = $scopeConfig;
     }
     
     
@@ -100,5 +118,32 @@ class Context implements \Magento\Framework\ObjectManager\ContextInterface
     public function appState()
     {
         return $this->state;
+    }
+
+
+    /**
+     * @return ConfigContext
+     */
+    public function configContext()
+    {
+        return $this->configContext;
+    }
+
+
+    /**
+     * @return Registry
+     */
+    public function registryManager()
+    {
+        return $this->registryManager;
+    }
+
+
+    /**
+     * @return ScopeConfigInterface
+     */
+    public function scopeConfig()
+    {
+        return $this->scopeConfig;
     }
 }
