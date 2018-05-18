@@ -3,9 +3,9 @@
 namespace BitTools\SkyHub\Controller\Adminhtml\Catalog\Product\Attributes\Mapping;
 
 use BitTools\SkyHub\Api\ProductAttributeMappingRepositoryInterface;
-use Magento\Backend\App\Action\Context;
 use BitTools\SkyHub\Controller\Adminhtml\AbstractController;
-use Magento\Framework\ObjectManagerInterface;
+use BitTools\SkyHub\Helper\Context as HelperContext;
+use Magento\Backend\App\Action\Context;
 
 abstract class AbstractMapping extends AbstractController
 {
@@ -18,14 +18,16 @@ abstract class AbstractMapping extends AbstractController
      * AbstractMapping constructor.
      *
      * @param Context                                    $context
+     * @param HelperContext                              $helperContext
      * @param ProductAttributeMappingRepositoryInterface $productAttributeMappingRepository
      */
     public function __construct(
         Context                                    $context,
+        HelperContext                              $helperContext,
         ProductAttributeMappingRepositoryInterface $productAttributeMappingRepository
     )
     {
-        parent::__construct($context);
+        parent::__construct($context, $helperContext);
         $this->productAttributeMappingRepository = $productAttributeMappingRepository;
     }
     
