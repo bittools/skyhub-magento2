@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">bittools_skyhub_sales_order_import_manual_form.bittools_skyhub_sales_order_import_manual_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">General Information</item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="import" class="BitTools\SkyHub\Block\Adminhtml\Sales\Order\Import\Manual\ImportButton"/>
+        </buttons>
+        <namespace>bittools_skyhub_sales_order_import_manual_form</namespace>
+        <dataScope>data</dataScope>
+        <deps>
+            <dep>bittools_skyhub_sales_order_import_manual_form.bittools_skyhub_sales_order_import_manual_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="bittools_skyhub_sales_order_import_manual_data_source">
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+        <settings>
+            <submitUrl path="bittools_skyhub/sales_order_import/import"/>
+        </settings>
+    </dataSource>
+    <fieldset name="general">
+        <settings>
+            <label/>
+        </settings>
+        <field name="store_id" sortOrder="10" formElement="select">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">block</item>
+                    <item name="default" xsi:type="number">0</item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>int</dataType>
+                <label translate="true">Store View</label>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="BitTools\SkyHub\Ui\Component\Listing\Column\Store\Options"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+        <field name="reference" sortOrder="20" formElement="textarea">
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>text</dataType>
+                <label translate="true">SkyHub Order Codes</label>
+                <notice translate="true">One order code by line. Notice that this field refers to SkyHub's order reference code.</notice>
+            </settings>
+        </field>
+    </fieldset>
+</form>
