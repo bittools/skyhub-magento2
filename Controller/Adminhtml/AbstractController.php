@@ -6,6 +6,7 @@ use Magento\Backend\App\Action;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Backend\App\Action\Context as BackendContext;
 use BitTools\SkyHub\Helper\Context as HelperContext;
+use Magento\Framework\View\Page\Title;
 
 abstract class AbstractController extends Action
 {

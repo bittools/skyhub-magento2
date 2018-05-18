@@ -19,11 +19,10 @@ class Index extends AbstractController
     
         $page->setActiveMenu('BitTools_SkyHub::queue_sales_order');
         
-        $title = $page->getConfig()->getTitle();
-        $title->prepend(__('SkyHub'));
-        $title->prepend(__('Queues'));
-        $title->prepend(__('Sales Order Queue'));
-        
+        $page->getConfig()
+            ->getTitle()
+            ->append(__('Sales Order'));
+
         return $page;
     }
 }
