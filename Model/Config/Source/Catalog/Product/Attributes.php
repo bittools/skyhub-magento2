@@ -10,11 +10,11 @@
 
 namespace BitTools\SkyHub\Model\Config\Source\Catalog\Product;
 
-use Magento\Framework\Option\ArrayInterface;
+use BitTools\SkyHub\Model\Config\Source\AbstractSource;
 use Magento\Catalog\Api\ProductAttributeRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaFactory;
 
-class Attributes implements ArrayInterface
+class Attributes extends AbstractSource
 {
     
     /** @var ProductAttributeRepositoryInterface */
@@ -37,26 +37,6 @@ class Attributes implements ArrayInterface
     {
         $this->productAttributeRepository = $productAttributeRepository;
         $this->searchCriteriaFactory = $searchCriteriaFactory;
-    }
-    
-    
-    /**
-     * Options getter
-     *
-     * @return array
-     */
-    public function toOptionArray()
-    {
-        $options = [];
-
-        foreach ((array) $this->toArray() as $value => $label) {
-            $options[] = [
-                'value' => $value,
-                'label' => $label,
-            ];
-        }
-
-        return $options;
     }
 
 

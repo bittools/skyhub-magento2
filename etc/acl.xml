@@ -12,7 +12,8 @@
                             <resource id="BitTools_SkyHub::skyhub_customer_attributes_mapping_save" title="Save Customer Attributes Mapping" translate="title" sortOrder="40"/>
                         </resource>
                         <resource id="BitTools_SkyHub::skyhub_queues" title="Queues" translate="title" sortOrder="30">
-                            <resource id="BitTools_SkyHub::skyhub_queues_products_queue" title="View Products Queue" translate="title" sortOrder="10"/>
+                            <resource id="BitTools_SkyHub::skyhub_queues_product" title="View Products Queue" translate="title" sortOrder="10"/>
+                            <resource id="BitTools_SkyHub::skyhub_queues_product_attribute" title="View Product Attributes Queue" translate="title" sortOrder="20"/>
                         </resource>
                         <resource id="BitTools_SkyHub::orders_import" title="Orders Importation" translate="title" sortOrder="40">
                             <resource id="BitTools_SkyHub::manual_import" title="Manual Import" translate="title" sortOrder="10"/>

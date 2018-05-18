@@ -4,11 +4,11 @@ namespace BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue;
 
 use BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue;
 
-class Product extends Queue
+class ProductAttribute extends Queue
 {
     
     /** @var string */
-    protected $entityType = 'catalog_product';
+    protected $entityType = 'catalog_product_attribute';
     
     
     /**
@@ -18,17 +18,13 @@ class Product extends Queue
     {
         $this->join(
             [
-                'e' => $this->getTable('catalog_product_entity')
+                'e' => $this->getTable('eav_attribute')
             ],
-            'e.entity_id = queue.entity_id',
-            [
-                'sku',
-                'type_id',
-                'attribute_set_id'
-            ]
+            'e.attribute_id = queue.entity_id'
         );
-        
+    
         parent::_beforeLoad();
+        
         return $this;
     }
 }

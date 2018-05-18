@@ -14,30 +14,10 @@
 
 namespace BitTools\SkyHub\Model\Config\Source\Integration\Catalog\Product;
 
-use Magento\Framework\Option\ArrayInterface;
+use BitTools\SkyHub\Model\Config\Source\AbstractSource;
 
-class Visibilities implements ArrayInterface
+class Visibilities extends AbstractSource
 {
-    
-    /**
-     * Options getter
-     *
-     * @return array
-     */
-    public function toOptionArray()
-    {
-        $options = [];
-        
-        foreach ((array) $this->toArray() as $value => $label) {
-            $options[] = [
-                'value' => $value,
-                'label' => $label,
-            ];
-        }
-    
-        return $options;
-    }
-    
     
     /**
      * Get options in "key-value" format

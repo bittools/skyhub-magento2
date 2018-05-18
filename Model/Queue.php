@@ -10,6 +10,7 @@
 
 namespace BitTools\SkyHub\Model;
 
+use BitTools\SkyHub\Api\Data\QueueInterface;
 use BitTools\SkyHub\Functions;
 use BitTools\SkyHub\Model\ResourceModel\Queue as ResourceModel;
 use Magento\Framework\Model\AbstractModel;
@@ -33,7 +34,7 @@ use Magento\Framework\Model\AbstractModel;
  * @method string  getCreatedAt()
  * @method string  getUpdatedAt()
  */
-class Queue extends AbstractModel
+class Queue extends AbstractModel implements QueueInterface
 {
     
     use Functions;

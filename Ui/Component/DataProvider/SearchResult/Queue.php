@@ -48,6 +48,18 @@ class Queue extends SearchResult
     
     
     /**
+     * {@inheritdoc}
+     */
+    protected function _initSelect()
+    {
+        $this->getSelect()
+            ->from(['queue' => $this->getMainTable()]);
+        
+        return $this;
+    }
+    
+    
+    /**
      * @return $this
      */
     protected function _beforeLoad()

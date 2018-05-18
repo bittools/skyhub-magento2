@@ -16,7 +16,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
     <menu>
         <!-- SkyHub Integration -->
-        <add id="BitTools_SkyHub::skyhub"                     title="SkyHub Integration"         translate="title" module="BitTools_SkyHub" sortOrder="100" resource="BitTools_SkyHub::skyhub"/>
+        <add id="BitTools_SkyHub::skyhub"                     title="SkyHub Integration"         translate="title" module="BitTools_SkyHub" sortOrder="80" resource="BitTools_SkyHub::skyhub"/>
 
         <!-- Attributes Mapping -->
         <add id="BitTools_SkyHub::attributes_mapping"          title="Product Attributes"          translate="title" module="BitTools_SkyHub" sortOrder="10" parent="BitTools_SkyHub::skyhub"              resource="BitTools_SkyHub::skyhub_attributes_mapping"/>
@@ -26,7 +26,7 @@
         <!-- Queues -->
         <add id="BitTools_SkyHub::queues"                     title="Queues"                    translate="title" module="BitTools_SkyHub" sortOrder="30" parent="BitTools_SkyHub::skyhub"              resource="BitTools_SkyHub::queues"/>
         <add id="BitTools_SkyHub::products_queue"             title="Products Queue"            translate="title" module="BitTools_SkyHub" sortOrder="10" parent="BitTools_SkyHub::queues"              resource="BitTools_SkyHub::products_queue" action="bittools_skyhub/queue_product/index" />
-        <add id="BitTools_SkyHub::product_attributes_queue"   title="Products Attributes Queue" translate="title" module="BitTools_SkyHub" sortOrder="20" parent="BitTools_SkyHub::queues"              resource="BitTools_SkyHub::product_attributes_queue"/>
+        <add id="BitTools_SkyHub::product_attributes_queue"   title="Products Attributes Queue" translate="title" module="BitTools_SkyHub" sortOrder="20" parent="BitTools_SkyHub::queues"              resource="BitTools_SkyHub::product_attributes_queue" action="bittools_skyhub/queue_product_attribute/index"/>
         <add id="BitTools_SkyHub::categories_queue"           title="Categories Queue"          translate="title" module="BitTools_SkyHub" sortOrder="30" parent="BitTools_SkyHub::queues"              resource="BitTools_SkyHub::categories_queue"/>
         <add id="BitTools_SkyHub::sales_order_status_queue"   title="Order Status Queue"        translate="title" module="BitTools_SkyHub" sortOrder="40" parent="BitTools_SkyHub::queues"              resource="BitTools_SkyHub::sales_order_status_queue"/>
 
