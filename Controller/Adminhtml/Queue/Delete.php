@@ -2,7 +2,6 @@
 
 namespace BitTools\SkyHub\Controller\Adminhtml\Queue;
 
-use BitTools\SkyHub\Api\Data\QueueInterface;
 use Magento\Framework\App\ResponseInterface;
 
 class Delete extends AbstractQueue

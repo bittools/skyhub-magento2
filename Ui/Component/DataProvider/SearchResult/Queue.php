@@ -32,8 +32,11 @@ class Queue extends SearchResult
         Logger $logger,
         FetchStrategy $fetchStrategy,
         EventManager $eventManager,
+        $resourceModel = \BitTools\SkyHub\Model\ResourceModel\Queue::class,
         $mainTable = \BitTools\SkyHub\Model\ResourceModel\Queue::MAIN_TABLE,
-        $resourceModel = \BitTools\SkyHub\Model\ResourceModel\Queue::class
+        $identifierName = null,
+        $connectionName = null,
+        $entityType = null
     )
     {
         parent::__construct(
@@ -42,8 +45,14 @@ class Queue extends SearchResult
             $fetchStrategy,
             $eventManager,
             $mainTable,
-            $resourceModel
+            $resourceModel,
+            $identifierName,
+            $connectionName
         );
+        
+        if (!empty($entityType)) {
+            $this->entityType = $entityType;
+        }
     }
     
     
@@ -65,7 +74,7 @@ class Queue extends SearchResult
     protected function _beforeLoad()
     {
         if ($this->entityType) {
-            $this->addFieldToFilter('entity_type', $this->entityType);
+            $this->addFieldToFilter('queue.entity_type', $this->entityType);
         }
         
         parent::_beforeLoad();

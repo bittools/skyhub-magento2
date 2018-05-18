@@ -1,6 +1,6 @@
 <?php
 
-namespace BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue;
+namespace BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Catalog;
 
 use BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue;
 

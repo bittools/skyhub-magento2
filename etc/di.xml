@@ -62,14 +62,21 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Sales\Order" type="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue">
+        <arguments>
+            <argument name="entityType" xsi:type="string">sales_order</argument>
+        </arguments>
+    </virtualType>
+
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
             <argument name="collections" xsi:type="array">
                 <item name="bittools_skyhub_attributes_mapping_listing_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Attribute\Mapping\Product</item>
-                <item name="bittools_skyhub_queue_product_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Product</item>
-                <item name="bittools_skyhub_queue_product_attribute_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\ProductAttribute</item>
-                <item name="bittools_skyhub_queue_category_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Category</item>
-                <item name="bittools_skyhub_queue_order_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\SalesOrder</item>
+                <item name="bittools_skyhub_queue_product_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Catalog\Product</item>
+                <item name="bittools_skyhub_queue_product_attribute_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Catalog\ProductAttribute</item>
+                <item name="bittools_skyhub_queue_category_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Catalog\Category</item>
+                <item name="bittools_skyhub_queue_sales_order_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Sales\Order</item>
+                <item name="bittools_skyhub_queue_sales_order_status_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Sales\OrderStatus</item>
             </argument>
         </arguments>
     </type>

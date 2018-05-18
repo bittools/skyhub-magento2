@@ -20,7 +20,7 @@
             </storageConfig>
             <updateUrl path="mui/index/render"/>
         </settings>
-        <aclResource>BitTools_SkyHub::skyhub_queues_product_attribute</aclResource>
+        <aclResource>BitTools_SkyHub::skyhub_queues_catalog_product_attribute</aclResource>
         <dataProvider class="BitTools\SkyHub\Ui\Component\DataProvider" name="bittools_skyhub_queue_product_attribute_data_source">
             <settings>
                 <requestFieldName>id</requestFieldName>
