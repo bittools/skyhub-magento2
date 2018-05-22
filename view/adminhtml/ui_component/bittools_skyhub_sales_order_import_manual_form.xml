@@ -10,7 +10,7 @@
         <item name="js_config" xsi:type="array">
             <item name="provider" xsi:type="string">bittools_skyhub_sales_order_import_manual_form.bittools_skyhub_sales_order_import_manual_data_source</item>
         </item>
-        <item name="label" xsi:type="string" translate="true">General Information</item>
+        <item name="label" xsi:type="string" translate="true">Import Orders Manually</item>
         <item name="template" xsi:type="string">templates/form/collapsible</item>
     </argument>
     <settings>
@@ -32,6 +32,12 @@
         <settings>
             <submitUrl path="bittools_skyhub/sales_order_import/import"/>
         </settings>
+        <dataProvider class="BitTools\SkyHub\Ui\Component\Form\DataProvider" name="bittools_skyhub_sales_order_import_manual_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>id</primaryFieldName>
+            </settings>
+        </dataProvider>
     </dataSource>
     <fieldset name="general">
         <settings>
