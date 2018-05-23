@@ -2,9 +2,7 @@
 
 namespace BitTools\SkyHub\Controller\Adminhtml\Sales\Order\Import;
 
-use BitTools\SkyHub\Controller\Adminhtml\AbstractController;
-
-class Manual extends AbstractController
+class Manual extends AbstractImport
 {
 
     /**

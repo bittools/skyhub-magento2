@@ -19,11 +19,11 @@ class DataProvider extends AbstractDataProvider
     
     
     /**
-     * @return array
+     * @return null
      */
     public function getData()
     {
         /** This method also does not need any data to be loaded. */
-        return [];
+        return null;
     }
 }

@@ -15,7 +15,7 @@
     </argument>
     <settings>
         <buttons>
-            <button name="import" class="BitTools\SkyHub\Block\Adminhtml\Sales\Order\Import\Manual\ImportButton"/>
+            <button name="save" class="BitTools\SkyHub\Block\Adminhtml\Sales\Order\Import\Manual\SaveButton"/>
         </buttons>
         <namespace>bittools_skyhub_sales_order_import_manual_form</namespace>
         <dataScope>data</dataScope>
@@ -30,7 +30,7 @@
             </item>
         </argument>
         <settings>
-            <submitUrl path="bittools_skyhub/sales_order_import/import"/>
+            <submitUrl path="bittools_skyhub/sales_order_import/save"/>
         </settings>
         <dataProvider class="BitTools\SkyHub\Ui\Component\Form\DataProvider" name="bittools_skyhub_sales_order_import_manual_data_source">
             <settings>

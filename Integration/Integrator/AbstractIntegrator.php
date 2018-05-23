@@ -103,8 +103,8 @@ abstract class AbstractIntegrator implements IntegratorInterface
     /**
      * @return \SkyHub\Api
      */
-    protected function api()
+    protected function api($new = false)
     {
-        return $this->context->service()->api();
+        return $this->context->service((bool) $new)->api();
     }
 }

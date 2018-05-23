@@ -15,9 +15,7 @@ class Order extends AbstractSales
      */
     public function orders($page = 1, $perPage = 30, $saleSystem = null, array $statuses = [])
     {
-        /** @var \SkyHub\Api\EntityInterface\Sales\Order $interface */
-        $interface = $this->api()->order()->entityInterface();
-        $result    = $interface->orders($page, $perPage, $saleSystem, $statuses);
+        $result = $this->getEntityInterface(true)->orders($page, $perPage, $saleSystem, $statuses);
         
         if ($result->exception() || $result->invalid()) {
             return false;
@@ -52,14 +50,14 @@ class Order extends AbstractSales
     
     
     /**
-     * @param int $orderId
+     * @param int|string $orderReference
      *
      * @return array|bool
      */
-    public function order($orderId)
+    public function order($orderReference)
     {
         /** @var  $result */
-        $result = $this->getEntityInterface()->order($orderId);
+        $result = $this->getEntityInterface(true)->order($orderReference);
         
         if ($result->exception() || $result->invalid()) {
             return false;
@@ -83,7 +81,7 @@ class Order extends AbstractSales
         $incrementId = $this->getOrderIncrementId($orderId);
         
         /** @var \SkyHub\Api\Handler\Response\HandlerInterface $result */
-        $result = $this->getEntityInterface()->invoice($incrementId, $invoiceKey);
+        $result = $this->getEntityInterface(true)->invoice($incrementId, $invoiceKey);
         
         if ($result->exception() || $result->invalid()) {
             return false;
@@ -103,7 +101,7 @@ class Order extends AbstractSales
         $incrementId = $this->getOrderIncrementId($orderId);
         
         /** @var \SkyHub\Api\Handler\Response\HandlerInterface $result */
-        $result = $this->getEntityInterface()->cancel($incrementId);
+        $result = $this->getEntityInterface(true)->cancel($incrementId);
         
         if ($result->exception() || $result->invalid()) {
             return false;
@@ -123,7 +121,7 @@ class Order extends AbstractSales
         $incrementId = $this->getOrderIncrementId($orderId);
         
         /** @var \SkyHub\Api\Handler\Response\HandlerInterface $result */
-        $result = $this->getEntityInterface()->delivery($incrementId);
+        $result = $this->getEntityInterface(true)->delivery($incrementId);
         
         if ($result->exception() || $result->invalid()) {
             return false;
@@ -143,7 +141,7 @@ class Order extends AbstractSales
         $incrementId = $this->getOrderIncrementId($orderId);
         
         /** @var \SkyHub\Api\Handler\Response\HandlerInterface $result */
-        $result = $this->getEntityInterface()->shipmentLabels($incrementId);
+        $result = $this->getEntityInterface(true)->shipmentLabels($incrementId);
         
         if ($result->exception() || $result->invalid()) {
             return false;
@@ -169,7 +167,7 @@ class Order extends AbstractSales
         $incrementId = $this->getOrderIncrementId($orderId);
         
         /** @var \SkyHub\Api\Handler\Response\HandlerInterface $result */
-        $result = $this->getEntityInterface()
+        $result = $this->getEntityInterface(true)
             ->shipment($incrementId, $items, $trackCode, $trackCarrier, $trackMethod, $trackUrl);
         
         if ($result->exception() || $result->invalid()) {
@@ -191,7 +189,7 @@ class Order extends AbstractSales
     public function shipmentException($orderId, $datetime, $observation)
     {
         $incrementId = $this->getOrderIncrementId($orderId);
-        $result = $this->getEntityInterface()
+        $result = $this->getEntityInterface(true)
             ->shipmentException($incrementId, $datetime, $observation);
         
         if ($result->exception() || $result->invalid()) {
@@ -206,8 +204,8 @@ class Order extends AbstractSales
     /**
      * @return \SkyHub\Api\EntityInterface\Sales\Order
      */
-    protected function getEntityInterface()
+    protected function getEntityInterface($new = false)
     {
-        return $this->api()->order()->entityInterface();
+        return $this->api((bool) $new)->order()->entityInterface();
     }
 }

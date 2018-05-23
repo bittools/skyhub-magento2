@@ -2,7 +2,7 @@
 
 namespace BitTools\SkyHub\Block\Adminhtml\Sales\Order\Import\Manual;
 
-class ImportButton extends GenericButton
+class SaveButton extends GenericButton
 {
 
     /**
@@ -14,8 +14,10 @@ class ImportButton extends GenericButton
             'label' => __('Import Order(s)'),
             'class' => 'save primary',
             'data_attribute' => [
-                'mage-init' => ['button' => ['event' => 'save']],
-                'form-role' => 'save',
+                'mage-init' => ['button' => [
+                    'event' => 'submit'
+                ]],
+                'form-role' => 'submit',
             ],
             'sort_order' => 100,
         ];

@@ -6,7 +6,6 @@ use Magento\Backend\App\Action;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Backend\App\Action\Context as BackendContext;
 use BitTools\SkyHub\Helper\Context as HelperContext;
-use Magento\Framework\View\Page\Title;
 
 abstract class AbstractController extends Action
 {
@@ -61,5 +60,17 @@ abstract class AbstractController extends Action
         $result->setRefererUrl();
         
         return $result;
+    }
+    
+    
+    /**
+     * @param null $storeId
+     *
+     * @return \Magento\Store\Api\Data\StoreInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    protected function getStore($storeId = null)
+    {
+        return $this->helperContext->storeManager()->getStore($storeId);
     }
 }

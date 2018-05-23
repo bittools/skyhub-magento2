@@ -10,17 +10,20 @@ class Context implements \Magento\Framework\ObjectManager\ContextInterface
     /** @var Service */
     protected $service;
     
+    /** @var ServiceFactory */
+    protected $serviceFactory;
+    
     /** @var HelperContext */
     protected $helperContext;
     
     
     public function __construct(
         HelperContext $helperContext,
-        Service $service
+        ServiceFactory $serviceFactory
     )
     {
-        $this->service       = $service;
-        $this->helperContext = $helperContext;
+        $this->serviceFactory = $serviceFactory;
+        $this->helperContext  = $helperContext;
     }
     
     
@@ -36,8 +39,12 @@ class Context implements \Magento\Framework\ObjectManager\ContextInterface
     /**
      * @return Service
      */
-    public function service()
+    public function service($new = false)
     {
+        if (!$this->service || true === $new) {
+            $this->service = $this->serviceFactory->create();
+        }
+        
         return $this->service;
     }
     
