@@ -2,6 +2,8 @@
 
 namespace BitTools\SkyHub\Controller\Adminhtml\Sales\Order\Import;
 
+use Magento\Sales\Api\Data\OrderInterface;
+
 class Save extends AbstractImport
 {
 
@@ -31,12 +33,18 @@ class Save extends AbstractImport
             $this->importOrder($reference, $storeId);
         }
         
-        $this->messageManager->addSuccessMessage(__('The process is finished.'));
+        $this->messageManager->addNoticeMessage(__('The process is finished.'));
 
         return $redirectResult;
     }
     
     
+    /**
+     * @param string   $referenceCode
+     * @param null|int $storeId
+     *
+     * @return bool
+     */
     protected function importOrder($referenceCode, $storeId = null)
     {
         $this->helperContext->storeManager()->setCurrentStore($storeId);
@@ -44,11 +52,25 @@ class Save extends AbstractImport
         /** @var \BitTools\SkyHub\Integration\Integrator\Sales\Order $integrator */
         $integrator = $this->getOrderIntegrator();
         
-        $order = $integrator->order($referenceCode);
+        $orderData = $integrator->order($referenceCode);
         
-        if (!$order) {
+        if (!$orderData) {
             $this->messageManager
                 ->addWarningMessage(__('The order reference "%1" does not exist in Skyhub.', $referenceCode));
+            
+            return false;
+        }
+    
+        /** @var \BitTools\SkyHub\Integration\Processor\Sales\Order $integrator */
+        $processor = $this->getOrderProcessor();
+        
+        /** @var bool|OrderInterface $order */
+        $order = $processor->createOrder($orderData);
+        
+        if (!$order) {
+            $this->messageManager->addWarningMessage(
+                __('The order reference "%1" could not be created. See the logs for more details.', $referenceCode)
+            );
             
             return false;
         }

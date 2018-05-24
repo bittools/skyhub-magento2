@@ -83,4 +83,67 @@ trait Customer
 
         return (array_shift($address) . "\n" . $this->_formatAddress($address, $addressSize - 1));
     }
+    
+    
+    /**
+     * @param string $vatNumber
+     *
+     * @return bool
+     */
+    protected function customerIsPj($vatNumber)
+    {
+        $vatNumber = preg_replace('/[^0-9]/', '', (string) $vatNumber);
+        
+        if (strlen($vatNumber) <= 11) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    
+    /**
+     * @param string      $street
+     * @param string|null $number
+     * @param string|null $neighborhood
+     * @param string|null $complement
+     *
+     * @return array
+     */
+    protected function prepareAddressStreetLines(
+        $street,
+        $number = null,
+        $neighborhood = null,
+        $complement = null,
+        $linesCount = 2
+    )
+    {
+        $linesCount = min(4, max(2, $linesCount));
+        
+        switch ($linesCount) {
+            case 2:
+                $streetLines = [
+                    $this->joinStrings(', ', $street, $number),
+                    $this->joinStrings(' - ', $neighborhood, $complement)
+                ];
+                break;
+            case 3:
+                $streetLines = [
+                    $street,
+                    $number,
+                    $this->joinStrings(' - ', $neighborhood, $complement)
+                ];
+                break;
+            default:
+                $streetLines = [
+                    $street,
+                    $number,
+                    $neighborhood,
+                    $complement
+                ];
+                break;
+        }
+        
+        return $streetLines;
+    }
 }

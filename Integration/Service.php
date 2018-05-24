@@ -56,6 +56,8 @@ class Service
             $this->initApi();
         }
         
+        $this->renewAuthentication();
+        
         return $this->api;
     }
     
@@ -74,10 +76,11 @@ class Service
      */
     public function initApi()
     {
-        $email  = $this->configContext->service()->getServiceEmail();
-        $apiKey = $this->configContext->service()->getServiceApiKey();
-        
-        $this->api = new Api($email, $apiKey, $this->xAccountKey);
+        $this->api = new Api(
+            $this->getServiceEmail(),
+            $this->getServiceApiKey(),
+            $this->xAccountKey
+        );
         
         if ($this->configContext->log()->isEnabled()) {
             /**
@@ -98,5 +101,40 @@ class Service
         }
         
         return $this;
+    }
+    
+    
+    /**
+     * This renew authentication was created because of the multi-store purpose.
+     * Each store can have a different account set up.
+     *
+     * @return $this
+     */
+    public function renewAuthentication()
+    {
+        $this->api->setAuthentication(
+            $this->getServiceEmail(),
+            $this->getServiceApiKey()
+        );
+        
+        return $this;
+    }
+    
+    
+    /**
+     * @return string
+     */
+    protected function getServiceEmail()
+    {
+        return $this->configContext->service()->getServiceEmail();
+    }
+    
+    
+    /**
+     * @return string
+     */
+    protected function getServiceApiKey()
+    {
+        return $this->configContext->service()->getServiceApiKey();
     }
 }

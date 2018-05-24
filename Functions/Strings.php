@@ -104,4 +104,24 @@ trait Strings
         
         return $value;
     }
+    
+    
+    /**
+     * @param string $separator
+     *
+     * @return null|string
+     */
+    protected function joinStrings($separator)
+    {
+        $result = null;
+        $fields = func_get_args();
+        
+        /** Unset the separator */
+        unset($fields[0]);
+        
+        $fields = array_filter($fields, 'trim');
+        $result = implode($separator, $fields);
+        
+        return $result;
+    }
 }

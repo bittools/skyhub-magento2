@@ -5,7 +5,8 @@ namespace BitTools\SkyHub\Integration\Support\Sales\Order;
 use BitTools\SkyHub\Functions;
 use BitTools\SkyHub\Integration\Context as IntegrationContext;
 use BitTools\SkyHub\Model\Backend\Session\Quote as AdminSessionQuote;
-use Magento\Customer\Model\Customer;
+use Magento\Customer\Api\Data\AddressInterface;
+use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\DataObject;
 use Magento\Sales\Model\Order;
 use Magento\Store\Api\Data\StoreInterface;
@@ -15,8 +16,16 @@ class Create
 {
 
     use Functions, \BitTools\SkyHub\Traits\Customer;
-
+    
+    /** @var string */
+    const ADDRESS_TYPE_BILLING  = 'billing';
+    
+    /** @var string */
+    const ADDRESS_TYPE_SHIPPING = 'shipping';
+    
+    /** @var string */
     const CARRIER_PREFIX = 'bseller_skyhub_';
+    
 
     /** @var StoreInterface */
     private $store;
@@ -218,11 +227,11 @@ class Create
 
 
     /**
-     * @param Customer $customer
+     * @param CustomerInterface $customer
      *
      * @return $this
      */
-    public function setCustomer(Customer $customer)
+    public function setCustomer(CustomerInterface $customer)
     {
         $data = [
             'order' => [
@@ -243,40 +252,40 @@ class Create
 
 
     /**
-     * @param string     $type
-     * @param DataObject $address
+     * @param string           $type
+     * @param AddressInterface $address
      *
      * @return $this
      */
-    public function addOrderAddress($type, DataObject $address)
+    public function addOrderAddress(AddressInterface $address, $type)
     {
-        $fullname = trim($address->getData('full_name'));
+        /*
+        $streetLinesCount = (int) $this->context
+            ->helperContext()
+            ->scopeConfig()
+            ->getValue('customer/address/street_lines');
 
-        /** @var DataObject $nameObject */
-        $nameObject = $this->breakName($fullname);
-
-        $addressSize = $this->getAddressSizeConfig();
-
-        $simpleAddressData = $this->formatAddress($address, $addressSize);
+        $simpleAddressData = $this->formatAddress($address, $streetLinesCount);
+        */
 
         $data = [
             'order' => [
                 "{$type}_address" => [
-                    'customer_address_id' => $address->getData('customer_address_id'),
-                    'prefix'              => '',
-                    'firstname'           => $nameObject->getData('firstname'),
-                    'middlename'          => $nameObject->getData('middlename'),
-                    'lastname'            => $nameObject->getData('lastname'),
-                    'suffix'              => '',
-                    'company'             => '',
-                    'street'              => $simpleAddressData,
-                    'city'                => $address->getData('city'),
-                    'country_id'          => $address->getData('country'),
-                    'region'              => $address->getData('region'),
-                    'region_id'           => '',
-                    'postcode'            => $address->getData('postcode'),
-                    'telephone'           => $this->formatPhone($address->getData('phone')),
-                    'fax'                 => $address->getData('secondary_phone'),
+                    'customer_address_id' => $address->getId(),
+                    'prefix'              => $address->getPrefix(),
+                    'firstname'           => $address->getFirstname(),
+                    'middlename'          => $address->getMiddlename(),
+                    'lastname'            => $address->getLastname(),
+                    'suffix'              => $address->getSuffix(),
+                    'company'             => $address->getCompany(),
+                    'street'              => $address->getStreet(),
+                    'city'                => $address->getCity(),
+                    'country_id'          => $address->getCountryId(),
+                    'region'              => $address->getRegion(),
+                    'region_id'           => $address->getRegionId(),
+                    'postcode'            => $address->getPostcode(),
+                    'telephone'           => $this->formatPhone($address->getTelephone()),
+                    'fax'                 => $this->formatPhone($address->getFax()),
                 ]
             ]
         ];
@@ -307,16 +316,16 @@ class Create
     {
         return $this->getOrderCreator()->getQuote();
     }
-
-
+    
+    
     /**
      * @return $this
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     protected function resetQuote()
     {
-        $this->getQuote()
-            ->setTotalsCollectedFlag(false);
-
+        $this->getQuote()->setTotalsCollectedFlag(false);
         return $this;
     }
 

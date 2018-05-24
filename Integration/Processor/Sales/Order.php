@@ -7,18 +7,29 @@ use BitTools\SkyHub\Integration\Processor\AbstractProcessor;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\AddressRepositoryInterface;
-use Magento\Customer\Model\AddressFactory;
+use Magento\Customer\Model\Data\AddressFactory;
+use Magento\Customer\Api\Data\AddressInterface;
 use Magento\Sales\Model\Order as SalesOrder;
 use Magento\Sales\Api\OrderRepositoryInterface;
-use Magento\Customer\Model\Customer;
-use Magento\Customer\Model\Address as CustomerAddress;
+use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\Customer\Api\Data\CustomerInterfaceFactory;
 use Magento\Framework\DataObject;
 use Magento\Catalog\Model as CatalogModelDir;
 use Magento\Store\Model\Store;
+use Magento\Customer\Api\Data\RegionInterfaceFactory;
 
 class Order extends AbstractProcessor
 {
-
+    
+    use \BitTools\SkyHub\Traits\Customer;
+    
+    /** @var string */
+    const ADDRESS_TYPE_BILLING  = \BitTools\SkyHub\Integration\Support\Sales\Order\Create::ADDRESS_TYPE_BILLING;
+    
+    /** @var string */
+    const ADDRESS_TYPE_SHIPPING = \BitTools\SkyHub\Integration\Support\Sales\Order\Create::ADDRESS_TYPE_SHIPPING;
+    
+    
     /** @var OrderRepositoryInterface */
     protected $orderRepository;
 
@@ -34,6 +45,18 @@ class Order extends AbstractProcessor
     /** @var AddressFactory */
     protected $addressFactory;
 
+    /** @var CustomerInterfaceFactory */
+    protected $customerFactory;
+
+    /** @var RegionInterfaceFactory */
+    protected $regionFactory;
+    
+    /** @var array|AddressInterface[] */
+    protected $addresses = [
+        self::ADDRESS_TYPE_BILLING  => null,
+        self::ADDRESS_TYPE_SHIPPING => null,
+    ];
+
 
     public function __construct(
         IntegrationContext $integrationContext,
@@ -41,7 +64,9 @@ class Order extends AbstractProcessor
         ProductRepositoryInterface $productRepository,
         CustomerRepositoryInterface $customerRepository,
         AddressRepositoryInterface $addressRepository,
-        AddressFactory $addressFactory
+        AddressFactory $addressFactory,
+        CustomerInterfaceFactory $customerFactory,
+        RegionInterfaceFactory $regionFactory
     )
     {
         parent::__construct($integrationContext);
@@ -51,6 +76,8 @@ class Order extends AbstractProcessor
         $this->customerRepository = $customerRepository;
         $this->addressRepository  = $addressRepository;
         $this->addressFactory     = $addressFactory;
+        $this->customerFactory    = $customerFactory;
+        $this->regionFactory      = $regionFactory;
     }
 
 
@@ -97,8 +124,8 @@ class Order extends AbstractProcessor
      */
     protected function processOrderCreation(array $data)
     {
-        $code        = $this->arrayExtract($data, 'code');
-        $channel     = $this->arrayExtract($data, 'channel');
+        $code    = $this->arrayExtract($data, 'code');
+        $channel = $this->arrayExtract($data, 'channel');
         $orderId = $this->getOrderId($code);
 
         if ($orderId) {
@@ -125,7 +152,7 @@ class Order extends AbstractProcessor
             ]
         );
 
-        /** @var Customer $customer */
+        /** @var CustomerInterface $customer */
         $customer = $this->getCustomer($customerData);
 
         $shippingCarrier = (string) $this->arrayExtract($data, 'shipping_carrier');
@@ -155,8 +182,8 @@ class Order extends AbstractProcessor
             ->setPaymentMethod('bseller_skyhub_standard')
             ->setDiscountAmount($discountAmount)
             ->setInterestAmount($interestAmount)
-            ->addOrderAddress('billing', $billingAddress)
-            ->addOrderAddress('shipping', $shippingAddress)
+            ->addOrderAddress($this->getBillingAddress(), self::ADDRESS_TYPE_BILLING)
+            ->addOrderAddress($this->getShippingAddress(), self::ADDRESS_TYPE_SHIPPING)
             ->setComment('This order was automatically created by SkyHub import process.');
 
         $products = $this->getProducts((array) $this->arrayExtract($data, 'items'));
@@ -289,28 +316,56 @@ class Order extends AbstractProcessor
 
         return $productId;
     }
-
-
+    
+    
     /**
      * @param array $data
+     * @param null  $storeId
      *
-     * @return Customer
-     *
+     * @return CustomerInterface
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\State\InputMismatchException
+     * @throws \Exception
      */
-    protected function getCustomer(array $data)
+    protected function getCustomer(array $data, $storeId = null)
     {
         $email = $this->arrayExtract($data, 'email');
 
         try {
-            /** @var Customer $customer */
-            $customer = $this->customerRepository->get($email);
-            $customer->setStore($this->getStore());
-            $customer->loadByEmail($email);
+            /** @var CustomerInterface $customer */
+            $customer = $this->customerRepository->get($email, $this->getStore($storeId)->getWebsiteId());
+            $addresses = $customer->getAddresses();
+            
+            $defaultBilling  = $customer->getDefaultBilling();
+            $defaultShipping = $customer->getDefaultShipping();
+            
+            /** @var AddressInterface $address */
+            foreach ($addresses as $address) {
+                /** Try to match the billing address. */
+                if ($defaultBilling && ($defaultBilling == $address->getId())) {
+                    $this->pushAddress($address, self::ADDRESS_TYPE_BILLING);
+                    continue;
+                }
+    
+                /** Try to match the shipping address. */
+                if ($defaultShipping && ($defaultShipping == $address->getId())) {
+                    $this->pushAddress($address, self::ADDRESS_TYPE_SHIPPING);
+                    continue;
+                }
+    
+                /** Otherwise use the first for both. */
+                $this->pushAddress($address, self::ADDRESS_TYPE_BILLING);
+                $this->pushAddress($address, self::ADDRESS_TYPE_SHIPPING);
+                
+                break;
+            }
+            
+        } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+            $customer = $this->createCustomer($data, $storeId);
         } catch (\Exception $e) {
-            $this->createCustomer($data, $customer);
+            $this->logger()->critical($e);
+            throw $e;
         }
 
         return $customer;
@@ -318,18 +373,19 @@ class Order extends AbstractProcessor
 
 
     /**
-     * @param array    $data
-     * @param Customer $customer
+     * @param array $data
+     * @param array $storeId
      *
-     * @return Customer
+     * @return CustomerInterface
      *
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\State\InputMismatchException
      */
-    protected function createCustomer(array $data, Customer $customer)
+    protected function createCustomer(array $data, $storeId = null)
     {
-        $customer->setStore($this->getStore());
+        $customer = $this->customerFactory->create();
+        $customer->setStoreId($this->getStore($storeId)->getId());
 
         $dateOfBirth = $this->arrayExtract($data, 'date_of_birth');
         $email       = $this->arrayExtract($data, 'email');
@@ -346,14 +402,15 @@ class Order extends AbstractProcessor
         $customer->setEmail($email);
         $customer->setDob($dateOfBirth);
 
-        $this->setPersonTypeInformation($data, $customer);
+        /** @todo Make this method works after customer attributes mapping logic is created. */
+        // $this->setPersonTypeInformation($data, $customer);
 
         /** @var string $phone */
         foreach ($phones as $phone) {
-            $customer->setTelephone($phone);
+            $customer->setData('telephone', $phone);
             break;
         }
-
+    
         switch ($gender) {
             case 'male':
                 $customer->setGender(1);
@@ -362,38 +419,123 @@ class Order extends AbstractProcessor
                 $customer->setGender(2);
                 break;
         }
-
-        $this->customerRepository->save($customer);
+        
+        $addresses = [];
 
         /** @var DataObject $billing */
         if ($billing = $this->arrayExtract($data, 'billing_address')) {
-            $address = $this->createCustomerAddress($billing);
-            $address->setCustomer($customer);
+            $address = $this->createCustomerAddress($billing, $customer, self::ADDRESS_TYPE_BILLING);
+            $addresses[] = $address;
         }
 
         /** @var DataObject $billing */
         if ($shipping = $this->arrayExtract($data, 'shipping_address')) {
-            $address = $this->createCustomerAddress($shipping);
-            $address->setCustomer($customer);
+            $address = $this->createCustomerAddress($shipping, $customer, self::ADDRESS_TYPE_SHIPPING);
+            $addresses[] = $address;
         }
+        
+        $customer->setAddresses($this->addresses);
+        $customer = $this->customerRepository->save($customer);
 
         return $customer;
     }
-
-
+    
+    
     /**
-     * @param DataObject $addressObject
+     * @param DataObject        $addressObject
+     * @param CustomerInterface $customer
      *
-     * @return CustomerAddress
+     * @return AddressInterface
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
-    protected function createCustomerAddress(DataObject $addressObject)
+    protected function createCustomerAddress(DataObject $addressObject, CustomerInterface $customer, $type)
     {
-        /** @var CustomerAddress $address */
+        /** @var AddressInterface $address */
         $address = $this->addressFactory->create();
-
+    
+        $streetLinesCount = (int) $this->helperContext()
+            ->scopeConfig()
+            ->getValue('customer/address/street_lines');
+    
         /**
-         * @todo Create customer address algorithm based on $addressObject.
+         * The customer configuration can be set to use 2 fields only.
          */
+        $street = $this->prepareAddressStreetLines(
+            $addressObject->getData('street'),
+            $addressObject->getData('number'),
+            $addressObject->getData('neighborhood'),
+            $addressObject->getData('complement'),
+            $streetLinesCount
+        );
+        
+        $reference = $addressObject->getData('reference');
+        $postcode  = $addressObject->getData('postcode');
+        $phone     = $addressObject->getData('phone');
+        $country   = $addressObject->getData('country');
+        $city      = $addressObject->getData('city');
+        
+        /** @var \Magento\Customer\Api\Data\RegionInterface $region */
+        $region = $this->regionFactory->create();
+        $region->setRegion($addressObject->getData('region'));
+        
+        $address->setFirstname($customer->getFirstname())
+            ->setLastname($customer->getLastname())
+            ->setTelephone($phone)
+            ->setStreet($street)
+            ->setCity($city)
+            ->setRegion($region)
+            ->setPostcode($postcode)
+            ->setCountryId($country ?: 'BR')
+        ;
+        
+        $this->pushAddress($address, $type);
+        
+        return $address;
+    }
+    
+    
+    /**
+     * @param AddressInterface $address
+     * @param string           $type
+     *
+     * @return $this
+     */
+    protected function pushAddress(AddressInterface $address, $type)
+    {
+        $this->addresses[$type] = $address;
+        return $this;
+    }
+    
+    
+    /**
+     * @return AddressInterface|mixed
+     */
+    protected function getBillingAddress()
+    {
+        /** @todo Create a logic to retrieve this address when address was not created in this process. */
+        $address = $this->addresses[self::ADDRESS_TYPE_BILLING];
+        
+        if (empty($address)) {
+            $address = $this->addresses[self::ADDRESS_TYPE_SHIPPING];
+        }
+        
+        return $address;
+    }
+    
+    
+    /**
+     * @return AddressInterface|mixed
+     */
+    protected function getShippingAddress()
+    {
+        /** @todo Create a logic to retrieve this address when address was not created in this process. */
+        $address = $this->addresses[self::ADDRESS_TYPE_SHIPPING];
+        
+        if (empty($address)) {
+            $address = $this->addresses[self::ADDRESS_TYPE_BILLING];
+        }
+        
         return $address;
     }
 
@@ -415,24 +557,24 @@ class Order extends AbstractProcessor
      *
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    protected function getStore()
+    protected function getStore($storeId = null)
     {
-        return $this->storeManager()->getStore();
+        return $this->storeManager()->getStore($storeId);
     }
 
 
     /**
      * @param string $code
      *
-     * @return int
+     * @return int|bool
      *
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    protected function getOrderId($code)
+    protected function getOrderId($skyhubCode)
     {
-        /** @var \BitTools\SkyHub\Model\ResourceModel\Sales\Order $orderResource */
-        $orderResource = $this->objectManager()->create(\BitTools\SkyHub\Model\ResourceModel\Sales\Order::class);
-        $orderId       = $orderResource->getEntityIdBySkyhubCode($code);
+        /** @var \BitTools\SkyHub\Model\ResourceModel\Order $orderResource */
+        $orderResource = $this->objectManager()->create(\BitTools\SkyHub\Model\ResourceModel\Order::class);
+        $orderId       = $orderResource->getOrderId($skyhubCode);
 
         return $orderId;
     }
@@ -456,14 +598,15 @@ class Order extends AbstractProcessor
 
         return null;
     }
-
+    
+    
     /**
-     * @param $data
-     * @param $customer
+     * @param array    $data
+     * @param Customer $customer
      *
-     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
-    protected function setPersonTypeInformation($data, $customer)
+    protected function setPersonTypeInformation(array $data, Customer $customer)
     {
         /**
          * @todo Check this entire method.
