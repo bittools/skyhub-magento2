@@ -24,7 +24,7 @@ class Create
     const ADDRESS_TYPE_SHIPPING = 'shipping';
     
     /** @var string */
-    const CARRIER_PREFIX = 'bseller_skyhub_';
+    const CARRIER_PREFIX = 'bittools_skyhub_';
     
 
     /** @var StoreInterface */
@@ -212,7 +212,8 @@ class Create
 
         $data = [
             'order' => [
-                'shipping_method'        => self::CARRIER_PREFIX.$methodCode,
+                // 'shipping_method'        => self::CARRIER_PREFIX.$methodCode,
+                'shipping_method'        => $methodCode . '_' . $methodCode,
                 'shipping_method_code'   => $methodCode,
                 'shipping_title'         => $title,
                 'shipping_carrier'       => $carrier,

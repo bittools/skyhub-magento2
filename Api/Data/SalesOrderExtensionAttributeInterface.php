@@ -18,5 +18,103 @@ use Magento\Framework\Api\ExtensibleDataInterface;
 
 interface SalesOrderExtensionAttributeInterface extends ExtensibleDataInterface
 {
-    
+
+    /**
+     * @return int
+     */
+    public function getStoreId();
+
+
+    /**
+     * @param int $storeId
+     *
+     * @return $this
+     *
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function setStoreId($storeId = null);
+
+
+    /**
+     * @return int
+     */
+    public function getOrderId();
+
+
+    /**
+     * @param int $orderId
+     *
+     * @return $this
+     */
+    public function setOrderId($orderId);
+
+
+    /**
+     * @return string
+     */
+    public function getCode();
+
+
+    /**
+     * @param string $code
+     *
+     * @return $this
+     */
+    public function setCode($code);
+
+
+    /**
+     * @return string
+     */
+    public function getChannel();
+
+
+    /**
+     * @param string $channel
+     *
+     * @return $this
+     */
+    public function setChannel($channel);
+
+
+    /**
+     * @return string
+     */
+    public function getInvoiceKey();
+
+
+    /**
+     * @param string $invoiceKey
+     *
+     * @return $this
+     */
+    public function setInvoiceKey($invoiceKey);
+
+
+    /**
+     * @return float
+     */
+    public function getInterest();
+
+
+    /**
+     * @param float $interest
+     *
+     * @return $this
+     */
+    public function setInterest($interest);
+
+
+    /**
+     * @param array $extensionAttributes
+     *
+     * @return $this
+     */
+    public function setExtensionAttributes(array $extensionAttributes);
+
+
+    /**
+     * @return array
+     */
+    public function getExtensionAttributes();
 }

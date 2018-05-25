@@ -53,8 +53,9 @@ class Save extends AbstractImport
         $orderData = $this->getOrderIntegrator()->order($referenceCode);
         
         if (!$orderData) {
-            $this->messageManager
-                ->addWarningMessage(__('The order reference "%1" does not exist in Skyhub.', $referenceCode));
+            $this->messageManager->addWarningMessage(
+                __('The order reference "%1" does not exist in Skyhub.', $referenceCode)
+            );
             
             return false;
         }
@@ -70,8 +71,9 @@ class Save extends AbstractImport
             return false;
         }
     
-        $this->messageManager
-            ->addSuccessMessage(__('The order reference "%1" was successfully imported.', $referenceCode));
+        $this->messageManager->addSuccessMessage(
+            __('The order reference "%1" was successfully imported.', $referenceCode)
+        );
         
         return true;
     }

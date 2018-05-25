@@ -19,6 +19,7 @@ use Magento\Store\Model\Store;
 use Magento\Customer\Api\Data\RegionInterfaceFactory;
 use BitTools\SkyHub\Integration\Support\Sales\Order\CreateFactory as OrderCreatorFactory;
 use BitTools\SkyHub\Helper\Sales\Order as OrderHelper;
+use BitTools\SkyHub\Integration\Processor\Sales\Order\Status as StatusProcessor;
 
 class Order extends AbstractProcessor
 {
@@ -58,6 +59,9 @@ class Order extends AbstractProcessor
 
     /** @var OrderHelper */
     protected $orderHelper;
+
+    /** @var StatusProcessor */
+    protected $statusProcessor;
     
     /** @var array|AddressInterface[] */
     protected $addresses = [
@@ -76,7 +80,8 @@ class Order extends AbstractProcessor
         CustomerInterfaceFactory $customerFactory,
         RegionInterfaceFactory $regionFactory,
         OrderCreatorFactory $orderCreatorFactory,
-        OrderHelper $orderHelper
+        OrderHelper $orderHelper,
+        StatusProcessor $statusProcessor
     )
     {
         parent::__construct($integrationContext);
@@ -90,6 +95,7 @@ class Order extends AbstractProcessor
         $this->regionFactory       = $regionFactory;
         $this->orderCreatorFactory = $orderCreatorFactory;
         $this->orderHelper         = $orderHelper;
+        $this->statusProcessor     = $statusProcessor;
     }
 
 
@@ -97,6 +103,8 @@ class Order extends AbstractProcessor
      * @param array $data
      *
      * @return bool|SalesOrder
+     *
+     * @throws \Exception
      */
     public function createOrder(array $data)
     {
@@ -104,12 +112,11 @@ class Order extends AbstractProcessor
             /** @var SalesOrder $order */
             $order = $this->processOrderCreation($data);
         } catch (\Exception $e) {
-            $this->eventManager()->dispatch(
-                'bseller_skyhub_order_import_exception', [
+            $this->eventManager()
+                ->dispatch('bseller_skyhub_order_import_exception', [
                     'exception' => $e,
                     'order_data' => $data,
-                ]
-            );
+                ]);
 
             $this->logger()->critical($e);
 
@@ -186,7 +193,8 @@ class Order extends AbstractProcessor
 
         $creator->setOrderInfo($info)
             ->setCustomer($customer)
-            ->setShippingMethod($shippingMethod, $shippingCarrier, (float) $shippingCost)
+            // ->setShippingMethod($shippingMethod, $shippingCarrier, (float) $shippingCost)
+            ->setShippingMethod('freeshipping', 'freeshipping', (float) $shippingCost)
             ->setPaymentMethod('bseller_skyhub_standard')
             ->setDiscountAmount($discountAmount)
             ->setInterestAmount($interestAmount)
@@ -229,6 +237,8 @@ class Order extends AbstractProcessor
      * @param SalesOrder $order
      *
      * @return $this
+     *
+     * @throws \Exception
      */
     protected function updateOrderStatus(array $skyhubOrderData, SalesOrder $order)
     {
@@ -238,8 +248,7 @@ class Order extends AbstractProcessor
         /**
          * @todo Update this code to get the correct processor.
          */
-        $this->salesOrderStatusProcessor()
-            ->processOrderStatus($skyhubStatusCode, $skyhubStatusType, $order);
+        $this->statusProcessor->processOrderStatus($skyhubStatusCode, $skyhubStatusType, $order);
 
         return $this;
     }

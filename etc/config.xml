@@ -59,13 +59,25 @@
         <payment>
             <bseller_skyhub_standard>
                 <active>1</active>
-                <model>ZPay\Standard\Model\Payment\Method\Standard</model>
+                <model>BitTools\SkyHub\Model\Payment\Method\Standard</model>
                 <order_status>pending</order_status>
-                <title>BSeller SkyHub Standard</title>
+                <title>BitTools SkyHub Standard</title>
                 <allowspecific>0</allowspecific>
-                <!--<group>zpay</group>-->
                 <sort_order>900</sort_order>
             </bseller_skyhub_standard>
         </payment>
+        <carrier>
+            <bseller_skyhub_standard>
+                <active>1</active>
+                <sallowspecific>0</sallowspecific>
+                <model>BitTools\SkyHub\Model\Shipping\Carrier\Standard</model>
+                <name>Fixed</name>
+                <price>0.00</price>
+                <title>BitTools SkyHub Standard</title>
+                <type>I</type>
+                <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
+                <handling_type>F</handling_type>
+            </bseller_skyhub_standard>
+        </carrier>
     </default>
 </config>

@@ -17,7 +17,7 @@ class Order extends AbstractResourceModel
     const MAIN_TABLE = 'bittools_skyhub_orders';
     
     /** @var string */
-    const ID_FIELD = 'id';
+    const ID_FIELD   = 'id';
     
     
     /**
@@ -46,7 +46,7 @@ class Order extends AbstractResourceModel
             ->select()
             ->from($this->getMainTable(), 'order_id')
             ->where('code = ?', $skyhubCode)
-            ->where('store_id IN (?)', [0, $storeId])
+            ->where('store_id IN (?)', $this->getDefaultStoreIdsFilter($storeId))
             ->limit(1);
         
         $result = $this->getConnection()->fetchOne($select);
@@ -71,5 +71,28 @@ class Order extends AbstractResourceModel
     {
         $orderId = $this->getOrderId($skyhubCode, $storeId);
         return (bool) $orderId;
+    }
+
+
+    /**
+     * @param null|int $storeId
+     *
+     * @return array
+     */
+    public function getDefaultStoreIdsFilter($storeId = null)
+    {
+        $storeIds = [0];
+
+        if (empty($storeId)) {
+            return $storeIds;
+        }
+
+        if (!is_array($storeId)) {
+            $storeId = [$storeId];
+        }
+
+        $storeIds = array_merge($storeIds, $storeId);
+
+        return $storeIds;
     }
 }
