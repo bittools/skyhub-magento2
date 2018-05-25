@@ -17,6 +17,8 @@ use Magento\Framework\DataObject;
 use Magento\Catalog\Model as CatalogModelDir;
 use Magento\Store\Model\Store;
 use Magento\Customer\Api\Data\RegionInterfaceFactory;
+use BitTools\SkyHub\Integration\Support\Sales\Order\CreateFactory as OrderCreatorFactory;
+use BitTools\SkyHub\Helper\Sales\Order as OrderHelper;
 
 class Order extends AbstractProcessor
 {
@@ -50,6 +52,12 @@ class Order extends AbstractProcessor
 
     /** @var RegionInterfaceFactory */
     protected $regionFactory;
+
+    /** @var OrderCreatorFactory */
+    protected $orderCreatorFactory;
+
+    /** @var OrderHelper */
+    protected $orderHelper;
     
     /** @var array|AddressInterface[] */
     protected $addresses = [
@@ -66,18 +74,22 @@ class Order extends AbstractProcessor
         AddressRepositoryInterface $addressRepository,
         AddressFactory $addressFactory,
         CustomerInterfaceFactory $customerFactory,
-        RegionInterfaceFactory $regionFactory
+        RegionInterfaceFactory $regionFactory,
+        OrderCreatorFactory $orderCreatorFactory,
+        OrderHelper $orderHelper
     )
     {
         parent::__construct($integrationContext);
 
-        $this->orderRepository    = $orderRepository;
-        $this->productRepository  = $productRepository;
-        $this->customerRepository = $customerRepository;
-        $this->addressRepository  = $addressRepository;
-        $this->addressFactory     = $addressFactory;
-        $this->customerFactory    = $customerFactory;
-        $this->regionFactory      = $regionFactory;
+        $this->orderRepository     = $orderRepository;
+        $this->productRepository   = $productRepository;
+        $this->customerRepository  = $customerRepository;
+        $this->addressRepository   = $addressRepository;
+        $this->addressFactory      = $addressFactory;
+        $this->customerFactory     = $customerFactory;
+        $this->regionFactory       = $regionFactory;
+        $this->orderCreatorFactory = $orderCreatorFactory;
+        $this->orderHelper         = $orderHelper;
     }
 
 
@@ -162,19 +174,15 @@ class Order extends AbstractProcessor
         $interestAmount  = (float)  $this->arrayExtract($data, 'interest', 0.0000);
 
         /** @var \BitTools\SkyHub\Integration\Support\Sales\Order\Create $creator */
-        $creator = $this->objectManager()
-            ->create(\BitTools\SkyHub\Integration\Support\Sales\Order\Create::class);
+        $creator = $this->orderCreatorFactory->create();
 
-        /** @var \BitTools\SkyHub\Helper\Sales\Order $helper */
-        $helper = $this->objectManager()->create(\BitTools\SkyHub\Helper\Sales\Order::class);
+        $info = new DataObject(['send_confirmation' => 0]);
 
-        $incrementId = $helper->getNewOrderIncrementId($code);
-        $info = new DataObject(
-            [
-                'increment_id' => $incrementId,
-                'send_confirmation' => 0
-            ]
-        );
+        $incrementId = $this->orderHelper->getNewOrderIncrementId($code);
+
+        if ($incrementId) {
+            $info->setData('increment_id', $incrementId);
+        }
 
         $creator->setOrderInfo($info)
             ->setCustomer($customer)

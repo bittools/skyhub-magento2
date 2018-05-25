@@ -3,8 +3,9 @@
 namespace BitTools\SkyHub\Integration;
 
 use BitTools\SkyHub\Helper\Context as HelperContext;
+use Magento\Framework\ObjectManager\ContextInterface;
 
-class Context implements \Magento\Framework\ObjectManager\ContextInterface
+class Context implements ContextInterface
 {
     
     /** @var Service */

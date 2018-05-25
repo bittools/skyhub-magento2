@@ -30,7 +30,7 @@ class Service
      * Service constructor.
      *
      * @param HelperContext $helperContext
-     * @param ConfigContext $config
+     * @param ConfigContext $configContext
      * @param DirectoryList $directoryList
      */
     public function __construct(

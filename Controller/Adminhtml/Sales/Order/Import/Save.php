@@ -49,10 +49,8 @@ class Save extends AbstractImport
     {
         $this->helperContext->storeManager()->setCurrentStore($storeId);
         
-        /** @var \BitTools\SkyHub\Integration\Integrator\Sales\Order $integrator */
-        $integrator = $this->getOrderIntegrator();
-        
-        $orderData = $integrator->order($referenceCode);
+        /** @var array|bool $orderData */
+        $orderData = $this->getOrderIntegrator()->order($referenceCode);
         
         if (!$orderData) {
             $this->messageManager
@@ -60,12 +58,9 @@ class Save extends AbstractImport
             
             return false;
         }
-    
-        /** @var \BitTools\SkyHub\Integration\Processor\Sales\Order $integrator */
-        $processor = $this->getOrderProcessor();
         
         /** @var bool|OrderInterface $order */
-        $order = $processor->createOrder($orderData);
+        $order = $this->getOrderProcessor()->createOrder($orderData);
         
         if (!$order) {
             $this->messageManager->addWarningMessage(

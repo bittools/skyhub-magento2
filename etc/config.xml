@@ -56,5 +56,16 @@
                 <expression>*/10 * * * *</expression>
             </cron_sales_order_queue>
         </bittools_skyhub>
+        <payment>
+            <bseller_skyhub_standard>
+                <active>1</active>
+                <model>ZPay\Standard\Model\Payment\Method\Standard</model>
+                <order_status>pending</order_status>
+                <title>BSeller SkyHub Standard</title>
+                <allowspecific>0</allowspecific>
+                <!--<group>zpay</group>-->
+                <sort_order>900</sort_order>
+            </bseller_skyhub_standard>
+        </payment>
     </default>
 </config>

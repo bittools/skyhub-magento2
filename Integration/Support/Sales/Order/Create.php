@@ -281,7 +281,7 @@ class Create
                     'street'              => $address->getStreet(),
                     'city'                => $address->getCity(),
                     'country_id'          => $address->getCountryId(),
-                    'region'              => $address->getRegion(),
+                    'region'              => $address->getRegion()->getRegion(),
                     'region_id'           => $address->getRegionId(),
                     'postcode'            => $address->getPostcode(),
                     'telephone'           => $this->formatPhone($address->getTelephone()),
