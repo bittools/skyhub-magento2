@@ -14,6 +14,12 @@ class Standard extends FreePayment
     /** @var bool */
     protected $_canUseCheckout = false;
 
+    /** @var bool */
+    protected $_isOffline = true;
+
+    /** @var bool */
+    protected $_canUseInternal = false;
+
 
     /**
      * @param CartInterface|null $quote

@@ -37,6 +37,8 @@
     <preference for="BitTools\SkyHub\Api\QueueRepositoryInterface" type="BitTools\SkyHub\Model\QueueRepository"/>
     <preference for="BitTools\SkyHub\Api\Data\Data\QueueInterface" type="BitTools\SkyHub\Model\Queue"/>
 
+    <preference for="BitTools\SkyHub\Api\Data\SalesOrderExtensionAttributeInterface" type="BitTools\SkyHub\Model\Sales\Order\AdditionalInfo"/>
+
     <!-- *********************************************************************************************************** -->
     <!-- TERMINAL COMMANDS DECLARATIONS                                                                              -->
     <!-- *********************************************************************************************************** -->
