@@ -49,6 +49,7 @@
                 <item name="integrateCatalogCategory" xsi:type="object">BitTools\SkyHub\Console\Integration\Catalog\IntegrateCategory</item>
                 <item name="integrateCatalogProduct" xsi:type="object">BitTools\SkyHub\Console\Integration\Catalog\IntegrateProduct</item>
                 <item name="integrateCatalogProductAttribute" xsi:type="object">BitTools\SkyHub\Console\Integration\Catalog\IntegrateProductAttribute</item>
+                <item name="integrateSalesOrder" xsi:type="object">BitTools\SkyHub\Console\Integration\Sales\IntegrateOrder</item>
             </argument>
         </arguments>
     </type>

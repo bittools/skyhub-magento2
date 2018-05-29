@@ -6,6 +6,7 @@ use BitTools\SkyHub\Helper\Context;
 use BitTools\SkyHub\Integration\Integrator\Catalog\Category as CategoryIntegrator;
 use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Store\Api\Data\StoreInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -72,7 +73,7 @@ class IntegrateCategory extends AbstractCatalog
      *
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    protected function processExecute(InputInterface $input, OutputInterface $output)
+    protected function processExecute(InputInterface $input, OutputInterface $output, StoreInterface $store)
     {
         $categoryIds = array_unique($input->getOption(self::INPUT_KEY_CATEGORY_ID));
         $categoryIds = array_filter($categoryIds);

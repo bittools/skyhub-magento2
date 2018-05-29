@@ -6,6 +6,7 @@ use BitTools\SkyHub\Helper\Context;
 use BitTools\SkyHub\Integration\Integrator\Catalog\Product as ProductIntegrator;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Store\Api\Data\StoreInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -70,7 +71,7 @@ class IntegrateProduct extends AbstractCatalog
      *
      * @throws \Exception
      */
-    protected function processExecute(InputInterface $input, OutputInterface $output)
+    protected function processExecute(InputInterface $input, OutputInterface $output, StoreInterface $store)
     {
         $productIds = $this->getProductIds($input, $output);
         

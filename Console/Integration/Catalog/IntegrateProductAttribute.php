@@ -7,6 +7,7 @@ use BitTools\SkyHub\Integration\Integrator\Catalog\Product\Attribute as ProductA
 use Magento\Catalog\Model\Product;
 use Magento\Eav\Api\AttributeRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Store\Api\Data\StoreInterface;
 use SkyHub\Api\Handler\Response\HandlerInterfaceException;
 use SkyHub\Api\Handler\Response\HandlerInterfaceSuccess;
 use Symfony\Component\Console\Input\InputOption;
@@ -73,7 +74,7 @@ class IntegrateProductAttribute extends AbstractCatalog
      *
      * @throws \Exception
      */
-    protected function processExecute(InputInterface $input, OutputInterface $output)
+    protected function processExecute(InputInterface $input, OutputInterface $output, StoreInterface $store)
     {
         $attributes = $this->getAttributes($input);
         
