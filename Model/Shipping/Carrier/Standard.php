@@ -9,7 +9,15 @@ class Standard extends Freeshipping
 {
 
     /** @var string */
-    protected $_code = 'bseller_skyhub_standard';
+    const CODE = 'bittools_skyhub_standard';
+
+
+    /** @var string */
+    protected $_code = self::CODE;
+
+
+    /** @var \Magento\Quote\Model\Quote */
+    protected $quote;
 
 
     /**
@@ -19,7 +27,18 @@ class Standard extends Freeshipping
      */
     public function collectRates(RateRequest $rateRequest)
     {
-        if (!$this->getConfigFlag('active')) {
+        if (!$this->isAvailable($rateRequest)) {
+            return false;
+        }
+
+        /** @var \Magento\Quote\Model\Quote $quote */
+        $quote = $this->getQuote($rateRequest);
+
+        $methodCode   = $quote->getData('fixed_shipping_method_code');
+        $methodTitle  = $quote->getData('fixed_shipping_title');
+        $methodAmount = (float) $quote->getData('fixed_shipping_amount');
+
+        if (!$methodCode || !$methodTitle) {
             return false;
         }
 
@@ -29,14 +48,14 @@ class Standard extends Freeshipping
         /** @var \Magento\Quote\Model\Quote\Address\RateResult\Method $method */
         $method = $this->_rateMethodFactory->create();
 
-        $method->setCarrier('freeshipping');
+        $method->setCarrier(self::CODE);
         $method->setCarrierTitle($this->getConfigData('title'));
 
-        $method->setMethod('freeshipping');
-        $method->setMethodTitle($this->getConfigData('name'));
+        $method->setMethod($methodCode);
+        $method->setMethodTitle($methodTitle);
 
-        $method->setPrice('0.00');
-        $method->setCost('0.00');
+        $method->setPrice($methodAmount);
+        $method->setCost($methodAmount);
 
         $result->append($method);
 
@@ -44,8 +63,39 @@ class Standard extends Freeshipping
     }
 
 
-    protected function getQuote()
+    protected function isAvailable(RateRequest $rateRequest)
     {
+        if (!$this->getConfigFlag('active')) {
+            return false;
+        }
 
+        if (!$this->getQuote($rateRequest)) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+    /**
+     * @param RateRequest $rateRequest
+     * @return \Magento\Quote\Model\Quote
+     */
+    protected function getQuote(RateRequest $rateRequest)
+    {
+        if ($this->quote) {
+            return $this->quote;
+        }
+
+        /** @var \Magento\Quote\Model\Quote\Item $item */
+        foreach ($rateRequest->getAllItems() as $item) {
+            if (!$item || !$item->getQuote()) {
+                continue;
+            }
+
+            $this->quote = $item->getQuote();
+        }
+
+        return $this->quote;
     }
 }

@@ -65,6 +65,7 @@ class IntegrateOrder extends AbstractSales
     /**
      * @param InputInterface  $input
      * @param OutputInterface $output
+     * @param StoreInterface  $store
      *
      * @return int|null|void
      *

@@ -33,7 +33,9 @@ class Create extends \Magento\Sales\Model\AdminOrder\Create
             return false;
         }
 
-        $qty = (float) $this->arrayExtract($productData, 'qty');
+        $qty        = (float) $this->arrayExtract($productData, 'qty');
+        $finalPrice = (float) $this->arrayExtract($productData, 'final_price');
+
 
         $this->registerCurrentData($product, $productData);
 
@@ -46,7 +48,11 @@ class Create extends \Magento\Sales\Model\AdminOrder\Create
                 break;
             case \Magento\Catalog\Model\Product\Type::TYPE_SIMPLE:
             default:
-                $config = ['qty' => $qty];
+                $config = [
+                    'qty'          => $qty,
+                    'custom_price' => $finalPrice,
+                ];
+
                 $this->addProduct($product, $config);
         }
 

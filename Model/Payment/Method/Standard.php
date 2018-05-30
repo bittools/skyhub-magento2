@@ -9,7 +9,10 @@ class Standard extends FreePayment
 {
 
     /** @var string */
-    protected $_code = 'bseller_skyhub_standard';
+    const CODE = 'bseller_skyhub_standard';
+
+    /** @var string */
+    protected $_code = self::CODE;
 
     /** @var bool */
     protected $_canUseCheckout = false;

@@ -5,5 +5,6 @@
         <attribute code="skyhub_channel" type="string"/>
         <attribute code="skyhub_invoice_key" type="string"/>
         <attribute code="skyhub_interest" type="float"/>
+        <attribute code="skyhub_json" type="string"/>
     </extension_attributes>
 </config>

@@ -174,8 +174,10 @@ class Order extends AbstractProcessor
         /** @var CustomerInterface $customer */
         $customer = $this->getCustomer($customerData);
 
-        $shippingCarrier = (string) $this->arrayExtract($data, 'shipping_carrier');
-        $shippingMethod  = (string) $this->arrayExtract($data, 'shipping_method');
+        $paymentMethod   = \BitTools\SkyHub\Model\Payment\Method\Standard::CODE;
+
+        $shippingCarrier = \BitTools\SkyHub\Model\Shipping\Carrier\Standard::CODE;
+        $shippingTitle   = (string) $this->arrayExtract($data, 'shipping_method');
         $shippingCost    = (float)  $this->arrayExtract($data, 'shipping_cost', 0.0000);
         $discountAmount  = (float)  $this->arrayExtract($data, 'discount', 0.0000);
         $interestAmount  = (float)  $this->arrayExtract($data, 'interest', 0.0000);
@@ -193,9 +195,8 @@ class Order extends AbstractProcessor
 
         $creator->setOrderInfo($info)
             ->setCustomer($customer)
-            // ->setShippingMethod($shippingMethod, $shippingCarrier, (float) $shippingCost)
-            ->setShippingMethod('freeshipping', 'freeshipping', (float) $shippingCost)
-            ->setPaymentMethod('bseller_skyhub_standard')
+            ->setShippingMethod($shippingTitle, $shippingCarrier, (float) $shippingCost)
+            ->setPaymentMethod($paymentMethod)
             ->setDiscountAmount($discountAmount)
             ->setInterestAmount($interestAmount)
             ->addOrderAddress($this->getBillingAddress(), self::ADDRESS_TYPE_BILLING)
@@ -218,11 +219,20 @@ class Order extends AbstractProcessor
         if (!$order) {
             return false;
         }
+        
+        $order->getExtensionAttributes()
+            ->setSkyhubCode($code)
+            ->setSkyhubChannel($channel)
+            ->setSkyhubInterest(0.0000)
+            ->setSkyhubJson(json_encode($data))
+        ;
 
+        /**
         $order->setData('bseller_skyhub', true);
         $order->setData('bseller_skyhub_code', $code);
         $order->setData('bseller_skyhub_channel', $channel);
         $order->setData('bseller_skyhub_json', json_encode($data));
+        */
 
         $this->orderRepository->save($order);
 
@@ -581,7 +591,7 @@ class Order extends AbstractProcessor
 
 
     /**
-     * @param string $code
+     * @param string $skyhubCode
      *
      * @return int|bool
      *

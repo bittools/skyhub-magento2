@@ -95,7 +95,8 @@ class Create
         $data = [
             'order' => [
                 'comment' => [
-                    'customer_note' => $comment,
+                    'customer_note'        => $comment,
+                    'customer_note_notify' => false
                 ]
             ],
         ];
@@ -213,7 +214,7 @@ class Create
         $data = [
             'order' => [
                 // 'shipping_method'        => self::CARRIER_PREFIX.$methodCode,
-                'shipping_method'        => $methodCode . '_' . $methodCode,
+                'shipping_method'        => $carrier . '_' . $methodCode,
                 'shipping_method_code'   => $methodCode,
                 'shipping_title'         => $title,
                 'shipping_carrier'       => $carrier,
@@ -317,6 +318,15 @@ class Create
     {
         return $this->getOrderCreator()->getQuote();
     }
+
+
+    /**
+     * @return \Magento\Quote\Model\Quote\Address
+     */
+    public function getShippingAddress()
+    {
+        return $this->getQuote()->getShippingAddress();
+    }
     
     
     /**
@@ -398,15 +408,15 @@ class Create
             $this->initSession($this->arrayExtract($orderData, 'session'));
 
             $this->processQuote($orderData);
-            $payment = $this->arrayExtract($orderData, 'payment');
+            $paymentData = $this->arrayExtract($orderData, 'payment');
 
-            if (!empty($payment)) {
+            if (!empty($paymentData)) {
                 $this->getOrderCreator()
-                    ->setPaymentData($payment);
+                    ->setPaymentData($paymentData);
 
                 $this->getQuote()
                     ->getPayment()
-                    ->addData($payment);
+                    ->addData($paymentData);
             }
 
             /** @todo Find another way to avoid customer e-mail sending */
@@ -445,13 +455,18 @@ class Create
      */
     protected function processQuote($data = array())
     {
-        $order = (array) $this->arrayExtract($data, 'order', []);
+        $orderData = (array) $this->arrayExtract($data, 'order', []);
+
+        /** @var \BitTools\SkyHub\Model\Sales\AdminOrder\Create $orderCreator */
+        $orderCreator = $this->getOrderCreator();
 
         /* Saving order data */
-        if (!empty($order)) {
-            $this->getOrderCreator()->importPostData($order);
-            $this->getQuote()
-                ->setReservedOrderId($this->arrayExtract($order, 'increment_id'));
+        if (!empty($orderData)) {
+            $orderCreator->importPostData($orderData);
+        }
+
+        if ($incrementId = $this->arrayExtract($orderData, 'increment_id')) {
+            $this->getQuote()->setReservedOrderId($incrementId);
         }
 
         /* Just like adding products from Magento admin grid */
@@ -459,17 +474,20 @@ class Create
 
         /** @var array $product */
         foreach ($products as $item) {
-            $this->getOrderCreator()->addProductByData($item);
+            $orderCreator->addProductByData($item);
         }
 
-        $this->registerDiscount($order);
-        $this->registerInterest($order);
+        $this->registerDiscount($orderData);
+        $this->registerInterest($orderData);
 
         $shippingMethod       = (string) $this->arrayExtract($data, 'order/shipping_method');
         $shippingMethodCode   = (string) $this->arrayExtract($data, 'order/shipping_method_code');
         $shippingCarrier      = (string) $this->arrayExtract($data, 'order/shipping_carrier');
         $shippingTitle        = (string) $this->arrayExtract($data, 'order/shipping_title');
         $shippingAmount       = (float) $this->arrayExtract($data, 'order/shipping_cost');
+
+        $this->getShippingAddress()
+            ->setShippingMethod($shippingMethod);
 
         $this->getQuote()
             ->setFixedShippingAmount($shippingAmount)
@@ -478,30 +496,23 @@ class Create
             ->setFixedShippingCarrier($shippingCarrier)
             ->setFixedShippingTitle($shippingTitle);
 
-        /* Collect shipping rates */
-        $this->resetQuote()
-            ->getOrderCreator()
-            ->collectShippingRates();
-
         /* Add payment data */
         $payment = $this->arrayExtract($data, 'payment', []);
         if (!empty($payment)) {
-            $this->getOrderCreator()
+            $orderCreator
                 ->getQuote()
                 ->getPayment()
                 ->addData($payment);
         }
 
-        $this->getOrderCreator()
+        /* Collect shipping rates */
+        $this->resetQuote();
+        $this->getShippingAddress()->unsetData('cached_items_all');
+        $orderCreator->collectShippingRates();
+
+        $orderCreator
             ->initRuleData()
             ->saveQuote();
-
-        if (!empty($payment)) {
-            $this->getOrderCreator()
-                ->getQuote()
-                ->getPayment()
-                ->addData($payment);
-        }
 
         return $this;
     }
