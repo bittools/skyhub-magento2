@@ -307,10 +307,15 @@ class InstallSchema implements InstallSchemaInterface
                 'nullable' => true,
                 'default'  => null,
             ], 'SkyHub Invoice Key')
-            ->addColumn('interest', Table::TYPE_TEXT, 255, [
+            ->addColumn('interest', Table::TYPE_DECIMAL, '12,4', [
                 'nullable' => false,
                 'default'  => '0.0000',
-            ], 'SkyHub Interest Amount');
+            ], 'SkyHub Interest Amount')
+            ->addColumn('data_source', Table::TYPE_TEXT, null, [
+                'nullable' => true,
+                'default'  => null,
+            ], 'SkyHub Order JSON')
+        ;
     
         /**
          * Add relations.

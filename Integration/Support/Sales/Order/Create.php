@@ -419,9 +419,6 @@ class Create
                     ->addData($paymentData);
             }
 
-            /** @todo Find another way to avoid customer e-mail sending */
-            // $this->context->helperContext()->scopeConfig()->setConfig(Order::XML_PATH_EMAIL_ENABLED, "0");
-
             $this->context->eventManager()->dispatch('bseller_skyhub_order_import_before', [
                 'order'      => $order,
                 'order_data' => $orderData,
@@ -486,8 +483,8 @@ class Create
         $shippingTitle        = (string) $this->arrayExtract($data, 'order/shipping_title');
         $shippingAmount       = (float) $this->arrayExtract($data, 'order/shipping_cost');
 
-        $this->getShippingAddress()
-            ->setShippingMethod($shippingMethod);
+//        $this->getShippingAddress()
+//            ->setShippingMethod($shippingMethod);
 
         $this->getQuote()
             ->setFixedShippingAmount($shippingAmount)

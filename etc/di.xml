@@ -39,6 +39,9 @@
 
     <preference for="BitTools\SkyHub\Api\Data\SalesOrderExtensionAttributeInterface" type="BitTools\SkyHub\Model\Sales\Order\AdditionalInfo"/>
 
+    <preference for="BitTools\SkyHub\Api\Data\OrderInterface" type="BitTools\SkyHub\Model\Order"/>
+    <preference for="BitTools\SkyHub\Api\OrderRepositoryInterface" type="BitTools\SkyHub\Model\OrderRepository"/>
+
     <!-- *********************************************************************************************************** -->
     <!-- TERMINAL COMMANDS DECLARATIONS                                                                              -->
     <!-- *********************************************************************************************************** -->
@@ -52,6 +55,18 @@
                 <item name="integrateSalesOrder" xsi:type="object">BitTools\SkyHub\Console\Integration\Sales\IntegrateOrder</item>
             </argument>
         </arguments>
+    </type>
+
+    <!-- *********************************************************************************************************** -->
+    <!-- PLUGINS DECLARATIONS                                                                                        -->
+    <!-- *********************************************************************************************************** -->
+
+    <type name="Magento\Sales\Api\Data\OrderInterface">
+        <plugin name="skyhub_information" type="BitTools\SkyHub\Plugin\Sales\Order"/>
+    </type>
+
+    <type name="Magento\Sales\Api\OrderRepositoryInterface">
+        <plugin name="skyhub_information" type="BitTools\SkyHub\Plugin\Sales\Order"/>
     </type>
 
     <!-- *********************************************************************************************************** -->

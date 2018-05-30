@@ -4,6 +4,7 @@ namespace BitTools\SkyHub\Model\Sales\AdminOrder;
 
 use BitTools\SkyHub\Functions;
 use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\Product\Type as ProductTypeSimple;
 
 class Create extends \Magento\Sales\Model\AdminOrder\Create
 {
@@ -33,8 +34,7 @@ class Create extends \Magento\Sales\Model\AdminOrder\Create
             return false;
         }
 
-        $qty        = (float) $this->arrayExtract($productData, 'qty');
-        $finalPrice = (float) $this->arrayExtract($productData, 'final_price');
+        $qty = (float) $this->arrayExtract($productData, 'qty');
 
 
         $this->registerCurrentData($product, $productData);
@@ -46,12 +46,18 @@ class Create extends \Magento\Sales\Model\AdminOrder\Create
             case \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE:
                 $this->addProductGrouped($product, $productData);
                 break;
-            case \Magento\Catalog\Model\Product\Type::TYPE_SIMPLE:
+            case ProductTypeSimple::TYPE_SIMPLE:
             default:
                 $config = [
-                    'qty'          => $qty,
-                    'custom_price' => $finalPrice,
+                    'qty' => $qty,
                 ];
+
+                $finalPrice = (float) $this->arrayExtract($productData, 'final_price');
+
+                if ($finalPrice) {
+                    $config['custom_price'] = $finalPrice;
+                }
+
 
                 $this->addProduct($product, $config);
         }

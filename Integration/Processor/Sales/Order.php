@@ -2,6 +2,7 @@
 
 namespace BitTools\SkyHub\Integration\Processor\Sales;
 
+use BitTools\SkyHub\Api\OrderRepositoryInterface as SkyhubOrderRepositoryInterface;
 use BitTools\SkyHub\Integration\Context as IntegrationContext;
 use BitTools\SkyHub\Integration\Processor\AbstractProcessor;
 use Magento\Catalog\Api\ProductRepositoryInterface;
@@ -20,6 +21,7 @@ use Magento\Customer\Api\Data\RegionInterfaceFactory;
 use BitTools\SkyHub\Integration\Support\Sales\Order\CreateFactory as OrderCreatorFactory;
 use BitTools\SkyHub\Helper\Sales\Order as OrderHelper;
 use BitTools\SkyHub\Integration\Processor\Sales\Order\Status as StatusProcessor;
+use BitTools\SkyHub\Api\Data\OrderInterfaceFactory;
 
 class Order extends AbstractProcessor
 {
@@ -35,6 +37,9 @@ class Order extends AbstractProcessor
     
     /** @var OrderRepositoryInterface */
     protected $orderRepository;
+
+    /** @var SkyhubOrderRepositoryInterface */
+    protected $skyhubOrderRepository;
 
     /** @var ProductRepositoryInterface */
     protected $productRepository;
@@ -62,6 +67,9 @@ class Order extends AbstractProcessor
 
     /** @var StatusProcessor */
     protected $statusProcessor;
+
+    /** @var OrderInterfaceFactory */
+    protected $orderFactory;
     
     /** @var array|AddressInterface[] */
     protected $addresses = [
@@ -73,6 +81,7 @@ class Order extends AbstractProcessor
     public function __construct(
         IntegrationContext $integrationContext,
         OrderRepositoryInterface $orderRepository,
+        SkyhubOrderRepositoryInterface $skyhubOrderRepository,
         ProductRepositoryInterface $productRepository,
         CustomerRepositoryInterface $customerRepository,
         AddressRepositoryInterface $addressRepository,
@@ -81,21 +90,24 @@ class Order extends AbstractProcessor
         RegionInterfaceFactory $regionFactory,
         OrderCreatorFactory $orderCreatorFactory,
         OrderHelper $orderHelper,
-        StatusProcessor $statusProcessor
+        StatusProcessor $statusProcessor,
+        OrderInterfaceFactory $orderFactory
     )
     {
         parent::__construct($integrationContext);
 
-        $this->orderRepository     = $orderRepository;
-        $this->productRepository   = $productRepository;
-        $this->customerRepository  = $customerRepository;
-        $this->addressRepository   = $addressRepository;
-        $this->addressFactory      = $addressFactory;
-        $this->customerFactory     = $customerFactory;
-        $this->regionFactory       = $regionFactory;
-        $this->orderCreatorFactory = $orderCreatorFactory;
-        $this->orderHelper         = $orderHelper;
-        $this->statusProcessor     = $statusProcessor;
+        $this->orderRepository       = $orderRepository;
+        $this->skyhubOrderRepository = $skyhubOrderRepository;
+        $this->productRepository     = $productRepository;
+        $this->customerRepository    = $customerRepository;
+        $this->addressRepository     = $addressRepository;
+        $this->addressFactory        = $addressFactory;
+        $this->customerFactory       = $customerFactory;
+        $this->regionFactory         = $regionFactory;
+        $this->orderCreatorFactory   = $orderCreatorFactory;
+        $this->orderHelper           = $orderHelper;
+        $this->statusProcessor       = $statusProcessor;
+        $this->orderFactory          = $orderFactory;
     }
 
 
@@ -157,8 +169,6 @@ class Order extends AbstractProcessor
             return $order;
         }
 
-//        $this->simulateStore($this->getStore());
-
         $billingAddress  = new DataObject($this->arrayExtract($data, 'billing_address'));
         $shippingAddress = new DataObject($this->arrayExtract($data, 'shipping_address'));
 
@@ -219,20 +229,20 @@ class Order extends AbstractProcessor
         if (!$order) {
             return false;
         }
-        
-        $order->getExtensionAttributes()
-            ->setSkyhubCode($code)
-            ->setSkyhubChannel($channel)
-            ->setSkyhubInterest(0.0000)
-            ->setSkyhubJson(json_encode($data))
+
+        /** @var \BitTools\SkyHub\Api\Data\OrderInterface $relation */
+        $relation = $this->orderFactory->create();
+        $relation->setOrderId($order->getId())
+            ->setStoreId($order->getStoreId())
+            ->setCode($code)
+            ->setChannel($channel)
+            ->setInterest($interestAmount)
+            ->setDataSource(json_encode($data))
         ;
 
-        /**
-        $order->setData('bseller_skyhub', true);
-        $order->setData('bseller_skyhub_code', $code);
-        $order->setData('bseller_skyhub_channel', $channel);
-        $order->setData('bseller_skyhub_json', json_encode($data));
-        */
+        $this->skyhubOrderRepository->save($relation);
+
+        $order->getExtensionAttributes()->setSkyhubInfo($relation);
 
         $this->orderRepository->save($order);
 
