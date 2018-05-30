@@ -94,8 +94,22 @@ class IntegrateOrder extends AbstractSales
                     $this->style()->error(__('This order could not be created.'));
                     continue;
                 }
+
+                if (true === $order->getData('is_created')) {
+                    $message = __(
+                        'The order code %1 was successfully created. Order ID %2.',
+                        $orderCode,
+                        $order->getIncrementId()
+                    );
+                } else {
+                    $message = __(
+                        'The order code %1 already exists and had its status updated. Order ID %2.',
+                        $orderCode,
+                        $order->getIncrementId()
+                    );
+                }
                 
-                $this->style()->success(__('The order code %1 was successfully created.', $orderCode));
+                $this->style()->success($message);
             } catch (\Exception $e) {
                 $this->style()->error(__('Error when trying to create an order.'));
                 $this->style()->error(__('Message: %1.', $e->getMessage()));

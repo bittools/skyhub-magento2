@@ -590,6 +590,8 @@ class Order extends AbstractProcessor
 
 
     /**
+     * @param int|null $storeId
+     *
      * @return \Magento\Store\Api\Data\StoreInterface
      *
      * @throws \Magento\Framework\Exception\NoSuchEntityException
@@ -601,17 +603,18 @@ class Order extends AbstractProcessor
 
 
     /**
-     * @param string $skyhubCode
+     * @param string   $skyhubCode
+     * @param null|int $storeId
      *
      * @return int|bool
      *
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    protected function getOrderId($skyhubCode)
+    protected function getOrderId($skyhubCode, $storeId = null)
     {
         /** @var \BitTools\SkyHub\Model\ResourceModel\Order $orderResource */
         $orderResource = $this->objectManager()->create(\BitTools\SkyHub\Model\ResourceModel\Order::class);
-        $orderId       = $orderResource->getOrderId($skyhubCode);
+        $orderId       = $orderResource->getOrderId($skyhubCode, $this->getStore($storeId)->getId());
 
         return $orderId;
     }

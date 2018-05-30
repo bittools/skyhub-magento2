@@ -10,12 +10,11 @@ class Quote extends \Magento\Backend\Model\Session\Quote
      */
     public function clear()
     {
-        $this->_quote    = null;
-        // $this->_customer = null;
-        $this->_order    = null;
-        $this->_store    = null;
+        $this->_quote = null;
+        $this->_order = null;
+        $this->_store = null;
 
-        // parent::clear();
+        $this->clearStorage();
 
         return $this;
     }

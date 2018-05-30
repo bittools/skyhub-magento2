@@ -22,7 +22,7 @@ class Create extends \Magento\Sales\Model\AdminOrder\Create
     public function addProductByData(array $data = [])
     {
         $productData = (array) $this->arrayExtract($data, 'product');
-        $productId   = (int)   $this->arrayExtract($productData, 'product_id');
+        $productId = (int) $this->arrayExtract($productData, 'product_id');
 
         if (!$productId) {
             return false;
@@ -97,18 +97,18 @@ class Create extends \Magento\Sales\Model\AdminOrder\Create
          * @var \Magento\ConfigurableProduct\Model\Product\Type\Configurable                                    $typeInstance
          * @var \Magento\ConfigurableProduct\Model\ResourceModel\Product\Type\Configurable\Attribute\Collection $attributes
          */
-        $typeInstance    = $product->getTypeInstance();
-        $attributes      = $typeInstance->getConfigurableAttributes($product);
+        $typeInstance = $product->getTypeInstance();
+        $attributes = $typeInstance->getConfigurableAttributes($product);
         $superAttributes = [];
-        $children        = (array) $this->arrayExtract($productData, 'children');
+        $children = (array) $this->arrayExtract($productData, 'children');
 
         /** @var \Magento\ConfigurableProduct\Model\Product\Type\Configurable\Attribute $attribute */
         foreach ($attributes as $attribute) {
             /** @var array $child */
             foreach ($children as $child) {
-                $childId     = (int) $this->arrayExtract($child, 'product_id');
+                $childId = (int) $this->arrayExtract($child, 'product_id');
                 $attributeId = $attribute->getAttributeId();
-                $value       = $this->getProductResource()
+                $value = $this->getProductResource()
                     ->getAttributeRawValue($childId, $attributeId, $product->getStore());
 
                 if (!$value) {
@@ -142,7 +142,7 @@ class Create extends \Magento\Sales\Model\AdminOrder\Create
     protected function addProductGrouped(Product $product, array $productData = [])
     {
         $children = (array) $this->arrayExtract($productData, 'children');
-        $qty      = (float) $this->arrayExtract($productData, 'qty');
+        $qty = (float) $this->arrayExtract($productData, 'qty');
 
         $childrenIds = [];
 

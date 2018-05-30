@@ -8,6 +8,12 @@
         </arguments>
     </type>
 
+    <type name="BitTools\SkyHub\Model\Sales\AdminOrder\Create">
+        <arguments>
+            <argument name="quoteSession" xsi:type="object">BitTools\SkyHub\Model\Backend\Session\Quote</argument>
+        </arguments>
+    </type>
+
     <!-- *********************************************************************************************************** -->
     <!-- CUSTOM CONFIGURATION DECLARATION (skyhub.xml)                                                               -->
     <!-- *********************************************************************************************************** -->
