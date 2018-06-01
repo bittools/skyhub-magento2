@@ -19,7 +19,7 @@ class Converter implements ConverterInterface
          * @var \DOMNodeList $attributesNode
          * @var \DOMNodeList $blacklistNode
          */
-        $attributesNode = $xpath->evaluate('/config/skyhub/attributes/attribute');
+        $attributesNode = $xpath->evaluate('/config/skyhub/catalog/product/attributes/attribute');
         $blacklistNode  = $xpath->evaluate('/config/skyhub/catalog/product/attributes/blacklist/attribute');
         
         $attributes = [];
@@ -80,8 +80,12 @@ class Converter implements ConverterInterface
         }
         
         return [
-            'blacklist'  => $blacklist,
-            'attributes' => $attributes
+            'blacklist'  => [
+                'catalog_product' => $blacklist
+            ],
+            'attributes' => [
+                'catalog_product' => $attributes
+            ]
         ];
     }
     

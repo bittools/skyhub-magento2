@@ -70,7 +70,7 @@ class InstallData implements InstallDataInterface
      */
     protected function installSkyHubRequiredAttributes()
     {
-        $attributes = (array)  $this->skyhubConfigData->getAttributes();
+        $attributes = (array)  $this->skyhubConfigData->getCatalogProductAttributes();
         $table      = (string) $this->getTable('bittools_skyhub_product_attributes_mapping');
     
         /** @var array $attribute */

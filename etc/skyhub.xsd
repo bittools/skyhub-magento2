@@ -9,7 +9,6 @@
     </xs:element>
     <xs:complexType name="skyhubConfig">
         <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="unbounded" name="attributes" type="attributesList" />
             <xs:element minOccurs="0" maxOccurs="unbounded" name="catalog" type="catalogParameters" />
         </xs:sequence>
     </xs:complexType>
@@ -26,6 +25,7 @@
     </xs:complexType>
     <xs:complexType name="productAttributes">
         <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="attribute" type="attributeData"/>
             <xs:element minOccurs="1" maxOccurs="unbounded" name="blacklist" type="blacklistedAttributes" />
         </xs:sequence>
     </xs:complexType>

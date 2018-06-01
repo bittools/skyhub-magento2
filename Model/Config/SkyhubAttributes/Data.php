@@ -10,12 +10,12 @@ class Data extends ConfigData
     /**
      * @return array
      */
-    public function getAttributes()
+    public function getCatalogProductAttributes()
     {
-        return $this->get('attributes');
+        return $this->get('attributes/catalog_product');
     }
-    
-    
+
+
     /**
      * @return array
      */
@@ -26,14 +26,26 @@ class Data extends ConfigData
     
     
     /**
+     * @return array
+     */
+    public function getCatalogProductBlacklistedAttributes()
+    {
+        return $this->get('blacklist/catalog_product');
+    }
+    
+    
+    /**
      * @param string $attributeCode
+     * @param string $entityType
      *
      * @return bool
      */
-    public function isAttributeCodeInBlacklist($attributeCode)
+    public function isAttributeCodeInBlacklist($attributeCode, $entityType = 'catalog_product')
     {
-        $blacklist = $this->getBlacklistedAttributes();
-        return in_array($attributeCode, $blacklist);
+        $blacklist  = $this->getBlacklistedAttributes();
+        $attributes = isset($blacklist[$entityType]) ? $blacklist[$entityType] : [];
+
+        return in_array($attributeCode, $attributes);
     }
     
     
@@ -44,7 +56,7 @@ class Data extends ConfigData
      */
     public function getAttributeInstallConfig($code)
     {
-        $attributes = $this->getAttributes();
+        $attributes = $this->getCatalogProductAttributes();
         
         if (!isset($attributes[$code], $attributes[$code]['attribute_install_config'])) {
             return [];
