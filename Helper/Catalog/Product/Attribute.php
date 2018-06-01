@@ -220,17 +220,16 @@ class Attribute extends AbstractHelper
      */
     public function createProductAttribute($code, array $attributeData)
     {
-        $groupName = 'BSeller SkyHub';
-        
+        $groupName = 'BitTools SkyHub';
+        $groupCode = 'bittools-skyhub';
+
         /** @var \BitTools\SkyHub\Model\ResourceModel\Eav\Entity\Attribute\Set $resource */
         $resource = $this->context
             ->objectManager()
             ->create(\BitTools\SkyHub\Model\ResourceModel\Eav\Entity\Attribute\Set::class);
-        
-        $result = $resource->setupEntityAttributeGroups(
-            $this->getEntityType(CatalogProduct::ENTITY)->getId(),
-            $groupName
-        );
+
+        $entityId = $this->getEntityType(CatalogProduct::ENTITY)->getId();
+        $result   = $resource->setupEntityAttributeGroups($entityId, $groupName, $groupCode);
         
         if (!$result) {
             throw new \Exception(__('The attribute group could not be created.'));

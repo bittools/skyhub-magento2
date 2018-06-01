@@ -1,6 +1,6 @@
 <?php
 
-namespace BitTools\SkyHub\Block\Adminhtml\Sales\Order\Import\Manual;
+namespace BitTools\SkyHub\Block\Widget\Button;
 
 use Magento\Backend\Block\Widget\Context;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;

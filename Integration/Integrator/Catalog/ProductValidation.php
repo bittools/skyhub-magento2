@@ -4,11 +4,12 @@ namespace BitTools\SkyHub\Integration\Integrator\Catalog;
 
 use BitTools\SkyHub\StoreConfig\Context;
 use BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping\Collection as AttributesMappingCollection;
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ResourceModel\ProductFactory as ResourceProductFactory;
-use Magento\Catalog\Model\Product;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\GroupedProduct\Model\Product\Type\Grouped;
+use Magento\Catalog\Model\Product\Type as SimpleProductType;
 use Magento\Framework\Registry;
 
 class ProductValidation
@@ -42,22 +43,19 @@ class ProductValidation
     
     
     /**
-     * @param Product $product
-     * @param bool    $bypassVisibleCheck
+     * @param ProductInterface $product
+     * @param bool             $bypassVisibleCheck
      *
      * @return bool
      */
-    public function canIntegrateProduct(Product $product, $bypassVisibleCheck = false)
+    public function canIntegrateProduct(ProductInterface $product, $bypassVisibleCheck = false)
     {
-        /**
-         * 
-         */
-        if ($this->canShowAttributesNotificationBlock()) {
+        if ($this->hasPendingAttributesForMapping()) {
             return false;
         }
         
         $allowedTypes = [
-            Product\Type::TYPE_SIMPLE,
+            SimpleProductType::TYPE_SIMPLE,
             Configurable::TYPE_CODE,
             Grouped::TYPE_CODE,
         ];
@@ -95,11 +93,11 @@ class ProductValidation
     
     
     /**
-     * @param Product $product
+     * @param ProductInterface $product
      *
      * @return bool
      */
-    public function hasAllowedVisibility(Product $product)
+    public function hasAllowedVisibility(ProductInterface $product)
     {
         $productVisibilities = $this->configContext->catalog()->getProductVisibilities();
         
@@ -115,6 +113,15 @@ class ProductValidation
      * @return bool
      */
     public function canShowAttributesNotificationBlock()
+    {
+        return $this->hasPendingAttributesForMapping();
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function hasPendingAttributesForMapping()
     {
         return (bool) ($this->getPendingAttributesCollection()->getSize() > 0);
     }

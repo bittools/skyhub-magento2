@@ -3,8 +3,10 @@
 namespace BitTools\SkyHub\Integration\Integrator\Catalog;
 
 use BitTools\SkyHub\Integration\Context;
-use Magento\Catalog\Model\Product as ProductModel;
 use BitTools\SkyHub\Integration\Transformer\Catalog\ProductFactory as ProductTransformerFactory;
+use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 class Product extends AbstractCatalog
 {
@@ -17,29 +19,72 @@ class Product extends AbstractCatalog
     
     /** @var ProductTransformerFactory */
     protected $transformerFactory;
+
+    /** @var ProductRepositoryInterface */
+    protected $repository;
     
     
     public function __construct(
         Context $context,
         ProductValidation $productValidation,
-        ProductTransformerFactory $transformerFactory
+        ProductTransformerFactory $transformerFactory,
+        ProductRepositoryInterface $repository
     )
     {
         parent::__construct($context);
         
         $this->validator          = $productValidation;
         $this->transformerFactory = $transformerFactory;
+        $this->repository         = $repository;
+    }
+
+
+    /**
+     * @param integer $productId
+     *
+     * @return bool|\SkyHub\Api\Handler\Response\HandlerInterface
+     */
+    public function createOrUpdateById($productId)
+    {
+        try {
+            /** @var \Magento\Catalog\Api\Data\ProductInterface $product */
+            $product = $this->repository->getById($productId);
+            return $this->createOrUpdate($product);
+        } catch (NoSuchEntityException $e) {
+        } catch (\Exception $e) {
+        }
+
+        return false;
+    }
+
+
+    /**
+     * @param string $sku
+     *
+     * @return bool|\SkyHub\Api\Handler\Response\HandlerInterface
+     */
+    public function createOrUpdateBySku($sku)
+    {
+        try {
+            /** @var \Magento\Catalog\Api\Data\ProductInterface $product */
+            $product = $this->repository->get($sku);
+            return $this->createOrUpdate($product);
+        } catch (NoSuchEntityException $e) {
+        } catch (\Exception $e) {
+        }
+
+        return false;
     }
     
     
     /**
-     * @param ProductModel $product
+     * @param ProductInterface $product
      *
      * @return bool|\SkyHub\Api\Handler\Response\HandlerInterface
      *
      * @throws \Exception
      */
-    public function createOrUpdate(ProductModel $product)
+    public function createOrUpdate(ProductInterface $product)
     {
         $exists = $this->productExists($product->getId());
         
@@ -69,13 +114,13 @@ class Product extends AbstractCatalog
     
     
     /**
-     * @param ProductModel $product
+     * @param ProductInterface $product
      *
      * @return bool|\SkyHub\Api\Handler\Response\HandlerInterface
      *
      * @throws \Exception
      */
-    public function create(ProductModel $product)
+    public function create(ProductInterface $product)
     {
         if (!$this->validator->canIntegrateProduct($product)) {
             return false;
@@ -100,13 +145,13 @@ class Product extends AbstractCatalog
     
     
     /**
-     * @param ProductModel $product
+     * @param ProductInterface $product
      *
      * @return bool|\SkyHub\Api\Handler\Response\HandlerInterface
      *
      * @throws \Exception
      */
-    public function update(\Magento\Catalog\Model\Product $product)
+    public function update(ProductInterface $product)
     {
         if (!$this->validator->canIntegrateProduct($product)) {
             return false;

@@ -12,13 +12,13 @@ abstract class AbstractController extends Action
     
     /** @var HelperContext */
     protected $helperContext;
-    
-    
+
+
     /**
      * AbstractController constructor.
      *
-     * @param BackendContext $context
-     * @param HelperContext  $helperContext
+     * @param BackendContext     $context
+     * @param HelperContext      $helperContext
      */
     public function __construct(BackendContext $context, HelperContext $helperContext)
     {

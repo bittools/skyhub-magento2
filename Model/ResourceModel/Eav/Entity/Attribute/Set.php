@@ -14,8 +14,8 @@ class Set extends \Magento\Eav\Model\ResourceModel\Entity\Attribute\Set
         \Magento\Framework\Model\ResourceModel\Db\Context $context,
         \Magento\Eav\Model\ResourceModel\Entity\Attribute\GroupFactory $attrGroupFactory,
         \Magento\Eav\Model\Config $eavConfig,
-        $connectionName = null,
-        Context $helperContext
+        Context $helperContext,
+        $connectionName = null
     )
     {
         parent::__construct($context, $attrGroupFactory, $eavConfig, $connectionName);
@@ -26,21 +26,22 @@ class Set extends \Magento\Eav\Model\ResourceModel\Entity\Attribute\Set
     /**
      * @param     $entityTypeId
      * @param     $groupName
+     * @param     $groupCode
      * @param int $sortOrder
      *
      * @return bool
      *
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function setupEntityAttributeGroups($entityTypeId, $groupName, $sortOrder = 900)
+    public function setupEntityAttributeGroups($entityTypeId, $groupName, $groupCode, $sortOrder = 900)
     {
         /** @var \Magento\Framework\DB\Select $select */
         $select = $this->getConnection()
             ->select()
             ->from(['sets' => $this->getMainTable()], 'attribute_set_id')
             ->joinLeft(
-                ['groups' => $this->getTable('eav/attribute_group')],
-                "sets.attribute_set_id = groups.attribute_set_id AND groups.attribute_group_name='{$groupName}'",
+                ['groups' => $this->getTable('eav_attribute_group')],
+                "sets.attribute_set_id = groups.attribute_set_id AND groups.attribute_group_code='{$groupCode}'",
                 'attribute_group_id'
             )
             ->where('entity_type_id = ?', (int) $entityTypeId)
@@ -71,6 +72,7 @@ class Set extends \Magento\Eav\Model\ResourceModel\Entity\Attribute\Set
             $groups[] = [
                 'attribute_set_id'     => $setId,
                 'attribute_group_name' => $groupName,
+                'attribute_group_code' => $groupCode,
                 'sort_order'           => (int) $sortOrder,
             ];
         }
@@ -79,7 +81,7 @@ class Set extends \Magento\Eav\Model\ResourceModel\Entity\Attribute\Set
             $this->beginTransaction();
             
             if (!empty($groups)) {
-                $this->getConnection()->insertMultiple($this->getTable('eav/attribute_group'), $groups);
+                $this->getConnection()->insertMultiple($this->getTable('eav_attribute_group'), $groups);
             }
             
             $this->commit();

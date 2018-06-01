@@ -4,8 +4,6 @@ namespace BitTools\SkyHub\Console\Integration\Catalog;
 
 use BitTools\SkyHub\Helper\Context;
 use BitTools\SkyHub\Integration\Integrator\Catalog\Product as ProductIntegrator;
-use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Api\Data\StoreInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,9 +15,6 @@ class IntegrateProduct extends AbstractCatalog
     /** @var string */
     const INPUT_KEY_PRODUCT_ID = 'product_id';
     
-    /** @var ProductRepositoryInterface */
-    protected $productRepository;
-    
     /** @var ProductIntegrator */
     protected $productIntegrator;
     
@@ -27,19 +22,13 @@ class IntegrateProduct extends AbstractCatalog
     /**
      * IntegrateProduct constructor.
      *
-     * @param Context                    $context
-     * @param ProductRepositoryInterface $productRepository
-     * @param ProductIntegrator          $productIntegrator
+     * @param Context           $context
+     * @param ProductIntegrator $productIntegrator
      */
-    public function __construct(
-        Context $context,
-        ProductRepositoryInterface $productRepository,
-        ProductIntegrator $productIntegrator
-    )
+    public function __construct(Context $context, ProductIntegrator $productIntegrator)
     {
         parent::__construct($context);
         
-        $this->productRepository = $productRepository;
         $this->productIntegrator = $productIntegrator;
     }
     
@@ -77,19 +66,11 @@ class IntegrateProduct extends AbstractCatalog
         
         /** @var int $productId */
         foreach ($productIds as $productId) {
-            /** @var \Magento\Catalog\Model\Product $product */
-            $product = $this->getProduct($productId);
-        
-            if (!$product) {
-                $this->style()->error(__('The product ID %1 does not exist.', $productId));
-                continue;
-            }
-        
             /** @var \SkyHub\Api\Handler\Response\HandlerInterfaceSuccess|\SkyHub\Api\Handler\Response\HandlerInterfaceException $response */
-            $response = $this->productIntegrator->createOrUpdate($product);
+            $response = $this->productIntegrator->createOrUpdateById($productId);
             
             if (false == $response) {
-                $this->style()->warning(__('The product ID %1 cannot be integrated.', $productId));
+                $this->style()->warning(__('The product ID %1 does not exist or cannot be integrated.', $productId));
                 continue;
             }
         
@@ -106,26 +87,6 @@ class IntegrateProduct extends AbstractCatalog
     
             $this->style()->warning(__('Something went wrong on this integration...'));
         }
-    }
-    
-    
-    /**
-     * @param integer $productId
-     *
-     * @return \Magento\Catalog\Model\Product|null
-     */
-    protected function getProduct($productId)
-    {
-        try {
-            /** @var \Magento\Catalog\Model\Product $product */
-            $product = $this->productRepository->getById($productId, false, $this->getStoreId());
-    
-            return $product;
-        } catch (NoSuchEntityException $e) {
-        } catch (\Exception $e) {
-        }
-        
-        return null;
     }
     
     

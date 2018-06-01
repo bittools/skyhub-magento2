@@ -2,6 +2,8 @@
 
 namespace BitTools\SkyHub\Block\Adminhtml\Sales\Order\Import\Manual;
 
+use BitTools\SkyHub\Block\Widget\Button\GenericButton;
+
 class SaveButton extends GenericButton
 {
 

@@ -114,7 +114,7 @@ class InstallSchema implements InstallSchemaInterface
         $this->addTableIndex($table, ['skyhub_code', 'attribute_id'], AdapterInterface::INDEX_TYPE_UNIQUE);
         
         /** Add Foreign Key */
-        $this->addTableForeignKey($table, 'attribute_id', 'eav_attribute', 'attribute_id');
+        $this->addTableForeignKey($table, 'attribute_id', 'eav_attribute', 'attribute_id', Table::ACTION_SET_NULL);
         
         $this->getConnection()->createTable($table);
         

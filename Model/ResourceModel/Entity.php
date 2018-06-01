@@ -13,7 +13,7 @@ namespace BitTools\SkyHub\Model\ResourceModel;
 use BitTools\SkyHub\Functions;
 use Magento\Framework\Model\ResourceModel\Db\Context;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
-use Magento\Store\Model\StoreManagerInterface;
+use Magento\Store\Model\Store;
 use Psr\Log\LoggerInterface;
 use BitTools\SkyHub\Helper\Context as HelperContext;
 
@@ -33,15 +33,11 @@ class Entity extends AbstractDb
     /**
      * Entity constructor.
      *
-     * @param Context               $context
-     * @param LoggerInterface       $logger
-     * @param StoreManagerInterface $storeManager
+     * @param Context         $context
+     * @param LoggerInterface $logger
+     * @param HelperContext   $helperContext
      */
-    public function __construct(
-        \Magento\Framework\Model\ResourceModel\Db\Context $context,
-        LoggerInterface $logger,
-        HelperContext $helperContext
-    )
+    public function __construct(Context $context, LoggerInterface $logger, HelperContext $helperContext)
     {
         parent::__construct($context);
         
@@ -159,7 +155,7 @@ class Entity extends AbstractDb
             ->from($this->getMainTable(), 'entity_id')
             ->where('entity_id = ?', (int) $entityId)
             ->where('entity_type = ?', (string) $entityType)
-            ->where('store_id = ?', (int) $this->getStoreId($storeId))
+            ->where('store_id IN (?)', (array) $this->getStoreIdFilter($storeId))
             ->limit(1);
         
         try {
@@ -192,7 +188,23 @@ class Entity extends AbstractDb
     
     
     /**
-     * @param int $storeId
+     * @param int|null $storeId
+     *
+     * @return array
+     *
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    protected function getStoreIdFilter($storeId = null)
+    {
+        return [
+            Store::DEFAULT_STORE_ID,
+            $this->getStoreId($storeId)
+        ];
+    }
+
+
+    /**
+     * @param int|null $storeId
      *
      * @return int
      *
