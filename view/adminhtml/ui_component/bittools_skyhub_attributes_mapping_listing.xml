@@ -2,18 +2,18 @@
 <listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <argument name="data" xsi:type="array">
         <item name="js_config" xsi:type="array">
-            <item name="provider" xsi:type="string">bittools_skyhub_attributes_mapping_listing.bittools_skyhub_attributes_mapping_listing_data_source</item>
+            <item name="provider" xsi:type="string">bittools_skyhub_attributes_mapping_listing.bittools_skyhub_catalog_product_attributes_mapping_listing_data_source</item>
         </item>
     </argument>
 
     <settings>
         <spinner>attributes_mapping_columns</spinner>
         <deps>
-            <dep>bittools_skyhub_attributes_mapping_listing.bittools_skyhub_attributes_mapping_listing_data_source</dep>
+            <dep>bittools_skyhub_attributes_mapping_listing.bittools_skyhub_catalog_product_attributes_mapping_listing_data_source</dep>
         </deps>
     </settings>
 
-    <dataSource name="bittools_skyhub_attributes_mapping_listing_data_source" component="Magento_Ui/js/grid/provider">
+    <dataSource name="bittools_skyhub_catalog_product_attributes_mapping_listing_data_source" component="Magento_Ui/js/grid/provider">
         <settings>
             <storageConfig>
                 <param name="indexField" xsi:type="string">id</param>
@@ -21,7 +21,7 @@
             <updateUrl path="mui/index/render"/>
         </settings>
         <aclResource>BitTools_SkyHub::skyhub_product_attributes_mapping</aclResource>
-        <dataProvider class="BitTools\SkyHub\Ui\Component\DataProvider" name="bittools_skyhub_attributes_mapping_listing_data_source">
+        <dataProvider class="BitTools\SkyHub\Ui\Component\DataProvider" name="bittools_skyhub_catalog_product_attributes_mapping_listing_data_source">
             <settings>
                 <requestFieldName>id</requestFieldName>
                 <primaryFieldName>id</primaryFieldName>
@@ -102,7 +102,7 @@
         </column>
         <column name="attribute_id">
             <settings>
-                <options class="\BitTools\SkyHub\Model\Config\Source\Catalog\Product\Attributes" />
+                <options class="BitTools\SkyHub\Model\Config\Source\Catalog\Product\Attributes" />
                 <filter>select</filter>
                 <dataType>select</dataType>
                 <editor>
