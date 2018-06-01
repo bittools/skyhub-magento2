@@ -79,7 +79,7 @@
     <!--  LISTING UI COMPONENTS                                                                                      -->
     <!-- *********************************************************************************************************** -->
 
-    <virtualType name="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Attribute\Mapping\Product" type="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult">
+    <virtualType name="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Catalog\Product\Attribute\Mapping\Product" type="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult">
         <arguments>
             <argument name="mainTable" xsi:type="string">bittools_skyhub_product_attributes_mapping</argument>
             <argument name="resourceModel" xsi:type="string">BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping</argument>
@@ -95,7 +95,7 @@
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
             <argument name="collections" xsi:type="array">
-                <item name="bittools_skyhub_attributes_mapping_listing_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Attribute\Mapping\Product</item>
+                <item name="bittools_skyhub_attributes_mapping_listing_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Catalog\Product\Attribute\Mapping\Product</item>
                 <item name="bittools_skyhub_queue_product_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Catalog\Product</item>
                 <item name="bittools_skyhub_queue_product_attribute_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Catalog\ProductAttribute</item>
                 <item name="bittools_skyhub_queue_category_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Catalog\Category</item>
