@@ -2,14 +2,14 @@
 <listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <argument name="data" xsi:type="array">
         <item name="js_config" xsi:type="array">
-            <item name="provider" xsi:type="string">bittools_skyhub_attributes_mapping_listing.bittools_skyhub_catalog_product_attributes_mapping_listing_data_source</item>
+            <item name="provider" xsi:type="string">bittools_skyhub_catalog_product_attributes_mapping_listing.bittools_skyhub_catalog_product_attributes_mapping_listing_data_source</item>
         </item>
     </argument>
 
     <settings>
         <spinner>attributes_mapping_columns</spinner>
         <deps>
-            <dep>bittools_skyhub_attributes_mapping_listing.bittools_skyhub_catalog_product_attributes_mapping_listing_data_source</dep>
+            <dep>bittools_skyhub_catalog_product_attributes_mapping_listing.bittools_skyhub_catalog_product_attributes_mapping_listing_data_source</dep>
         </deps>
     </settings>
 
