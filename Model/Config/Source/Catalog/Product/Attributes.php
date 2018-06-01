@@ -19,24 +19,30 @@ class Attributes extends AbstractSource
     
     /** @var ProductAttributeRepositoryInterface */
     protected $productAttributeRepository;
-    
+
     /** @var $searchCriteriaFactory */
     protected $searchCriteriaFactory;
-    
+
+    /** @var \BitTools\SkyHub\Helper\Catalog\Product\Attribute */
+    protected $attributeHelper;
+
     
     /**
      * Attributes constructor.
      *
-     * @param ProductAttributeRepositoryInterface $productAttributeRepository
-     * @param SearchCriteriaFactory               $searchCriteriaFactory
+     * @param \BitTools\SkyHub\Helper\Catalog\Product\Attribute $attributeHelper
+     * @param ProductAttributeRepositoryInterface               $productAttributeRepository
+     * @param SearchCriteriaFactory                             $searchCriteriaFactory
      */
     public function __construct(
+        \BitTools\SkyHub\Helper\Catalog\Product\Attribute $attributeHelper,
         ProductAttributeRepositoryInterface $productAttributeRepository,
         SearchCriteriaFactory $searchCriteriaFactory
     )
     {
         $this->productAttributeRepository = $productAttributeRepository;
-        $this->searchCriteriaFactory = $searchCriteriaFactory;
+        $this->searchCriteriaFactory      = $searchCriteriaFactory;
+        $this->attributeHelper            = $attributeHelper;
     }
 
 
@@ -53,6 +59,10 @@ class Attributes extends AbstractSource
         
         /** @var \Magento\Catalog\Model\ResourceModel\Eav\Attribute $attribute */
         foreach ($result->getItems() as $attribute) {
+            if ($this->attributeHelper->isAttributeCodeInBlacklist($attribute->getAttributeCode())) {
+                continue;
+            }
+
             $attributes[$attribute->getId()] = $attribute->getName();
         }
         

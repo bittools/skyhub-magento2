@@ -33,7 +33,7 @@ class Index extends AbstractMapping
         
         $title = $resultPage->getConfig()->getTitle();
         $title->prepend(__('SkyHub'));
-        $title->prepend(__('Attributes Mapping'));
+        $title->prepend(__('Product Attributes Mapping'));
         
         return $resultPage;
     }

@@ -6,7 +6,7 @@
                 <attributes>
                     <attribute code="sku" enabled="true" required="true" editable="true">
                         <label>Product Sku</label>
-                        <description>The products main SKU (Stock Keeping Unit).</description>
+                        <description>The product's main SKU (Stock Keeping Unit).</description>
                         <validation/>
                         <attribute_install_config>
                             <attribute_code>sku</attribute_code>
@@ -20,7 +20,7 @@
                     </attribute>
                     <attribute code="name" enabled="true" required="true" editable="true">
                         <label>Product Name</label>
-                        <description>The products name.</description>
+                        <description>The product's name.</description>
                         <validation/>
                         <attribute_install_config>
                             <attribute_code>name</attribute_code>
@@ -34,7 +34,7 @@
                     </attribute>
                     <attribute code="description" enabled="true" required="true" editable="true">
                         <label>Product Description</label>
-                        <description>The products description.</description>
+                        <description>The product's description.</description>
                         <validation/>
                         <attribute_install_config>
                             <attribute_code>description</attribute_code>
@@ -67,7 +67,7 @@
                     -->
                     <attribute code="price" enabled="true" cast_type="float" required="true" editable="true">
                         <label>Product Price</label>
-                        <description>The products current price.</description>
+                        <description>The product's current price.</description>
                         <validation/>
                         <attribute_install_config>
                             <attribute_code>price</attribute_code>
@@ -81,11 +81,11 @@
                     </attribute>
                     <attribute code="promotional_price" enabled="true" required="true" cast_type="float" editable="true">
                         <label>Product Promotional Price</label>
-                        <description>The products current promotional price.</description>
+                        <description>The product's current promotional price.</description>
                         <validation/>
                         <attribute_install_config>
                             <attribute_code>special_price</attribute_code>
-                            <label>Product Promotional Price</label>
+                            <label>Product's promotional price.</label>
                             <backend_model/>
                             <type>decimal</type>
                             <input>text</input>
@@ -95,7 +95,7 @@
                     </attribute>
                     <attribute code="cost" enabled="true" cast_type="float" required="true" editable="true">
                         <label>Product Cost</label>
-                        <description>The products cost.</description>
+                        <description>The product's cost.</description>
                         <validation/>
                         <attribute_install_config>
                             <attribute_code>cost</attribute_code>
@@ -109,7 +109,7 @@
                     </attribute>
                     <attribute code="weight" enabled="true" cast_type="float" required="true" editable="true">
                         <label>Product Weight</label>
-                        <description>The products weight (in kilograms always).</description>
+                        <description>The product's weight (in kilograms always).</description>
                         <validation/>
                         <attribute_install_config>
                             <attribute_code>weight</attribute_code>
@@ -123,7 +123,7 @@
                     </attribute>
                     <attribute code="height" enabled="true" cast_type="float" required="true" editable="true">
                         <label>Product Height</label>
-                        <description>The products height (in centimeters always).</description>
+                        <description>The product's height (in centimeters always).</description>
                         <validation/>
                         <attribute_install_config>
                             <attribute_code>height</attribute_code>
@@ -137,7 +137,7 @@
                     </attribute>
                     <attribute code="width" enabled="true" cast_type="float" required="true" editable="true">
                         <label>Product Width</label>
-                        <description>The products width (in centimeters always).</description>
+                        <description>The product's width (in centimeters always).</description>
                         <validation/>
                         <attribute_install_config>
                             <attribute_code>width</attribute_code>
@@ -151,7 +151,7 @@
                     </attribute>
                     <attribute code="length" enabled="true" cast_type="float" required="true" editable="true">
                         <label>Product Length</label>
-                        <description>The products length (in centimeters always).</description>
+                        <description>The product's length (in centimeters always).</description>
                         <validation/>
                         <attribute_install_config>
                             <attribute_code>length</attribute_code>
@@ -165,7 +165,7 @@
                     </attribute>
                     <attribute code="brand" enabled="true" required="true" editable="true">
                         <label>Product Brand</label>
-                        <description>The products brand.</description>
+                        <description>The product's brand.</description>
                         <validation/>
                         <attribute_install_config>
                             <attribute_code>brand</attribute_code>
@@ -180,7 +180,7 @@
                     </attribute>
                     <attribute code="ean" enabled="true" required="true" editable="true">
                         <label>Product EAN</label>
-                        <description>The products valid EAN number.</description>
+                        <description>The product's valid EAN number.</description>
                         <validation/>
                         <attribute_install_config>
                             <attribute_code>ean</attribute_code>
@@ -194,7 +194,7 @@
                     </attribute>
                     <attribute code="nbm" enabled="true" required="true" type="varchar" input="text" editable="true">
                         <label>Product NBM</label>
-                        <description>The products valid NBM.</description>
+                        <description>The product's valid NBM.</description>
                         <validation/>
                         <attribute_install_config>
                             <attribute_code>nbm</attribute_code>
@@ -208,7 +208,6 @@
                     </attribute>
                     <blacklist>
                         <attribute code="entity_id"/>
-                        <attribute code="special_price"/>
                         <attribute code="attribute_set_id"/>
                         <attribute code="options_container"/>
                         <attribute code="media_gallery"/>

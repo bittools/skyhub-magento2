@@ -31,7 +31,7 @@
 
     <listingToolbar name="listing_top">
         <settings>
-            <sticky>true</sticky>
+            <sticky>false</sticky>
         </settings>
         <bookmark name="bookmarks"/>
         <columnsControls name="columns_controls"/>
@@ -65,11 +65,11 @@
                 </param>
                 <param name="indexField" xsi:type="string">id</param>
                 <param name="enabled" xsi:type="boolean">true</param>
-                <param name="selectProvider" xsi:type="string">bittools_skyhub_attributes_mapping_listing.bittools_skyhub_attributes_mapping_listing.attributes_mapping_columns.ids</param>
+                <param name="selectProvider" xsi:type="string">bittools_skyhub_catalog_product_attributes_mapping_listing.bittools_skyhub_catalog_product_attributes_mapping_listing.attributes_mapping_columns.ids</param>
             </editorConfig>
             <childDefaults>
                 <param name="fieldAction" xsi:type="array">
-                    <item name="provider" xsi:type="string">bittools_skyhub_attributes_mapping_listing.bittools_skyhub_attributes_mapping_listing.attributes_mapping_columns_editor</item>
+                    <item name="provider" xsi:type="string">bittools_skyhub_catalog_product_attributes_mapping_listing.bittools_skyhub_catalog_product_attributes_mapping_listing.attributes_mapping_columns_editor</item>
                     <item name="target" xsi:type="string">startEdit</item>
                     <item name="params" xsi:type="array">
                         <item name="0" xsi:type="string">${ $.$data.rowIndex }</item>
