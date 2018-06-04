@@ -12,8 +12,8 @@ class GeneralConfig extends AbstractConfig
     /**
      * @return boolean
      */
-    public function isModuleEnabled()
+    public function isModuleEnabled($storeId = null)
     {
-        return (bool) $this->getSkyHubModuleConfig('enabled');
+        return (bool) $this->getSkyHubModuleConfig('enabled', null, $storeId);
     }
 }

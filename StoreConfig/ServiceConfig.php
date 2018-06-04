@@ -12,27 +12,27 @@ class ServiceConfig extends AbstractConfig
     /**
      * @return string
      */
-    public function getServiceBaseUri()
+    public function getServiceBaseUri($storeId = null)
     {
-        return (string) $this->getSkyHubModuleConfig('base_uri');
+        return (string) $this->getSkyHubModuleConfig('base_uri', null, $storeId);
     }
     
     
     /**
      * @return string
      */
-    public function getServiceEmail()
+    public function getServiceEmail($storeId = null)
     {
-        return (string) $this->getSkyHubModuleConfig('email');
+        return (string) $this->getSkyHubModuleConfig('email', null, $storeId);
     }
     
     
     /**
      * @return string
      */
-    public function getServiceApiKey()
+    public function getServiceApiKey($storeId = null)
     {
-        $key = (string) $this->getSkyHubModuleConfig('api_key');
+        $key = (string) $this->getSkyHubModuleConfig('api_key', null, $storeId);
         $key = $this->encryptor->decrypt($key);
         
         return $key;
@@ -40,19 +40,21 @@ class ServiceConfig extends AbstractConfig
     
     
     /**
+     * @var int|null $storeId
+     *
      * @return bool
      */
-    public function isConfigurationOk()
+    public function isConfigurationOk($storeId = null)
     {
-        if (!$this->getServiceBaseUri()) {
+        if (!$this->getServiceBaseUri($storeId)) {
             return false;
         }
         
-        if (!$this->getServiceEmail()) {
+        if (!$this->getServiceEmail($storeId)) {
             return false;
         }
         
-        if (!$this->getServiceApiKey()) {
+        if (!$this->getServiceApiKey($storeId)) {
             return false;
         }
         

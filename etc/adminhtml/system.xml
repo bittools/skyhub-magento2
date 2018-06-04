@@ -104,7 +104,7 @@
             </group>
 
             <!-- CATALOG PRODUCT ATTRIBUTES -->
-            <group id="cron_catalog_product_attributes" translate="label comment" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="cron_catalog_product_attribute" translate="label comment" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Product Attributes Cron Configuration</label>
 
                 <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">

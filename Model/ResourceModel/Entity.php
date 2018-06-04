@@ -22,6 +22,9 @@ class Entity extends AbstractDb
     
     use Functions;
     
+    /** @var string  */
+    const MAIN_TABLE = 'bittools_skyhub_entity_id';
+    
     
     /** @var LoggerInterface */
     protected $logger;
@@ -53,7 +56,7 @@ class Entity extends AbstractDb
      */
     protected function _construct()
     {
-        $this->_init($this->getTable('bittools_skyhub_entity_id'), 'id');
+        $this->_init(self::MAIN_TABLE, 'id');
     }
     
     

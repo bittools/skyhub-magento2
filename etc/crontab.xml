@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <!-- CATALOG CATEGORY -->
+        <job name="bittools_skyhub_catalog_category_queue_create" instance="BitTools\SkyHub\Cron\Catalog\Category" method="create">
+            <config_path>bittools_skyhub/cron_catalog_category/queue_create</config_path>
+        </job>
+        <job name="bittools_skyhub_catalog_category_queue_execute" instance="BitTools\SkyHub\Cron\Catalog\Category" method="execute">
+            <config_path>bittools_skyhub/cron_catalog_category/queue_execute</config_path>
+        </job>
+
+        <!-- CATALOG PRODUCT -->
+        <job name="bittools_skyhub_catalog_product_queue_create" instance="BitTools\SkyHub\Cron\Catalog\Product" method="create">
+            <config_path>bittools_skyhub/cron_catalog_product/queue_create</config_path>
+        </job>
+        <job name="bittools_skyhub_catalog_product_queue_execute" instance="BitTools\SkyHub\Cron\Catalog\Product" method="execute">
+            <config_path>bittools_skyhub/cron_catalog_product/queue_execute</config_path>
+        </job>
+
+        <!-- CATALOG PRODUCT ATTRIBUTE -->
+        <job name="bittools_skyhub_catalog_product_attributes_queue_create" instance="BitTools\SkyHub\Cron\Catalog\Product\Attribute" method="create">
+            <config_path>bittools_skyhub/cron_catalog_product_attribute/queue_create</config_path>
+        </job>
+        <job name="bittools_skyhub_catalog_product_attributes_queue_execute" instance="BitTools\SkyHub\Cron\Catalog\Product\Attribute" method="execute">
+            <config_path>bittools_skyhub/cron_catalog_product_attribute/queue_execute</config_path>
+        </job>
+
+        <!-- SALES ORDER -->
+        <job name="bittools_skyhub_sales_order_import" instance="BitTools\SkyHub\Cron\Sales\Order" method="importProcess">
+            <config_path>bittools_skyhub/cron_sales_order_import/expression</config_path>
+        </job>
+
+        <!-- SALES ORDER STATUS -->
+        <job name="bittools_skyhub_sales_order_status_update_queue_create" instance="BitTools\SkyHub\Cron\Sales\Order\Status" method="create">
+            <config_path>bittools_skyhub/cron_sales_order_status/queue_create</config_path>
+        </job>
+        <job name="bittools_skyhub_sales_order_status_update_queue_execute" instance="BitTools\SkyHub\Cron\Sales\Order\Status" method="execute">
+            <config_path>bittools_skyhub/cron_sales_order_status/queue_execute</config_path>
+        </job>
+    </group>
+</config>
