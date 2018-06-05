@@ -6,6 +6,7 @@ use BitTools\SkyHub\Model\Config\Source\Skyhub\Status\Type as SkyHubStatusType;
 use BitTools\SkyHub\Integration\Processor\AbstractProcessor;
 use BitTools\SkyHub\Integration\Context as IntegrationContext;
 use BitTools\SkyHub\StoreConfig\Context as ConfigContext;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Framework\DB\Transaction as DBTransaction;
@@ -34,9 +35,9 @@ class Status extends AbstractProcessor
 
 
     /**
-     * @param string $skyhubStatusCode
-     * @param string $skyhubStatusType
-     * @param Order  $order
+     * @param string               $skyhubStatusCode
+     * @param string               $skyhubStatusType
+     * @param Order|OrderInterface $order
      *
      * @return bool|$this
      *

@@ -3,6 +3,7 @@
 namespace BitTools\SkyHub\Integration\Integrator\Sales\Order;
 
 use BitTools\SkyHub\Integration\Integrator\Sales\AbstractSales;
+use \Magento\Sales\Api\Data\OrderInterface;
 
 class Queue extends AbstractSales
 {
@@ -32,11 +33,11 @@ class Queue extends AbstractSales
     
     
     /**
-     * @param \Magento\Sales\Model\Order $order
+     * @param OrderInterface $order
      *
      * @return bool
      */
-    public function deleteByOrder(\Magento\Sales\Model\Order $order)
+    public function deleteByOrder(OrderInterface $order)
     {
         if (!$order->getIncrementId()) {
             return false;

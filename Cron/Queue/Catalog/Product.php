@@ -57,7 +57,7 @@ class Product extends AbstractQueue
             ->order(array('e.updated_at DESC', 'e.created_at DESC'));
         
         /** Set limitation. */
-        $limit = abs($this->context->cronConfig()->catalogProduct()->getQueueCreateLimit());
+        $limit = abs($this->cronConfig()->catalogProduct()->getQueueCreateLimit());
         
         if ($limit) {
             $select->limit((int) $limit);
@@ -138,7 +138,7 @@ class Product extends AbstractQueue
             ->addFieldToFilter('entity_id', ['in' => $productIds]);
         
         /** Set limitation. */
-        $limit = abs($this->context->cronConfig()->catalogProduct()->getQueueExecuteLimit());
+        $limit = abs($this->cronConfig()->catalogProduct()->getQueueExecuteLimit());
         
         if ($limit) {
             $collection->getSelect()->limit((int) $limit);
@@ -226,7 +226,7 @@ class Product extends AbstractQueue
      */
     protected function canRun(Schedule $schedule, $storeId = null)
     {
-        if (!$this->context->cronConfig()->catalogProduct()->isEnabled($storeId)) {
+        if (!$this->cronConfig()->catalogProduct()->isEnabled($storeId)) {
             $schedule->setMessages(__('Catalog Product Cron is Disabled'));
             return false;
         }

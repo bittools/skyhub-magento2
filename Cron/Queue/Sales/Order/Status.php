@@ -3,14 +3,10 @@
 namespace BitTools\SkyHub\Cron\Queue\Sales\Order;
 
 use BitTools\SkyHub\Cron\Queue\AbstractQueue;
-use BitTools\SkyHub\Functions;
 use Magento\Cron\Model\Schedule;
 
 class Status extends AbstractQueue
 {
-    
-    use Functions;
-    
     
     /**
      * @param Schedule $schedule
@@ -73,7 +69,7 @@ class Status extends AbstractQueue
      */
     public function execute(Schedule $schedule)
     {
-        $limit = $this->context->cronConfig()->salesOrderStatus()->queueExecuteLimit();
+        $limit = $this->cronConfig()->salesOrderStatus()->queueExecuteLimit();
         
         $orderIds = (array) $this->getQueueResource()->getPendingEntityIds(
             \BitTools\SkyHub\Model\Entity::TYPE_SALES_ORDER_STATUS,
@@ -143,7 +139,7 @@ class Status extends AbstractQueue
      */
     protected function canRun(Schedule $schedule, $storeId = null)
     {
-        if (!$this->context->cronConfig()->salesOrderStatus()->isEnabled($storeId)) {
+        if (!$this->cronConfig()->salesOrderStatus()->isEnabled($storeId)) {
             $schedule->setMessages(__('Sales Order Status Cron is Disabled'));
             return false;
         }

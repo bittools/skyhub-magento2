@@ -2,11 +2,15 @@
 
 namespace BitTools\SkyHub\Cron;
 
+use BitTools\SkyHub\Functions;
 use Magento\Cron\Model\Schedule;
 use Magento\Store\Api\Data\StoreInterface;
 
 abstract class AbstractCron
 {
+    
+    use Functions;
+    
     
     /** @var Context */
     protected $context;
@@ -251,5 +255,14 @@ abstract class AbstractCron
         $group = $this->groupRepository->get($store->getStoreGroupId());
         
         return $group;
+    }
+    
+    
+    /**
+     * @return Config
+     */
+    protected function cronConfig()
+    {
+        return $this->context->cronConfig();
     }
 }

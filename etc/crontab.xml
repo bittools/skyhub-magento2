@@ -26,7 +26,7 @@
         </job>
 
         <!-- SALES ORDER -->
-        <job name="bittools_skyhub_sales_order_import" instance="BitTools\SkyHub\Cron\Sales\Order" method="importProcess">
+        <job name="bittools_skyhub_sales_order_import" instance="BitTools\SkyHub\Cron\Sales\Order\Queue" method="execute">
             <config_path>bittools_skyhub/cron_sales_order_import/expression</config_path>
         </job>
 

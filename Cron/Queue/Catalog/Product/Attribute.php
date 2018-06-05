@@ -140,7 +140,7 @@ class Attribute extends AbstractQueue
      */
     protected function canRun(Schedule $schedule, $storeId = null)
     {
-        if (!$this->context->cronConfig()->catalogProductAttribute()->isEnabled($storeId)) {
+        if (!$this->cronConfig()->catalogProductAttribute()->isEnabled($storeId)) {
             $schedule->setMessages(__('Catalog Product Attribute Cron is Disabled'));
             return false;
         }

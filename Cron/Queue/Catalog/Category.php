@@ -208,7 +208,7 @@ class Category extends AbstractQueue
      */
     protected function canRun(Schedule $schedule, $storeId = null)
     {
-        if (!$this->context->cronConfig()->catalogCategory()->isEnabled($storeId)) {
+        if (!$this->cronConfig()->catalogCategory()->isEnabled($storeId)) {
             $schedule->setMessages(__('Catalog Category Cron is Disabled'));
             return false;
         }
