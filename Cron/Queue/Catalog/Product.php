@@ -231,14 +231,16 @@ class Product extends AbstractQueue
             return false;
         }
         
+        /** @var \BitTools\SkyHub\Helper\Catalog\Product\Attribute\Mapping $helper */
+        $helper = $this->createObject(\BitTools\SkyHub\Helper\Catalog\Product\Attribute\Mapping::class);
+        
         /**
          * If the notification block can be shown, it means there's a products attributes mapping problem.
          */
-        if ($this->hasPendingAttributesToMap()) {
+        if ($helper->hasPendingAttributesForMapping()) {
             $schedule->setMessages(
                 __('The installation is not completed. All required product attributes must be mapped.')
             );
-            
             return false;
         }
         

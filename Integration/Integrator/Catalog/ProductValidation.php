@@ -2,6 +2,7 @@
 
 namespace BitTools\SkyHub\Integration\Integrator\Catalog;
 
+use BitTools\SkyHub\Helper\Catalog\Product\Attribute\Mapping;
 use BitTools\SkyHub\StoreConfig\Context;
 use BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping\Collection as AttributesMappingCollection;
 use Magento\Catalog\Api\Data\ProductInterface;
@@ -27,18 +28,23 @@ class ProductValidation
     /** @var Registry */
     protected $registry;
     
+    /** @var Mapping */
+    protected $attributesMappingHelper;
+    
     
     public function __construct(
         Context $configContext,
         ResourceProductFactory $resourceFactory,
         Registry $registry,
-        ObjectManagerInterface $objectManager
+        ObjectManagerInterface $objectManager,
+        Mapping $attributesMappingHelper
     )
     {
-        $this->resourceFactory = $resourceFactory;
-        $this->configContext   = $configContext;
-        $this->objectManager   = $objectManager;
-        $this->registry        = $registry;
+        $this->resourceFactory         = $resourceFactory;
+        $this->configContext           = $configContext;
+        $this->objectManager           = $objectManager;
+        $this->registry                = $registry;
+        $this->attributesMappingHelper = $attributesMappingHelper;
     }
     
     
@@ -50,7 +56,7 @@ class ProductValidation
      */
     public function canIntegrateProduct(ProductInterface $product, $bypassVisibleCheck = false)
     {
-        if ($this->hasPendingAttributesForMapping()) {
+        if ($this->attributesMappingHelper->hasPendingAttributesForMapping()) {
             return false;
         }
         
@@ -111,19 +117,11 @@ class ProductValidation
     
     /**
      * @return bool
+     * @deprecated
      */
     public function canShowAttributesNotificationBlock()
     {
-        return $this->hasPendingAttributesForMapping();
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function hasPendingAttributesForMapping()
-    {
-        return (bool) ($this->getPendingAttributesCollection()->getSize() > 0);
+        return $this->attributesMappingHelper->hasPendingAttributesForMapping();
     }
     
     

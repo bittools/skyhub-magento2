@@ -4,6 +4,7 @@ namespace BitTools\SkyHub\Helper\Catalog\Product\Attribute;
 
 use BitTools\SkyHub\Helper\Context;
 use BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping\Collection as AttributesMappingCollection;
+use Magento\Framework\Registry;
 
 class Mapping
 {
@@ -11,13 +12,20 @@ class Mapping
     /** @var Context */
     protected $context;
     
+    /** @var Registry */
+    protected $registry;
+    
     /** @var array */
     protected $mappedAttributes = [];
     
     
-    public function __construct(Context $context)
+    public function __construct(
+        Context $context,
+        Registry $registry
+    )
     {
-        $this->context = $context;
+        $this->context  = $context;
+        $this->registry = $registry;
     }
     
     
@@ -68,13 +76,54 @@ class Mapping
     
     
     /**
+     * @return bool
+     */
+    public function hasPendingAttributesForMapping()
+    {
+        return (bool) ($this->getPendingAttributesCollection()->getSize() > 0);
+    }
+    
+    
+    /**
+     * @return AttributesMappingCollection
+     */
+    public function getPendingAttributesCollection()
+    {
+        $key = 'notification_pending_attributes_collection';
+        
+        if (!$this->registry->registry($key)) {
+            /** @var AttributesMappingCollection $collection */
+            $collection = $this->getAttributesMappingCollection()
+                ->setPendingAttributesFilter();
+            
+            $this->registry->register($key, $collection, true);
+        }
+        
+        return $this->registry->registry($key);
+    }
+    
+    
+    /**
      * @return AttributesMappingCollection
      */
     public function getMappedAttributesCollection()
     {
+        $collection = $this->getAttributesMappingCollection()
+            ->setMappedAttributesFilter();
+        
+        return $collection;
+    }
+    
+    
+    /**
+     * @return AttributesMappingCollection
+     */
+    public function getAttributesMappingCollection()
+    {
         /** @var AttributesMappingCollection $collection */
-        $collection = $this->context->objectManager()->create(AttributesMappingCollection::class);
-        $collection->setMappedAttributesFilter();
+        $collection = $this->context
+            ->objectManager()
+            ->create(AttributesMappingCollection::class);
         
         return $collection;
     }
