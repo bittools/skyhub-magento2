@@ -156,7 +156,11 @@ class InstallSchema implements InstallSchemaInterface
                 'unsigned' => true,
                 'nullable' => false,
                 'primary' => true,
-                'default' => 0,
+                'default' => \Magento\Store\Model\Store::DEFAULT_STORE_ID,
+            ])
+            ->addColumn('force_integration', Table::TYPE_BOOLEAN, 1, [
+                'unsigned' => true,
+                'default'  => false,
             ])
             ->addColumn('created_at', Table::TYPE_DATETIME, null, [
                 'nullable' => true,
@@ -284,12 +288,12 @@ class InstallSchema implements InstallSchemaInterface
             ->addColumn(\BitTools\SkyHub\Model\ResourceModel\Order::ID_FIELD, Table::TYPE_INTEGER, 10, [
                 'identity' => true,
                 'unsigned' => true,
-                'primary'  => true,
+                'primary' => true,
                 'nullable' => false,
             ], 'ID')
             ->addColumn('store_id', Table::TYPE_SMALLINT, 5, [
                 'nullable' => false,
-                'default'  => \Magento\Store\Model\Store::DEFAULT_STORE_ID,
+                'default' => \Magento\Store\Model\Store::DEFAULT_STORE_ID,
                 'unsigned' => true,
             ], 'Store Entity ID')
             ->addColumn('order_id', Table::TYPE_INTEGER, 10, [
@@ -301,33 +305,33 @@ class InstallSchema implements InstallSchemaInterface
             ], 'SkyHub Code')
             ->addColumn('channel', Table::TYPE_TEXT, 255, [
                 'nullable' => true,
-                'default'  => null,
+                'default' => null,
             ], 'SkyHub Channel')
             ->addColumn('invoice_key', Table::TYPE_TEXT, 255, [
                 'nullable' => true,
-                'default'  => null,
+                'default' => null,
             ], 'SkyHub Invoice Key')
             ->addColumn('interest', Table::TYPE_DECIMAL, '12,4', [
                 'nullable' => false,
-                'default'  => '0.0000',
+                'default' => '0.0000',
             ], 'SkyHub Interest Amount')
             ->addColumn('data_source', Table::TYPE_TEXT, null, [
                 'nullable' => true,
-                'default'  => null,
+                'default' => null,
             ], 'SkyHub Order JSON')
         ;
-    
+        
         /**
          * Add relations.
          */
         $this->addTableForeignKey($table, 'store_id', 'store', 'store_id');
         $this->addTableForeignKey($table, 'order_id', 'sales_order', 'entity_id');
-    
+        
         /**
          * Add unique index.
          */
         $this->addTableIndex($table, ['store_id', 'order_id', 'code'], AdapterInterface::INDEX_TYPE_UNIQUE);
-    
+        
         $this->getConnection()->createTable($table);
         
         return $this;

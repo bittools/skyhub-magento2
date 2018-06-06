@@ -174,11 +174,11 @@ class Product extends AbstractHelper
             return false;
         }
         
-        if (!empty($fromDate) && (strtotime(time()) < strtotime($fromDate))) {
+        if (!empty($fromDate) && (time() < strtotime($fromDate))) {
             return false;
         }
         
-        if (!empty($toDate) && (strtotime(time()) > strtotime($toDate))) {
+        if (!empty($toDate) && (time() > strtotime($toDate))) {
             return false;
         }
         
