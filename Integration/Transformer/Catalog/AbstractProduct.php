@@ -20,7 +20,7 @@ use BitTools\SkyHub\Helper\Catalog\Product\Attribute\Mapping as AttributeMapping
 use BitTools\SkyHub\Helper\Catalog\Product as ProductHelper;
 use BitTools\SkyHub\Helper\Eav\Option as EavOptionHelper;
 use BitTools\SkyHub\Helper\Catalog\Product\Attribute as AttributeHelper;
-use Magento\Catalog\Helper\Image as CatalogImageHelper;
+use Magento\Catalog\Helper\ImageFactory;
 use BitTools\SkyHub\Integration\Context;
 use BitTools\SkyHub\Model\Config\SkyhubAttributes\Data;
 use Magento\CatalogInventory\Model\StockState;
@@ -37,8 +37,8 @@ abstract class AbstractProduct extends AbstractTransformer
     /** @var ProductHelper */
     protected $productHelper;
     
-    /** @var CatalogImageHelper */
-    protected $imageHelper;
+    /** @var ImageFactory */
+    protected $imageHelperFactory;
     
     /** @var AttributeHelper */
     protected $attributesHelper;
@@ -54,7 +54,7 @@ abstract class AbstractProduct extends AbstractTransformer
         Context $context,
         StockState $stockState,
         ProductHelper $productHelper,
-        CatalogImageHelper $imageHelper,
+        ImageFactory $imageHelperFactory,
         AttributeHelper $attributesHelper,
         AttributeMappingHelper $attributeMappingHelper,
         EavOptionHelper $eavOptionHelper,
@@ -65,7 +65,7 @@ abstract class AbstractProduct extends AbstractTransformer
         
         $this->stockState             = $stockState;
         $this->productHelper          = $productHelper;
-        $this->imageHelper            = $imageHelper;
+        $this->imageHelperFactory     = $imageHelperFactory;
         $this->attributesHelper       = $attributesHelper;
         $this->attributeMappingHelper = $attributeMappingHelper;
         $this->eavOptionHelper        = $eavOptionHelper;
@@ -91,8 +91,9 @@ abstract class AbstractProduct extends AbstractTransformer
     
         /** @var \Magento\Catalog\Model\Product\Gallery\Entry $galleryImage */
         foreach ($gallery as $galleryImage) {
-            $this->imageHelper->setImageFile($galleryImage->getFile());
-            $url = $this->imageHelper->getUrl();
+            /** @var \Magento\Catalog\Helper\Image $helper */
+            $helper = $this->imageHelperFactory->create();
+            $url    = $helper->setImageFile($galleryImage->getFile())->getUrl();
     
             $images[]['url'] = $url;
         }
