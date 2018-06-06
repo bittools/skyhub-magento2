@@ -62,7 +62,7 @@ class Configurable extends AbstractType
     {
         /** @var \Magento\ConfigurableProduct\Model\Product\Type\Configurable $typeInstance */
         $typeInstance = $product->getTypeInstance();
-        $usedProducts = $typeInstance->getUsedProducts(null, $product);
+        $usedProducts = $typeInstance->getUsedProducts($product);
         
         return $usedProducts;
     }

@@ -4,6 +4,7 @@ namespace BitTools\SkyHub\Integration\Transformer\Catalog\Product\Variation\Type
 
 use BitTools\SkyHub\Helper\Catalog\Product\Attribute\Mapping as AttributeMappingHelper;
 use BitTools\SkyHub\Helper\Catalog\Product as ProductHelper;
+use Magento\Catalog\Helper\Image as CatalogImageHelper;
 use BitTools\SkyHub\Helper\Eav\Option as EavOptionHelper;
 use BitTools\SkyHub\Integration\Context;
 use BitTools\SkyHub\Integration\Transformer\AbstractTransformer;
@@ -22,6 +23,9 @@ abstract class AbstractType extends AbstractTransformer implements TypeInterface
     /** @var AttributeMappingHelper */
     protected $productHelper;
     
+    /** @var CatalogImageHelper */
+    protected $imageHelper;
+    
     /** @var EavOptionHelper */
     protected $eavOptionHelper;
     
@@ -33,6 +37,7 @@ abstract class AbstractType extends AbstractTransformer implements TypeInterface
         Context $context,
         AttributeMappingHelper $attributeMappingHelper,
         ProductHelper $productHelper,
+        CatalogImageHelper $imageHelper,
         EavOptionHelper $eavOptionHelper,
         StockState $stockState
     )
@@ -41,6 +46,7 @@ abstract class AbstractType extends AbstractTransformer implements TypeInterface
         
         $this->attributeMappingHelper = $attributeMappingHelper;
         $this->productHelper          = $productHelper;
+        $this->imageHelper            = $imageHelper;
         $this->eavOptionHelper        = $eavOptionHelper;
         $this->stockState             = $stockState;
     }
@@ -211,7 +217,10 @@ abstract class AbstractType extends AbstractTransformer implements TypeInterface
         
         /** @var MediaGalleryEntry $galleryImage */
         foreach ($gallery as $galleryImage) {
-            $variation->addImage($galleryImage->getData('url'));
+            $this->imageHelper->setImageFile($galleryImage->getFile());
+            $url = $this->imageHelper->getUrl();
+            
+            $variation->addImage($url);
         }
         
         return $this;
