@@ -173,7 +173,7 @@ class Configurable extends AbstractType
         /**
          * Add Price
          */
-        $price = $mappedPrice->extractProductValue($parentProduct);
+        $price = $mappedPrice->extractProductValue($product);
         
         if (!empty($price)) {
             $price = (float) $this->calculatePrice($parentProduct, (float) $price);
@@ -187,7 +187,7 @@ class Configurable extends AbstractType
          * Add Special Price
          */
         $specialPrice = $this->productHelper
-            ->extractProductSpecialPrice($parentProduct, $attributeSpecialPrice, $price);
+            ->extractProductSpecialPrice($product, $attributeSpecialPrice, $price);
         
         if (!empty($specialPrice)) {
             $specialPrice = (float) $this->calculatePrice($parentProduct, (float) $specialPrice);

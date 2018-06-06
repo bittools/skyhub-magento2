@@ -2,55 +2,13 @@
 
 namespace BitTools\SkyHub\Integration\Transformer\Catalog\Product\Variation\Type;
 
-use BitTools\SkyHub\Helper\Catalog\Product\Attribute\Mapping as AttributeMappingHelper;
-use BitTools\SkyHub\Helper\Catalog\Product as ProductHelper;
-use Magento\Catalog\Helper\Image as CatalogImageHelper;
-use BitTools\SkyHub\Helper\Eav\Option as EavOptionHelper;
-use BitTools\SkyHub\Integration\Context;
-use BitTools\SkyHub\Integration\Transformer\AbstractTransformer;
+use BitTools\SkyHub\Integration\Transformer\Catalog\AbstractProduct;
 use BitTools\SkyHub\Model\Catalog\Product\Attributes\Mapping;
-use Magento\Catalog\Model\Product\Gallery\Entry as MediaGalleryEntry;
 use Magento\Catalog\Model\Product;
-use Magento\CatalogInventory\Model\StockState;
 use SkyHub\Api\EntityInterface\Catalog\Product as ProductEntityInterface;
 
-abstract class AbstractType extends AbstractTransformer implements TypeInterface
+abstract class AbstractType extends AbstractProduct implements TypeInterface
 {
-    
-    /** @var AttributeMappingHelper */
-    protected $attributeMappingHelper;
-    
-    /** @var AttributeMappingHelper */
-    protected $productHelper;
-    
-    /** @var CatalogImageHelper */
-    protected $imageHelper;
-    
-    /** @var EavOptionHelper */
-    protected $eavOptionHelper;
-    
-    /** @var StockState */
-    protected $stockState;
-    
-    
-    public function __construct(
-        Context $context,
-        AttributeMappingHelper $attributeMappingHelper,
-        ProductHelper $productHelper,
-        CatalogImageHelper $imageHelper,
-        EavOptionHelper $eavOptionHelper,
-        StockState $stockState
-    )
-    {
-        parent::__construct($context);
-        
-        $this->attributeMappingHelper = $attributeMappingHelper;
-        $this->productHelper          = $productHelper;
-        $this->imageHelper            = $imageHelper;
-        $this->eavOptionHelper        = $eavOptionHelper;
-        $this->stockState             = $stockState;
-    }
-    
     
     /**
      * @param Product                $product
@@ -161,8 +119,8 @@ abstract class AbstractType extends AbstractTransformer implements TypeInterface
     {
         /** @var Mapping $mappedAttribute */
         foreach ($this->getFixedMappedAttributes() as $mappedAttribute) {
-            $value = $mappedAttribute->extractProductValue($product);
             $code  = $mappedAttribute->getAttribute()->getAttributeCode();
+            $value = $mappedAttribute->extractProductValue($product);
             
             if (empty($code) || empty($value)) {
                 continue;
@@ -208,17 +166,15 @@ abstract class AbstractType extends AbstractTransformer implements TypeInterface
      */
     protected function addImagesToVariation(Product $product, ProductEntityInterface\Variation $variation)
     {
-        /** @var array $gallery */
-        $gallery = $product->getMediaGalleryEntries();
+        $images = (array) $this->getProductGalleryImages($product);
         
-        if (!$gallery || !count($gallery)) {
-            return $this;
-        }
-        
-        /** @var MediaGalleryEntry $galleryImage */
-        foreach ($gallery as $galleryImage) {
-            $this->imageHelper->setImageFile($galleryImage->getFile());
-            $url = $this->imageHelper->getUrl();
+        /** @var array $image */
+        foreach ($images as $image) {
+            $url = $this->arrayExtract($image, 'url');
+            
+            if (empty($url)) {
+                continue;
+            }
             
             $variation->addImage($url);
         }

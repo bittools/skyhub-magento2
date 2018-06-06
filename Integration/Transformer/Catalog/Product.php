@@ -2,61 +2,14 @@
 
 namespace BitTools\SkyHub\Integration\Transformer\Catalog;
 
-use BitTools\SkyHub\Helper\Catalog\Product\Attribute\Mapping as AttributeMappingHelper;
-use BitTools\SkyHub\Helper\Catalog\Product as ProductHelper;
-use BitTools\SkyHub\Helper\Eav\Option as EavOptionHelper;
 use BitTools\SkyHub\Helper\Catalog\Product\Attribute as AttributeHelper;
-use BitTools\SkyHub\Integration\Context;
-use BitTools\SkyHub\Integration\Transformer\AbstractTransformer;
-use BitTools\SkyHub\Model\Config\SkyhubAttributes\Data;
 use SkyHub\Api\EntityInterface\Catalog\Product as ProductEntityInterface;
 use Magento\Catalog\Model\Product as CatalogProduct;
 use BitTools\SkyHub\Model\Catalog\Product\Attributes\Mapping as AttributesMapping;
 use Magento\Eav\Model\Entity\Attribute as EntityAttribute;
-use Magento\CatalogInventory\Model\StockState;
 
-class Product extends AbstractTransformer
+class Product extends AbstractProduct
 {
-    
-    /** @var StockState */
-    protected $stockState;
-    
-    /** @var Data */
-    protected $skyhubConfig;
-    
-    /** @var ProductHelper */
-    protected $productHelper;
-    
-    /** @var AttributeHelper */
-    protected $attributesHelper;
-    
-    /** @var AttributeMappingHelper */
-    protected $attributeMappingHelper;
-    
-    /** @var EavOptionHelper */
-    protected $eavOptionHelper;
-    
-    
-    public function __construct(
-        Context $context,
-        StockState $stockState,
-        ProductHelper $productHelper,
-        AttributeHelper $attributesHelper,
-        AttributeMappingHelper $attributeMappingHelper,
-        EavOptionHelper $eavOptionHelper,
-        Data $skyhubConfig
-    )
-    {
-        parent::__construct($context);
-        
-        $this->stockState             = $stockState;
-        $this->productHelper          = $productHelper;
-        $this->attributesHelper       = $attributesHelper;
-        $this->attributeMappingHelper = $attributeMappingHelper;
-        $this->eavOptionHelper        = $eavOptionHelper;
-        $this->skyhubConfig           = $skyhubConfig;
-    }
-    
     
     /**
      * @param CatalogProduct $product
@@ -130,20 +83,16 @@ class Product extends AbstractTransformer
      */
     public function prepareProductImages(CatalogProduct $product, ProductEntityInterface $interface)
     {
-        /**
-         * @todo Make sure this instructions are working properly.
-         *
-         * @var array $gallery
-         */
-        $gallery = $product->getMediaGalleryEntries();
+        $images = (array) $this->getProductGalleryImages($product);
         
-        if (!$gallery || !count($gallery)) {
-            return $this;
-        }
-        
-        /** @var \Magento\Catalog\Model\Product\Gallery\Entry $image */
-        foreach ($gallery as $image) {
-            $url = $image->getData('url');
+        /** @var array $image */
+        foreach ($images as $image) {
+            $url = $this->arrayExtract($image, 'url');
+            
+            if (empty($url)) {
+                continue;
+            }
+            
             $interface->addImage($url);
         }
         

@@ -20,7 +20,7 @@ class Option extends \Magento\Eav\Model\ResourceModel\Entity\Attribute\Option
             $attribute = $attribute->getId();
         }
         
-        /** @var \Magento\Store\Model\Store $store */
+        /** @var int|null $store */
         $store = $this->getStore($store);
         
         /** @var \Magento\Framework\DB\Select $select */
@@ -28,7 +28,7 @@ class Option extends \Magento\Eav\Model\ResourceModel\Entity\Attribute\Option
             ->select()
             ->from(['o' => $this->getMainTable()])
             ->joinInner(
-                ['ov' => $this->getTable('eav/attribute_option_value')],
+                ['ov' => $this->getTable('eav_attribute_option_value')],
                 "o.option_id = ov.option_id",
                 ['store_id', 'value']
             )
@@ -46,7 +46,7 @@ class Option extends \Magento\Eav\Model\ResourceModel\Entity\Attribute\Option
             }
             
             foreach ((array) $results as $result) {
-                $resultStoreId = (int) $result['store_id'];
+                $resultStoreId = $result['store_id'];
                 if ($resultStoreId === $store) {
                     return $this->returnValue($result);
                 }
