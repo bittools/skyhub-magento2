@@ -91,7 +91,12 @@ abstract class AbstractProduct extends AbstractTransformer
     
         /** @var \Magento\Catalog\Model\Product\Gallery\Entry $galleryImage */
         foreach ($gallery as $galleryImage) {
-            /** @var \Magento\Catalog\Helper\Image $helper */
+            /**
+             * If the same instance of the helper is used the images will be all the same.
+             * This helper does not seem to be transient.
+             *
+             * @var \Magento\Catalog\Helper\Image $helper
+             */
             $helper = $this->imageHelperFactory->create();
             $url    = $helper->setImageFile($galleryImage->getFile())->getUrl();
     
