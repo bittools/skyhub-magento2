@@ -101,9 +101,15 @@ class IntegrateOrder extends AbstractSales
                         $orderCode,
                         $order->getIncrementId()
                     );
-                } else {
+                } elseif (true === $order->getData('is_updated')) {
                     $message = __(
                         'The order code %1 already exists and had its status updated. Order ID %2.',
+                        $orderCode,
+                        $order->getIncrementId()
+                    );
+                } else {
+                    $message = __(
+                        'The order code %1 already exists did not need to be updated. Order ID %2.',
                         $orderCode,
                         $order->getIncrementId()
                     );

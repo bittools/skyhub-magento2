@@ -213,7 +213,6 @@ class Create
 
         $data = [
             'order' => [
-                // 'shipping_method'        => self::CARRIER_PREFIX.$methodCode,
                 'shipping_method'        => $carrier . '_' . $methodCode,
                 'shipping_method_code'   => $methodCode,
                 'shipping_title'         => $title,
@@ -261,15 +260,6 @@ class Create
      */
     public function addOrderAddress(AddressInterface $address, $type)
     {
-        /*
-        $streetLinesCount = (int) $this->context
-            ->helperContext()
-            ->scopeConfig()
-            ->getValue('customer/address/street_lines');
-
-        $simpleAddressData = $this->formatAddress($address, $streetLinesCount);
-        */
-
         $data = [
             'order' => [
                 "{$type}_address" => [
@@ -481,10 +471,7 @@ class Create
         $shippingMethodCode   = (string) $this->arrayExtract($data, 'order/shipping_method_code');
         $shippingCarrier      = (string) $this->arrayExtract($data, 'order/shipping_carrier');
         $shippingTitle        = (string) $this->arrayExtract($data, 'order/shipping_title');
-        $shippingAmount       = (float) $this->arrayExtract($data, 'order/shipping_cost');
-
-//        $this->getShippingAddress()
-//            ->setShippingMethod($shippingMethod);
+        $shippingAmount       = (float)  $this->arrayExtract($data, 'order/shipping_cost');
 
         $this->getQuote()
             ->setFixedShippingAmount($shippingAmount)
@@ -496,8 +483,7 @@ class Create
         /* Add payment data */
         $payment = $this->arrayExtract($data, 'payment', []);
         if (!empty($payment)) {
-            $orderCreator
-                ->getQuote()
+            $orderCreator->getQuote()
                 ->getPayment()
                 ->addData($payment);
         }
@@ -507,8 +493,7 @@ class Create
         $this->getShippingAddress()->unsetData('cached_items_all');
         $orderCreator->collectShippingRates();
 
-        $orderCreator
-            ->initRuleData()
+        $orderCreator->initRuleData()
             ->saveQuote();
 
         return $this;

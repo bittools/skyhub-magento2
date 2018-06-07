@@ -264,10 +264,7 @@ class Order extends AbstractProcessor
     {
         $skyhubStatusCode = $this->arrayExtract($skyhubOrderData, 'code');
         $skyhubStatusType = $this->arrayExtract($skyhubOrderData, 'status/type');
-
-        /**
-         * @todo Update this code to get the correct processor.
-         */
+        
         $this->statusProcessor->processOrderStatus($skyhubStatusCode, $skyhubStatusType, $order);
 
         return $this;
