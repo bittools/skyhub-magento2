@@ -22,7 +22,7 @@ class Create extends \Magento\Sales\Model\AdminOrder\Create
     public function addProductByData(array $data = [])
     {
         $productData = (array) $this->arrayExtract($data, 'product');
-        $productId = (int) $this->arrayExtract($productData, 'product_id');
+        $productId   = (int)   $this->arrayExtract($productData, 'product_id');
 
         if (!$productId) {
             return false;
@@ -30,39 +30,53 @@ class Create extends \Magento\Sales\Model\AdminOrder\Create
 
         /** @var Product $product */
         $product = $this->getProduct($productId);
+        
         if (!$product->getId()) {
             return false;
         }
-
-        $qty = (float) $this->arrayExtract($productData, 'qty');
-
-
+        
         $this->registerCurrentData($product, $productData);
-
-        switch ($product->getTypeId()) {
-            case \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE:
-                $this->addProductConfigurable($product, $productData);
-                break;
-            case \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE:
-                $this->addProductGrouped($product, $productData);
-                break;
-            case ProductTypeSimple::TYPE_SIMPLE:
-            default:
-                $config = [
-                    'qty' => $qty,
-                ];
-
-                $finalPrice = (float) $this->arrayExtract($productData, 'final_price');
-
-                if ($finalPrice) {
-                    $config['custom_price'] = $finalPrice;
-                }
-
-
-                $this->addProduct($product, $config);
-        }
+    
+        $config = $this->prepareProductConfig($product, $productData);
+        $this->addProduct($product, $config);
 
         return true;
+    }
+    
+    
+    /**
+     * @param Product $product
+     * @param array   $productData
+     *
+     * @return array
+     */
+    protected function prepareProductConfig(Product $product, array $productData)
+    {
+        $config = [];
+        
+        switch ($product->getTypeId()) {
+            case \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE:
+                $config['config']      = $productData;
+                $config['super_group'] = $this->getGroupedSuperGroup($productData);
+                
+                break;
+            case \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE:
+                $config['config']          = $productData;
+                $config['super_attribute'] = $this->getConfigurableSuperAttributes($product, $productData);
+                
+            case ProductTypeSimple::TYPE_SIMPLE: /** It's applied to configurable product too. */
+            default:
+                $qty           = (float) $this->arrayExtract($productData, 'qty');
+                $config['qty'] = $qty;
+        }
+    
+        $finalPrice = (float) $this->arrayExtract($productData, 'final_price');
+    
+        if ($finalPrice) {
+            $config['custom_price'] = $finalPrice;
+        }
+        
+        return $config;
     }
 
 
@@ -79,92 +93,74 @@ class Create extends \Magento\Sales\Model\AdminOrder\Create
 
         return $this;
     }
-
-
+    
+    
     /**
      * @param Product $product
      * @param array   $productData
      *
-     * @return bool
-     *
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @return array
      */
-    protected function addProductConfigurable(Product $product, array $productData = [])
+    protected function getConfigurableSuperAttributes(Product $product, array $productData = [])
     {
-        $qty = (float) $this->arrayExtract($productData, 'qty');
-
+        $superAttributes = [];
+        
         /**
          * @var \Magento\ConfigurableProduct\Model\Product\Type\Configurable                                    $typeInstance
          * @var \Magento\ConfigurableProduct\Model\ResourceModel\Product\Type\Configurable\Attribute\Collection $attributes
          */
         $typeInstance = $product->getTypeInstance();
-        $attributes = $typeInstance->getConfigurableAttributes($product);
-        $superAttributes = [];
-        $children = (array) $this->arrayExtract($productData, 'children');
-
+        $attributes   = $typeInstance->getConfigurableAttributes($product);
+        $children     = (array) $this->arrayExtract($productData, 'children');
+    
         /** @var \Magento\ConfigurableProduct\Model\Product\Type\Configurable\Attribute $attribute */
         foreach ($attributes as $attribute) {
             /** @var array $child */
             foreach ($children as $child) {
-                $childId = (int) $this->arrayExtract($child, 'product_id');
+                /** @var \Magento\Store\Model\Store $store */
+                $store       = $product->getStore();
+                $childId     = (int) $this->arrayExtract($child, 'product_id');
                 $attributeId = $attribute->getAttributeId();
-                $value = $this->getProductResource()
-                    ->getAttributeRawValue($childId, $attributeId, $product->getStore());
-
+                
+                /** Extract the value from product. */
+                $value = $this->getProductResource()->getAttributeRawValue($childId, $attributeId, $store);
+            
                 if (!$value) {
                     continue;
                 }
-
+            
                 $superAttributes[$attributeId] = $value;
             }
         }
-
-        $config = [
-            'qty'             => $qty,
-            'config'          => $productData,
-            'super_attribute' => $superAttributes,
-        ];
-
-        $this->addProduct($product, $config);
-
-        return true;
+        
+        return $superAttributes;
     }
-
-
+    
+    
     /**
-     * @param Product $product
-     * @param array   $productData
+     * @param array $productData
      *
-     * @return $this
-     *
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @return array
      */
-    protected function addProductGrouped(Product $product, array $productData = [])
+    protected function getGroupedSuperGroup(array $productData = [])
     {
+        $superGroup = [];
+        
         $children = (array) $this->arrayExtract($productData, 'children');
-        $qty = (float) $this->arrayExtract($productData, 'qty');
-
-        $childrenIds = [];
-
+        $qty      = (float) $this->arrayExtract($productData, 'qty');
+        
         /** @var array $child */
         foreach ($children as $child) {
             $childId = $this->arrayExtract($child, 'product_id');
-
+        
             if (!$childId || !$this->validateProductId($childId)) {
                 continue;
             }
-
-            $childrenIds[$childId] = $qty;
+    
+            $superGroup[$childId] = $qty;
         }
-
-        $params = [
-            'config'      => $productData,
-            'super_group' => $childrenIds,
-        ];
-
-        $this->addProduct($product, $params);
-
-        return $this;
+        
+        return $superGroup;
     }
 
 

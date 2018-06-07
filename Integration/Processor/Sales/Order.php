@@ -223,10 +223,22 @@ class Order extends AbstractProcessor
             $creator->addProduct($productData);
         }
 
-        /** @var SalesOrder $order */
-        $order = $creator->create();
-
-        if (!$order) {
+        try {
+            /** @var SalesOrder $order */
+            $order = $creator->create();
+        } catch (\Exception $exception) {
+            $this->logger()->critical($exception);
+    
+            /**
+             * An exception can be thrown here but in some cases the order might be created.
+             * If the order was not created let's throw the exception again and hand over the exception treatment.
+             */
+            if (!$this->validateCreatedOrder($order)) {
+                throw $exception;
+            }
+        }
+    
+        if (!$this->validateCreatedOrder($order)) {
             return false;
         }
 
@@ -622,12 +634,15 @@ class Order extends AbstractProcessor
      *
      * @return string | null
      */
-    protected function getOrderIncrementId($code)
+    protected function getOrderIncrementId($code = null)
     {
         /**
          * @todo Check if this is really necessary.
          */
-        $useDefaultIncrementId = $this->getSkyHubModuleConfig('use_default_increment_id', 'cron_sales_order_queue');
+        $useDefaultIncrementId = $this->helperContext()
+            ->configContext()
+            ->general()
+            ->getSkyHubModuleConfig('use_default_increment_id', 'cron_sales_order_queue');
 
         if (!$useDefaultIncrementId) {
             return $code;
@@ -638,12 +653,12 @@ class Order extends AbstractProcessor
     
     
     /**
-     * @param array    $data
-     * @param Customer $customer
+     * @param array             $data
+     * @param CustomerInterface $customer
      *
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    protected function setPersonTypeInformation(array $data, Customer $customer)
+    protected function setPersonTypeInformation(array $data, CustomerInterface $customer)
     {
         /**
          * @todo Check this entire method.
@@ -651,8 +666,10 @@ class Order extends AbstractProcessor
 
         //get the vat number
         $vatNumber = $this->arrayExtract($data, 'vat_number');
+        
         //the taxvat is filled anyway
         $customer->setTaxvat($vatNumber);
+        
         //check if is a PJ customer (if not, it's a PF customer)
         $customerIsPj = $this->customerIsPj($vatNumber);
 
@@ -669,6 +686,7 @@ class Order extends AbstractProcessor
             } else {
                 $personTypeAttributeValue = $this->getAttributeMappingOptionMagentoValue('person_type', 'physical_person');
             }
+            
             $customer->setData($personTypeAttribute->getAttributeCode(), $personTypeAttributeValue);
         }
 
@@ -701,5 +719,24 @@ class Order extends AbstractProcessor
             $attribute = $this->getAttributeById($mappedAttribute->getAttributeId());
             $customer->setData($attribute->getAttributeCode(), $this->arrayExtract($data, 'name'));
         }
+    }
+    
+    
+    /**
+     * @param \Magento\Sales\Api\Data\OrderInterface|null $order
+     *
+     * @return bool
+     */
+    protected function validateCreatedOrder(\Magento\Sales\Api\Data\OrderInterface $order = null)
+    {
+        if (!$order) {
+            return false;
+        }
+        
+        if (!$order->getEntityId()) {
+            return false;
+        }
+        
+        return true;
     }
 }

@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: tiagosampaio
- * Date: 18/05/18
- * Time: 13:45
- */
 
 namespace BitTools\SkyHub\Model\Config\Source\Skyhub\Status;
-
 
 use BitTools\SkyHub\Model\Config\Source\AbstractSource;
 

@@ -81,11 +81,12 @@ class Status extends AbstractProcessor
             return true;
         }
 
-        $message = __('Change automatically by SkyHub. Status %s, Type %s.', $skyhubStatusCode, $skyhubStatusType);
+        $message = __('Change automatically by SkyHub. Status %1, Type %2.', $skyhubStatusCode, $skyhubStatusType);
 
         $order->setState($state)
             ->setData('is_updated', true)
             ->addStatusHistoryComment($message, true);
+        
         $this->orderRepository->save($order);
 
         return true;

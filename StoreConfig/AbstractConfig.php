@@ -41,7 +41,7 @@ abstract class AbstractConfig
      *
      * @return mixed
      */
-    protected function getStoreConfig(
+    public function getStoreConfig(
         $field,
         $group,
         $section,
@@ -64,7 +64,7 @@ abstract class AbstractConfig
      *
      * @return mixed
      */
-    protected function getSkyHubModuleConfig(
+    public function getSkyHubModuleConfig(
         $field,
         $group = null,
         $scopeCode = null,
@@ -87,7 +87,7 @@ abstract class AbstractConfig
      *
      * @return array
      */
-    protected function getSkyHubModuleConfigAsArray(
+    public function getSkyHubModuleConfigAsArray(
         $field,
         $group = null,
         $scopeCode = null,
