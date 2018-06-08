@@ -18,7 +18,7 @@ class Heartbeat extends AbstractCron
      */
     public function execute(Schedule $schedule)
     {
-        $schedule->setMessages(__('Success!'));
+        $schedule->setMessages(__("The module's heart is beating correctly!"));
         return true;
     }
 
