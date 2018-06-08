@@ -3,8 +3,9 @@
 namespace BitTools\SkyHub\StoreConfig;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Store\Model\ScopeInterface as StoreScopeInterface;
 use Magento\Framework\Encryption\EncryptorInterface;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManager;
 
 abstract class AbstractConfig
 {
@@ -14,6 +15,9 @@ abstract class AbstractConfig
     
     /** @var EncryptorInterface */
     protected $encryptor;
+
+    /** @var StoreManager */
+    protected $storeManager;
     
     /** @var string */
     protected $group = 'general';
@@ -24,77 +28,77 @@ abstract class AbstractConfig
      *
      * @param ScopeConfigInterface $scopeConfig
      * @param EncryptorInterface   $encryptor
+     * @param StoreManager         $storeManager
      */
-    public function __construct(ScopeConfigInterface $scopeConfig, EncryptorInterface $encryptor)
+    public function __construct(
+        ScopeConfigInterface $scopeConfig,
+        EncryptorInterface $encryptor,
+        StoreManager $storeManager
+    )
     {
-        $this->scopeConfig = $scopeConfig;
-        $this->encryptor   = $encryptor;
+        $this->scopeConfig  = $scopeConfig;
+        $this->encryptor    = $encryptor;
+        $this->storeManager = $storeManager;
     }
-    
-    
+
+
     /**
-     * @param string      $field
-     * @param string      $group
-     * @param string      $section
-     * @param string|null $scopeCode
-     * @param string      $scope
+     * @param string   $field
+     * @param string   $group
+     * @param string   $section
+     * @param int|null $scopeCode
+     * @param string   $scopeType
      *
      * @return mixed
      */
-    public function getStoreConfig(
-        $field,
-        $group,
-        $section,
-        $scopeCode = null,
-        $scope = ScopeConfigInterface::SCOPE_TYPE_DEFAULT
-    )
+    public function getStoreConfig($field, $group, $section, $scopeCode = null, $scopeType = null)
     {
-        $path  = implode('/', [$section, $group, $field]);
-        $value = $this->scopeConfig->getValue($path, $scope, $scopeCode);
-        
-        return $value;
+        if (!$scopeType) {
+            $scopeType = ScopeInterface::SCOPE_STORES;
+        }
+
+        $path = implode('/', [$section, $group, $field]);
+
+        try {
+            $scopeCode = $this->storeManager->getStore($scopeCode)->getId();
+            $value     = $this->scopeConfig->getValue($path, $scopeType, $scopeCode);
+
+            return $value;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
-    
-    
+
+
     /**
      * @param string      $field
      * @param string      $group
-     * @param string|null $scopeCode
-     * @param string      $scope
+     * @param null|int    $scopeCode
+     * @param string      $scopeType
      *
      * @return mixed
      */
-    public function getSkyHubModuleConfig(
-        $field,
-        $group = null,
-        $scopeCode = null,
-        $scope = StoreScopeInterface::SCOPE_STORE
-    )
+    public function getSkyHubModuleConfig($field, $group = null, $scopeCode = null, $scopeType = null)
     {
         if (empty($group)) {
             $group = $this->group;
         }
-        
-        return $this->getStoreConfig($field, $group, 'bittools_skyhub', $scopeCode, $scope);
+
+        return $this->getStoreConfig($field, $group, 'bittools_skyhub', $scopeCode, $scopeType);
     }
-    
+
     
     /**
      * @param string      $field
      * @param string      $group
-     * @param string|null $scopeCode
-     * @param string      $scope
+     * @param int|null    $scopeCode
+     * @param string      $scopeType
      *
      * @return array
      */
-    public function getSkyHubModuleConfigAsArray(
-        $field,
-        $group = null,
-        $scopeCode = null,
-        $scope = ScopeConfigInterface::SCOPE_TYPE_DEFAULT
-    )
+    public function getSkyHubModuleConfigAsArray($field, $group = null, $scopeCode = null, $scopeType = null)
     {
-        $values      = $this->getSkyHubModuleConfig($field, $group, $scopeCode, $scope);
+        $values      = $this->getSkyHubModuleConfig($field, $group, $scopeCode, $scopeType);
         $arrayValues = explode(',', $values);
         
         return $arrayValues;

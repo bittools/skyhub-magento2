@@ -11,19 +11,23 @@ class Status extends AbstractCronConfig
     
     
     /**
+     * @var $scopeCode
+     *
      * @return int
      */
-    public function queueCreateLimit()
+    public function queueCreateLimit($scopeCode = null)
     {
-        return (int) $this->getGroupConfig('queue_create_limit');
+        return (int) $this->getGroupConfig('queue_create_limit', $scopeCode);
     }
     
     
     /**
+     * @var $scopeCode
+     *
      * @return int
      */
-    public function queueExecuteLimit()
+    public function queueExecuteLimit($scopeCode = null)
     {
-        return (int) $this->getGroupConfig('queue_execute_limit');
+        return (int) $this->getGroupConfig('queue_execute_limit', $scopeCode);
     }
 }

@@ -34,6 +34,7 @@ class IntegrateOrder extends AbstractSales
      * @param Context         $context
      * @param OrderIntegrator $integrator
      * @param OrderProcessor  $processor
+     * @param Message         $message
      * @param null            $name
      */
     public function __construct(

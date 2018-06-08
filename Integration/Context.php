@@ -38,6 +38,8 @@ class Context implements ContextInterface
     
     
     /**
+     * @var boolean $new
+     *
      * @return Service
      */
     public function service($new = false)

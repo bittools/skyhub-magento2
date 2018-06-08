@@ -2,41 +2,21 @@
 
 namespace BitTools\SkyHub\Console\Integration;
 
-use BitTools\SkyHub\Helper\Context;
+use BitTools\SkyHub\Console\AbstractConsole;
 use Magento\Framework\App\Area;
 use Magento\Store\Api\Data\StoreInterface;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Style\StyleInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-abstract class AbstractIntegration extends Command
+abstract class AbstractIntegration extends AbstractConsole
 {
     
     /** @var string */
     const INPUT_KEY_STORE_ID = 'store_id';
-    
-    /** @var Context */
-    protected $context;
-    
-    /** @var StyleInterface */
-    private $style;
-    
-    
-    /**
-     * AbstractIntegration constructor.
-     *
-     * @param Context     $context
-     * @param null|string $name
-     */
-    public function __construct(Context $context, $name = null)
-    {
-        parent::__construct($name);
-        $this->context = $context;
-    }
-    
+
     
     /**
      * @param InputInterface  $input

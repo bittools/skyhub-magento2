@@ -5,6 +5,7 @@ namespace BitTools\SkyHub\Cron\Queue\Catalog\Product;
 use BitTools\SkyHub\Cron\Queue\AbstractQueue;
 use Magento\Cron\Model\Schedule;
 use Magento\Store\Api\Data\StoreInterface;
+use Magento\Store\Model\Store;
 use SkyHub\Api\Handler\Response\HandlerDefault;
 use SkyHub\Api\Handler\Response\HandlerException;
 
@@ -26,7 +27,10 @@ class Attribute extends AbstractQueue
             $this->getQueueResource()->queue(
                 $integrableIds,
                 \BitTools\SkyHub\Model\Entity::TYPE_CATALOG_PRODUCT_ATTRIBUTE,
-                \BitTools\SkyHub\Model\Queue::PROCESS_TYPE_EXPORT
+                \BitTools\SkyHub\Model\Queue::PROCESS_TYPE_EXPORT,
+                true,
+                null,
+                Store::DEFAULT_STORE_ID
             );
             
             $message = __('Queue successfully created. IDs: %s.', implode(',', $integrableIds));
@@ -134,17 +138,17 @@ class Attribute extends AbstractQueue
     
     /**
      * @param Schedule $schedule
-     * @param int|null $storeId
+     * @param int|null $scopeCode
      *
      * @return bool
      */
-    protected function canRun(Schedule $schedule, $storeId = null)
+    protected function canRun(Schedule $schedule, $scopeCode = null)
     {
-        if (!$this->cronConfig()->catalogProductAttribute()->isEnabled($storeId)) {
+        if (!$this->cronConfig()->catalogProductAttribute()->isEnabled($scopeCode)) {
             $schedule->setMessages(__('Catalog Product Attribute Cron is Disabled'));
             return false;
         }
         
-        return parent::canRun($schedule, $storeId);
+        return parent::canRun($schedule, $scopeCode);
     }
 }

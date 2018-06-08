@@ -2,6 +2,8 @@
 
 namespace BitTools\SkyHub\StoreConfig;
 
+use Magento\Store\Model\ScopeInterface;
+
 class GeneralConfig extends AbstractConfig
 {
     
@@ -10,10 +12,12 @@ class GeneralConfig extends AbstractConfig
     
     
     /**
+     * @var int|null $scopeCode
+     *
      * @return boolean
      */
-    public function isModuleEnabled($storeId = null)
+    public function isModuleEnabled($scopeCode = null)
     {
-        return (bool) $this->getSkyHubModuleConfig('enabled', null, $storeId);
+        return (bool) $this->getSkyHubModuleConfig('enabled', $this->group, $scopeCode);
     }
 }

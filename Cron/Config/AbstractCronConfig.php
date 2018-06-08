@@ -2,6 +2,9 @@
 
 namespace BitTools\SkyHub\Cron\Config;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
+
 abstract class AbstractCronConfig extends \BitTools\SkyHub\StoreConfig\AbstractConfig implements ConfigInterface
 {
     
@@ -13,24 +16,24 @@ abstract class AbstractCronConfig extends \BitTools\SkyHub\StoreConfig\AbstractC
     
     
     /**
-     * @param int|null $storeId
+     * @param int|null $scopeCode
      *
      * @return bool
      */
-    public function isEnabled($storeId = null)
+    public function isEnabled($scopeCode = null)
     {
-        return (bool) $this->getSkyHubModuleConfig($this->enabledField, $this->group, $storeId);
+        return (bool) $this->getSkyHubModuleConfig($this->enabledField, $this->group, $scopeCode);
     }
     
     
     /**
      * @param string   $field
-     * @param int|null $storeId
+     * @param int|null $scopeCode
      *
      * @return mixed
      */
-    public function getGroupConfig($field, $storeId = null)
+    public function getGroupConfig($field, $scopeCode = null)
     {
-        return $this->getSkyHubModuleConfig($field, $this->group, $storeId);
+        return $this->getSkyHubModuleConfig($field, $this->group, $scopeCode);
     }
 }

@@ -6,6 +6,7 @@ namespace BitTools\SkyHub\StoreConfig;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Sales\Model\Order;
+use Magento\Store\Model\StoreManager;
 
 class SalesOrderStatus extends AbstractConfig
 {
@@ -20,27 +21,29 @@ class SalesOrderStatus extends AbstractConfig
      * @param ScopeConfigInterface $scopeConfig
      * @param EncryptorInterface   $encryptor
      * @param Order\StatusFactory  $statusFactory
+     * @param StoreManager $storeManager
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         EncryptorInterface $encryptor,
-        Order\StatusFactory $statusFactory
+        Order\StatusFactory $statusFactory,
+        StoreManager $storeManager
     )
     {
-        parent::__construct($scopeConfig, $encryptor);
+        parent::__construct($scopeConfig, $encryptor, $storeManager);
 
         $this->statusFactory = $statusFactory;
     }
 
 
     /**
-     * @param null|int $storeId
+     * @param null|int $scopeCode
      *
      * @return string
      */
-    public function getNewOrdersStatus($storeId = null)
+    public function getNewOrdersStatus($scopeCode = null)
     {
-        $status = (string) $this->getSkyHubModuleConfig('new_order_status', 'sales_order_status', $storeId);
+        $status = (string) $this->getSkyHubModuleConfig('new_order_status', 'sales_order_status', $scopeCode);
 
         if (empty($status)) {
             $status = $this->getDefaultStatusByState(Order::STATE_NEW);
@@ -55,9 +58,9 @@ class SalesOrderStatus extends AbstractConfig
      *
      * @return string
      */
-    public function getApprovedOrdersStatus($storeId = null)
+    public function getApprovedOrdersStatus($scopeCode = null)
     {
-        $status = (string) $this->getSkyHubModuleConfig('approved_order_status', 'sales_order_status', $storeId);
+        $status = (string) $this->getSkyHubModuleConfig('approved_order_status', 'sales_order_status', $scopeCode);
 
         if (empty($status)) {
             $status = $this->getDefaultStatusByState(Order::STATE_PROCESSING);
@@ -68,13 +71,13 @@ class SalesOrderStatus extends AbstractConfig
 
 
     /**
-     * @param null|int $storeId
+     * @param null|int $scopeCode
      *
      * @return string
      */
-    public function getDeliveredOrdersStatus($storeId = null)
+    public function getDeliveredOrdersStatus($scopeCode = null)
     {
-        $status = (string) $this->getSkyHubModuleConfig('delivered_order_status', 'sales_order_status', $storeId);
+        $status = (string) $this->getSkyHubModuleConfig('delivered_order_status', 'sales_order_status', $scopeCode);
 
         if (empty($status)) {
             $status = $this->getDefaultStatusByState(Order::STATE_COMPLETE);
@@ -85,14 +88,14 @@ class SalesOrderStatus extends AbstractConfig
 
 
     /**
-     * @param null|int $storeId
+     * @param null|int $scopeCode
      *
      * @return string
      */
-    public function getShipmentExceptionOrderStatus($storeId = null)
+    public function getShipmentExceptionOrderStatus($scopeCode = null)
     {
         $status = (string) $this->getSkyHubModuleConfig(
-            'shipment_exception_order_status', 'sales_order_status', $storeId
+            'shipment_exception_order_status', 'sales_order_status', $scopeCode
         );
 
         if (empty($status)) {

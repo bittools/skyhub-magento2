@@ -2,6 +2,8 @@
 
 namespace BitTools\SkyHub\StoreConfig;
 
+use Magento\Store\Model\ScopeInterface;
+
 class ServiceConfig extends AbstractConfig
 {
     
@@ -10,29 +12,35 @@ class ServiceConfig extends AbstractConfig
     
     
     /**
+     * @var int|null $storeId
+     *
      * @return string
      */
-    public function getServiceBaseUri($storeId = null)
+    public function getServiceBaseUri($scopeCode = null)
     {
-        return (string) $this->getSkyHubModuleConfig('base_uri', null, $storeId);
+        return (string) $this->getSkyHubModuleConfig('base_uri', null, $scopeCode, ScopeInterface::SCOPE_STORES);
     }
     
     
     /**
+     * @var int|null $storeId
+     *
      * @return string
      */
-    public function getServiceEmail($storeId = null)
+    public function getServiceEmail($scopeCode = null)
     {
-        return (string) $this->getSkyHubModuleConfig('email', null, $storeId);
+        return (string) $this->getSkyHubModuleConfig('email', null, $scopeCode, ScopeInterface::SCOPE_STORES);
     }
     
     
     /**
+     * @var int|null $storeId
+     *
      * @return string
      */
-    public function getServiceApiKey($storeId = null)
+    public function getServiceApiKey($scopeCode = null)
     {
-        $key = (string) $this->getSkyHubModuleConfig('api_key', null, $storeId);
+        $key = (string) $this->getSkyHubModuleConfig('api_key', null, $scopeCode, ScopeInterface::SCOPE_STORES);
         $key = $this->encryptor->decrypt($key);
         
         return $key;
@@ -44,17 +52,17 @@ class ServiceConfig extends AbstractConfig
      *
      * @return bool
      */
-    public function isConfigurationOk($storeId = null)
+    public function isConfigurationOk($scopeCode = null)
     {
-        if (!$this->getServiceBaseUri($storeId)) {
+        if (!$this->getServiceBaseUri($scopeCode)) {
             return false;
         }
         
-        if (!$this->getServiceEmail($storeId)) {
+        if (!$this->getServiceEmail($scopeCode)) {
             return false;
         }
         
-        if (!$this->getServiceApiKey($storeId)) {
+        if (!$this->getServiceApiKey($scopeCode)) {
             return false;
         }
         

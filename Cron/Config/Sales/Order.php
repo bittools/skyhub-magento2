@@ -12,10 +12,12 @@ class Order extends AbstractCronConfig
     
     
     /**
+     * @var $scopeCode
+     *
      * @return int
      */
-    public function getLimit()
+    public function getLimit($scopeCode = null)
     {
-        return (int) $this->getGroupConfig('limit');
+        return (int) $this->getGroupConfig('limit', $scopeCode);
     }
 }

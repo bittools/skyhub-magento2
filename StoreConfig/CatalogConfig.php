@@ -7,10 +7,10 @@ class CatalogConfig extends AbstractConfig
     
     /** @var string */
     protected $group = 'catalog';
-    
-    
+
+
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasActiveIntegrateOnSaveFlag()
     {

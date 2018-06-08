@@ -12,19 +12,23 @@ class Product extends AbstractCronConfig
     
     
     /**
+     * @var $scopeCode
+     *
      * @return integer
      */
-    public function getQueueCreateLimit()
+    public function getQueueCreateLimit($scopeCode = null)
     {
-        return (int) $this->getGroupConfig('queue_create_limit');
+        return (int) $this->getGroupConfig('queue_create_limit', $scopeCode);
     }
     
     
     /**
+     * @var $scopeCode
+     *
      * @return integer
      */
-    public function getQueueExecuteLimit()
+    public function getQueueExecuteLimit($scopeCode = null)
     {
-        return (int) $this->getGroupConfig('queue_execute_limit');
+        return (int) $this->getGroupConfig('queue_execute_limit', $scopeCode);
     }
 }
