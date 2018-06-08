@@ -40,8 +40,6 @@ class Queue extends AbstractResourceModel
      * @param int|null  $storeId
      *
      * @return $this
-     *              
-     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function queue(
         $entityIds,
@@ -132,7 +130,7 @@ class Queue extends AbstractResourceModel
         $select = $this->getConnection()
             ->select()
             ->from($this->getMainTable(), 'entity_id')
-            ->where('status IN (?)', implode(',', $integrableStatuses))
+            ->where('status IN (?)', $integrableStatuses)
             ->where('can_process = ?', 1)
             ->where('process_type = ?', (int) $processType)
             ->where('store_id IN (?)', $this->getStoreIds($storeId))
@@ -318,10 +316,11 @@ class Queue extends AbstractResourceModel
     protected function getCondition(array $entityIds, $entityType, $storeId = null)
     {
         $entityIds  = implode(',', $entityIds);
+        $storeIds   = implode(',', $this->getStoreIds($storeId));
         $conditions = [
             "entity_id IN ({$entityIds})",
             "entity_type = '{$entityType}'",
-            "store_id IN ({$this->getStoreIds($storeId)})"
+            "store_id IN ({$storeIds})"
         ];
         
         return new \Zend_Db_Expr(implode(' AND ', $conditions));
@@ -331,7 +330,7 @@ class Queue extends AbstractResourceModel
     /**
      * @param int $storeId
      *
-     * @return string
+     * @return array
      */
     protected function getStoreIds($storeId = null)
     {
@@ -340,18 +339,18 @@ class Queue extends AbstractResourceModel
         $storeIds = [0, $storeId];
         $storeIds = array_unique($storeIds);
         
-        return implode(',', $storeIds);
+        return $storeIds;
     }
     
     
     /**
      * @param null|int $storeId
      *
-     * @return \Magento\Store\Api\Data\StoreInterface|null
+     * @return integer
      */
     protected function getStoreId($storeId = null)
     {
-        return $this->getStore($storeId);
+        return $this->getStore($storeId)->getId();
     }
     
     
