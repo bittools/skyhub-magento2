@@ -415,12 +415,19 @@ class Create
                 'creator'    => $this,
             ]);
 
-            /** @var Order $order */
-            $order = $this->getOrderCreator()
-                ->importPostData($this->arrayExtract($orderData, 'order'))
-                ->createOrder();
+            try {
+                /** @var Order $order */
+                $order = $this->getOrderCreator()
+                    ->importPostData($this->arrayExtract($orderData, 'order'))
+                    ->createOrder();
 
-            $this->context->eventManager()->dispatch('bseller_skyhub_order_import_success', [
+                $eventName = 'bseller_skyhub_order_import_success';
+            } catch (\Exception $e) {
+                $this->context->helperContext()->logger()->critical($e);
+                $eventName = 'bseller_skyhub_order_import_fail';
+            }
+
+            $this->context->eventManager()->dispatch($eventName, [
                 'order'      => $order,
                 'order_data' => $orderData,
             ]);
