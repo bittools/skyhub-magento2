@@ -6,9 +6,11 @@ use Magento\Sales\Api\Data\OrderInterface;
 
 class Save extends AbstractImport
 {
-
+    
     /**
      * @return \Magento\Framework\Controller\Result\Redirect
+     *
+     * @throws \Exception
      */
     public function execute()
     {
@@ -44,6 +46,8 @@ class Save extends AbstractImport
      * @param null|int $storeId
      *
      * @return bool
+     *
+     * @throws \Exception
      */
     protected function importOrder($referenceCode, $storeId = null)
     {
@@ -54,7 +58,7 @@ class Save extends AbstractImport
         
         if (!$orderData) {
             $this->messageManager->addWarningMessage(
-                __('The order reference "%1" does not exist in Skyhub.', $referenceCode)
+                $this->message->getNonExistentOrderMessage($referenceCode)
             );
             
             return false;
@@ -64,17 +68,11 @@ class Save extends AbstractImport
         $order = $this->getOrderProcessor()->createOrder($orderData);
         
         if (!$order) {
-            $this->messageManager->addWarningMessage(
-                __('The order reference "%1" could not be created. See the logs for more details.', $referenceCode)
-            );
-            
+            $this->messageManager->addWarningMessage($this->message->getNotCreatedOrderMessage($referenceCode));
             return false;
         }
     
-        $this->messageManager->addSuccessMessage(
-            __('The order reference "%1" was successfully imported.', $referenceCode)
-        );
-        
+        $this->messageManager->addSuccessMessage($this->message->getOrderCreationMessage($order, $referenceCode));
         return true;
     }
 }

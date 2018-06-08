@@ -3,6 +3,7 @@
     <default>
         <bittools_skyhub>
             <general>
+                <version>1.0.0</version>
                 <enabled>0</enabled>
             </general>
             <log>

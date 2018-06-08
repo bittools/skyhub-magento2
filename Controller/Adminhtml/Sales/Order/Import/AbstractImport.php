@@ -3,6 +3,7 @@
 namespace BitTools\SkyHub\Controller\Adminhtml\Sales\Order\Import;
 
 use BitTools\SkyHub\Controller\Adminhtml\AbstractController;
+use BitTools\SkyHub\Helper\Sales\Order\Created\Message;
 use Magento\Backend\App\Action\Context as BackendContext;
 use BitTools\SkyHub\Helper\Context as HelperContext;
 use BitTools\SkyHub\Integration\Integrator\Sales\OrderFactory as OrderIntegratorFactory;
@@ -17,18 +18,23 @@ abstract class AbstractImport extends AbstractController
     /** @var OrderProcessorFactory */
     protected $orderProcessorFactory;
     
+    /** @var Message */
+    protected $message;
+    
     
     public function __construct(
         BackendContext $context,
         HelperContext $helperContext,
         OrderIntegratorFactory $orderIntegratorFactory,
-        OrderProcessorFactory $orderProcessorFactory
+        OrderProcessorFactory $orderProcessorFactory,
+        Message $message
     )
     {
         parent::__construct($context, $helperContext);
         
         $this->orderIntegratorFactory = $orderIntegratorFactory;
         $this->orderProcessorFactory  = $orderProcessorFactory;
+        $this->message                = $message;
     }
     
     

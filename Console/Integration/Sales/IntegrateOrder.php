@@ -3,6 +3,7 @@
 namespace BitTools\SkyHub\Console\Integration\Sales;
 
 use BitTools\SkyHub\Helper\Context;
+use BitTools\SkyHub\Helper\Sales\Order\Created\Message;
 use BitTools\SkyHub\Integration\Integrator\Sales\Order as OrderIntegrator;
 use BitTools\SkyHub\Integration\Processor\Sales\Order as OrderProcessor;
 use Magento\Sales\Api\Data\OrderInterface;
@@ -23,6 +24,9 @@ class IntegrateOrder extends AbstractSales
     /** @var OrderProcessor */
     protected $processor;
     
+    /** @var Message */
+    protected $message;
+    
     
     /**
      * IntegrateOrder constructor.
@@ -32,12 +36,19 @@ class IntegrateOrder extends AbstractSales
      * @param OrderProcessor  $processor
      * @param null            $name
      */
-    public function __construct(Context $context, OrderIntegrator $integrator, OrderProcessor $processor, $name = null)
+    public function __construct(
+        Context $context,
+        OrderIntegrator $integrator,
+        OrderProcessor $processor,
+        Message $message,
+        $name = null
+    )
     {
         parent::__construct($context, $name);
         
         $this->integrator = $integrator;
         $this->processor  = $processor;
+        $this->message    = $message;
     }
     
     
@@ -82,7 +93,7 @@ class IntegrateOrder extends AbstractSales
             $orderData = $this->integrator->order($orderCode);
             
             if (!$orderData) {
-                $this->style()->error(__('The order code %1 does not exist.', $orderCode));
+                $this->style()->error($this->message->getNonExistentOrderMessage($orderCode));
                 continue;
             }
             
@@ -94,27 +105,8 @@ class IntegrateOrder extends AbstractSales
                     $this->style()->error(__('This order could not be created.'));
                     continue;
                 }
-
-                if (true === $order->getData('is_created')) {
-                    $message = __(
-                        'The order code %1 was successfully created. Order ID %2.',
-                        $orderCode,
-                        $order->getIncrementId()
-                    );
-                } elseif (true === $order->getData('is_updated')) {
-                    $message = __(
-                        'The order code %1 already exists and had its status updated. Order ID %2.',
-                        $orderCode,
-                        $order->getIncrementId()
-                    );
-                } else {
-                    $message = __(
-                        'The order code %1 already exists did not need to be updated. Order ID %2.',
-                        $orderCode,
-                        $order->getIncrementId()
-                    );
-                }
                 
+                $message = $this->message->getOrderCreationMessage($order, $orderCode);
                 $this->style()->success($message);
             } catch (\Exception $e) {
                 $this->style()->error(__('Error when trying to create an order.'));
