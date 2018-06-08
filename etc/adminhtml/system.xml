@@ -12,7 +12,7 @@
             <!-- General Settings -->
             <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>General Settings</label>
-                <field id="version" translate="label" type="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="version" translate="label comment" type="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Module Version</label>
                     <frontend_model>BitTools\SkyHub\Block\System\Config\Version</frontend_model>
                     <comment>This is the current version you have installed of this module.</comment>
@@ -44,6 +44,7 @@
                 <comment>You are only able to configure this section by switching to store scope.</comment>
                 <field id="base_uri" translate="label" type="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Base URI</label>
+                    <frontend_model>BitTools\SkyHub\Block\System\Config\Base</frontend_model>
                 </field>
                 <field id="email" translate="label" type="text" sortOrder="20" showInDefault="0" showInWebsite="1" showInStore="1" canRestore="0">
                     <label>Email</label>
@@ -135,7 +136,7 @@
             </group>
 
             <!-- CATALOG PRODUCTS -->
-            <group id="cron_catalog_products" translate="label comment" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="cron_catalog_product" translate="label comment" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Product Cron Configuration</label>
 
                 <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
@@ -179,7 +180,7 @@
             </group>
 
             <!-- CATALOG CATEGORIES -->
-            <group id="cron_catalog_categories" translate="label comment" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="cron_catalog_category" translate="label comment" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Category Cron Configuration</label>
 
                 <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
@@ -231,7 +232,7 @@
             </group>
 
             <!-- SALES ORDER QUEUE -->
-            <group id="cron_sales_order_queue" translate="label comment" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="cron_sales_order_import" translate="label comment" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Order Import Cron Configuration</label>
 
                 <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">

@@ -8,5 +8,5 @@ class Category extends AbstractCronConfig
 {
     
     /** @var string */
-    protected $group = 'cron_catalog_categories';
+    protected $group = 'cron_catalog_category';
 }

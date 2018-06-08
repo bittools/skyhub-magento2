@@ -642,7 +642,7 @@ class Order extends AbstractProcessor
         $useDefaultIncrementId = $this->helperContext()
             ->configContext()
             ->general()
-            ->getSkyHubModuleConfig('use_default_increment_id', 'cron_sales_order_queue');
+            ->getSkyHubModuleConfig('use_default_increment_id', 'cron_sales_order_import');
 
         if (!$useDefaultIncrementId) {
             return $code;
