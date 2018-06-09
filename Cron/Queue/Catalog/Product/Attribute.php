@@ -27,10 +27,7 @@ class Attribute extends AbstractQueue
             $this->getQueueResource()->queue(
                 $integrableIds,
                 \BitTools\SkyHub\Model\Entity::TYPE_CATALOG_PRODUCT_ATTRIBUTE,
-                \BitTools\SkyHub\Model\Queue::PROCESS_TYPE_EXPORT,
-                true,
-                null,
-                Store::DEFAULT_STORE_ID
+                \BitTools\SkyHub\Model\Queue::PROCESS_TYPE_EXPORT
             );
             
             $message = __('Queue successfully created. IDs: %s.', implode(',', $integrableIds));

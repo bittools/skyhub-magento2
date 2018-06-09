@@ -6,6 +6,7 @@ namespace BitTools\SkyHub\Model\ResourceModel;
 use BitTools\SkyHub\Functions;
 use BitTools\SkyHub\Helper\Context as HelperContext;
 use BitTools\SkyHub\Model\Queue as QueueModel;
+use Magento\Store\Model\Store;
 
 class Queue extends AbstractResourceModel
 {
@@ -45,9 +46,9 @@ class Queue extends AbstractResourceModel
         $entityIds,
         $entityType,
         $processType = QueueModel::PROCESS_TYPE_EXPORT,
+        $storeId = Store::DEFAULT_STORE_ID,
         $canProcess = true,
-        $processAfter = null,
-        $storeId = null
+        $processAfter = null
     )
     {
         $entityIds = $this->filterEntityIds((array) $entityIds);

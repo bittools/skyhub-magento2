@@ -10,16 +10,24 @@ class Category
     
     /** @var CategoryResourceFactory */
     protected $resourceCategoryFactory;
+
+    /** @var \Magento\Catalog\Model\CategoryFactory */
+    protected $categoryFactory;
     
     
     /**
      * Category constructor.
      *
-     * @param CategoryResourceFactory $resourceCategoryFactory
+     * @param \Magento\Catalog\Model\CategoryFactory $categoryFactory
+     * @param CategoryResourceFactory                $resourceCategoryFactory
      */
-    public function __construct(CategoryResourceFactory $resourceCategoryFactory)
+    public function __construct(
+        \Magento\Catalog\Model\CategoryFactory $categoryFactory,
+        CategoryResourceFactory $resourceCategoryFactory
+    )
     {
         $this->resourceCategoryFactory = $resourceCategoryFactory;
+        $this->categoryFactory         = $categoryFactory;
     }
     
     
@@ -35,6 +43,13 @@ class Category
         $categoryPieces = [];
         
         foreach ($ids as $id) {
+            $_category = $this->categoryFactory->create();
+            $this->getResource()->load($_category, $id);
+
+            if ($_category->getData('level') < 2) {
+                continue;
+            }
+
             $name = $category->getName();
             
             if (!$name || !($id == $category->getId())) {
@@ -85,5 +100,11 @@ class Category
         /** @var \Magento\Catalog\Model\ResourceModel\Category $resource */
         $resource = $this->resourceCategoryFactory->create();
         return $resource;
+    }
+
+
+    protected function getModel()
+    {
+
     }
 }

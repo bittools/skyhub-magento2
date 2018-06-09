@@ -24,12 +24,9 @@ class Category extends AbstractQueue
             return;
         }
         
-        $rootCategoryLevel = 1;
-        
         /** @var \Magento\Catalog\Model\ResourceModel\Category\Collection $categories */
-        $categories = $this->getCategoryCollection()
-            ->addFieldToFilter('level', ['gt' => $rootCategoryLevel]);
-        
+        $categories = $this->getCategoryCollection();
+
         if (!$categories->getSize()) {
             $schedule->setMessages(__('No category to be listed right now.'));
             return;
@@ -39,10 +36,10 @@ class Category extends AbstractQueue
         
         /** @var \Magento\Catalog\Model\Category $category */
         foreach ($categories as $category) {
-            if ($category->isInRootCategoryList()) {
+            if ($category->getId() == $this->getStore()->getRootCategoryId()) {
                 continue;
             }
-            
+
             $categoryIds[] = $category->getId();
         }
         
@@ -53,7 +50,7 @@ class Category extends AbstractQueue
         );
         
         $schedule->setMessages(
-            __('The categories were successfully queued. Category IDs: %s.', implode(',', $categoryIds))
+            __('The categories were successfully queued. Category IDs: %1.', implode(',', $categoryIds))
         );
     }
     
@@ -71,15 +68,24 @@ class Category extends AbstractQueue
         
         $successQueueIds = $this->extractResultSuccessIds($schedule);
         $failedQueueIds  = $this->extractResultFailIds($schedule);
-        
-        $this->getQueueResource()
-            ->removeFromQueue($successQueueIds, \BitTools\SkyHub\Model\Entity::TYPE_CATALOG_CATEGORY);
-        
-        $message = __(
-            'Queue was processed. Success: %s. Errors: %s.',
-            implode(',', $successQueueIds),
-            implode(',', $failedQueueIds)
-        );
+        $message         = '';
+
+        if (!$successQueueIds && !$failedQueueIds) {
+            $message = __(
+                'No category was processed at this time. Probably the queue was empty.'
+            );
+        }
+
+        if ($successQueueIds || $failedQueueIds) {
+            $this->getQueueResource()
+                ->removeFromQueue($successQueueIds, \BitTools\SkyHub\Model\Entity::TYPE_CATALOG_CATEGORY);
+
+            $message = __('Queue was processed. Success: %1.', implode(',', $successQueueIds));
+
+            if (!empty($failedQueueIds)) {
+                $message .= __(' Errors: %1.', implode(',', $failedQueueIds));
+            }
+        }
         
         $schedule->setMessages($message);
     }
@@ -175,7 +181,8 @@ class Category extends AbstractQueue
     {
         /** @var \Magento\Catalog\Model\ResourceModel\Category\Collection $collection */
         $collection = $this->createObject(\Magento\Catalog\Model\ResourceModel\Category\Collection::class);
-        $collection->setDisableFlat(true);
+        $collection->addFieldToFilter('level', ['gteq' => $this->getRootCategoryLevel()]);
+        // $collection->setDisableFlat(true);
         
         return $collection;
     }
@@ -214,5 +221,14 @@ class Category extends AbstractQueue
         }
         
         return parent::canRun($schedule, $storeId);
+    }
+
+
+    /**
+     * @return int
+     */
+    protected function getRootCategoryLevel()
+    {
+        return 2;
     }
 }

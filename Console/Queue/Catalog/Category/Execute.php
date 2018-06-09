@@ -1,6 +1,6 @@
 <?php
 
-namespace BitTools\SkyHub\Console\Queue\Catalog\Product\Attribute;
+namespace BitTools\SkyHub\Console\Queue\Catalog\Category;
 
 use BitTools\SkyHub\Console\AbstractConsole;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,8 +14,8 @@ class Execute extends AbstractConsole
      */
     protected function configure()
     {
-        $this->setName('skyhub:queue-execute:product-attributes')
-            ->setDescription('Execute queue for product attributes.');
+        $this->setName('skyhub:queue-execute:category')
+            ->setDescription('Execute queue for categories.');
 
         parent::configure();
     }
@@ -37,8 +37,10 @@ class Execute extends AbstractConsole
         /** @var \BitTools\SkyHub\Cron\Queue\Catalog\Product\Attribute $cron */
         $cron = $this->context
             ->objectManager()
-            ->create(\BitTools\SkyHub\Cron\Queue\Catalog\Product\Attribute::class);
+            ->create(\BitTools\SkyHub\Cron\Queue\Catalog\Category::class);
 
         $cron->execute($schedule);
+
+        $output->writeln((string) $schedule->getMessages());
     }
 }
