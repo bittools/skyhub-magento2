@@ -21,7 +21,7 @@
                 <field id="cron_heartbeat" translate="label comment" type="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Cron Heartbeat Status</label>
                     <frontend_model>BitTools\SkyHub\Block\System\Config\Cron\Heartbeat</frontend_model>
-                    <comment>This field indicates if your cron configuration is set correctly by using a heartbeat job that runs every minute.</comment>
+                    <comment>This field indicates if your cron configuration is set correctly by using a heartbeat job that runs every minute. If the heartbeat is longer than 1 hour there's probably a problem with the crontab.</comment>
                 </field>
                 <field id="enabled" translate="label" type="select" sortOrder="30" showInDefault="0" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Enabled</label>

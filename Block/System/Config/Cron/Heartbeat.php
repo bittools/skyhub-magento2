@@ -10,6 +10,9 @@ class Heartbeat extends AbstractConfig
     /** @var \BitTools\SkyHub\Cron\HeartbeatFactory */
     protected $heartbeatFactory;
     
+    /** @var \BitTools\SkyHub\Cron\Heartbeat */
+    protected $lastHeartbeat;
+    
     /** @var bool */
     protected $isOlderThanOneHour = null;
     
@@ -42,14 +45,14 @@ class Heartbeat extends AbstractConfig
             $style    = 'color:red;';
             $message  = 'Your cron seems to be not working properly because the heartbeat is older than one hour.';
             $message .= ' Please check your cron configuration.';
+            $message = __($message);
         }
     
         if (!$this->isOlderThanOneHour()) {
             $style   = 'color:green;';
-            $message = 'Your cron seems to be working properly.';
+            $message = 'Your cron seems to be working properly. Last heartbeat executed %1 minutes ago.';
+            $message = __($message, (int) abs($this->getHeartbeatModel()->getLastHeartbeatTimeInMinutes()));
         }
-    
-        $message = __($message);
         
         return "<p style='{$style}'>$message</p>";
     }
@@ -75,6 +78,10 @@ class Heartbeat extends AbstractConfig
      */
     protected function getHeartbeatModel()
     {
-        return $this->heartbeatFactory->create();
+        if (!$this->lastHeartbeat) {
+            $this->lastHeartbeat = $this->heartbeatFactory->create();
+        }
+        
+        return $this->lastHeartbeat;
     }
 }

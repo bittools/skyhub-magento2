@@ -9,6 +9,9 @@ class Heartbeat extends AbstractCron
 
     /** @var string */
     const JOB_CODE = 'bittools_skyhub_heartbeat';
+    
+    /** @var Schedule */
+    protected $lastHeartbeat;
 
 
     /**
@@ -32,6 +35,27 @@ class Heartbeat extends AbstractCron
     {
         return (bool) $this->getLastHeartbeat();
     }
+    
+    
+    /**
+     * @return bool|float|int
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getLastHeartbeatTimeInMinutes()
+    {
+        /** @var Schedule $schedule */
+        $schedule = $this->getLastHeartbeat();
+    
+        if (!$schedule) {
+            return false;
+        }
+    
+        $lastExecution = strtotime($schedule->getExecutedAt());
+        $duration      = (time()-$lastExecution)/60;
+        
+        return $duration;
+    }
 
 
     /**
@@ -47,11 +71,12 @@ class Heartbeat extends AbstractCron
         if (!$schedule) {
             return true;
         }
+        
+        if (false === $this->getLastHeartbeatTimeInMinutes()) {
+            return true;
+        }
 
-        $lastExecution = strtotime($schedule->getExecutedAt());
-        $duration      = (time()-$lastExecution)/60;
-
-        if ($duration > 60) {
+        if ($this->getLastHeartbeatTimeInMinutes() > 60) {
             return true;
         }
 
@@ -66,6 +91,10 @@ class Heartbeat extends AbstractCron
      */
     public function getLastHeartbeat()
     {
+        if ($this->lastHeartbeat) {
+            return $this->lastHeartbeat;
+        }
+        
         $scheduleId = $this->getLastHeartbeatScheduleId();
 
         if (!$scheduleId) {
@@ -73,10 +102,10 @@ class Heartbeat extends AbstractCron
         }
 
         /** @var Schedule $schedule */
-        $schedule = $this->createObject(Schedule::class);
-        $schedule->load($scheduleId);
+        $this->lastHeartbeat = $this->createObject(Schedule::class);
+        $this->lastHeartbeat->load($scheduleId);
 
-        return $schedule;
+        return $this->lastHeartbeat;
     }
 
 

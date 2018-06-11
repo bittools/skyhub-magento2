@@ -3,7 +3,7 @@
     <group id="default">
         <!-- HEARTBEAT -->
         <job name="bittools_skyhub_heartbeat" instance="BitTools\SkyHub\Cron\Heartbeat" method="execute">
-            <schedule>*/5 * * * *</schedule>
+            <schedule>* * * * *</schedule>
         </job>
 
         <!-- CATALOG CATEGORY -->
