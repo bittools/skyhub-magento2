@@ -16,10 +16,10 @@ class Queue extends AbstractCron
     
     
     /**
-     * Import next orders from the queue in SkyHub.
-     *
      * @param Schedule       $schedule
      * @param StoreInterface $store
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function executeIntegration(Schedule $schedule, StoreInterface $store)
     {
@@ -36,14 +36,20 @@ class Queue extends AbstractCron
         /** @var \BitTools\SkyHub\Integration\Processor\Sales\Order $orderProcessor */
         $orderProcessor = $this->createObject(\BitTools\SkyHub\Integration\Processor\Sales\Order::class);
         
+        $this->initArea();
+        
         while ($count < $limit) {
             /** @var \SkyHub\Api\Handler\Response\HandlerDefault $result */
-            $orderData = $queueIntegrator->nextOrder();
+            $orderData  = $queueIntegrator->nextOrder();
             
             if (empty($orderData)) {
                 $schedule->setMessages(__('No order found in the queue.'));
                 break;
             }
+    
+            /** @var \BitTools\SkyHub\Helper\Sales\Order\Created\Message $helper */
+            $helper     = $this->createObject(\BitTools\SkyHub\Helper\Sales\Order\Created\Message::class);
+            $skyhubCode = $this->arrayExtract($orderData, 'code');;
             
             try {
                 /** @var \Magento\Sales\Api\Data\OrderInterface $order */
@@ -54,14 +60,12 @@ class Queue extends AbstractCron
             }
             
             if (!$order || !$order->getEntityId()) {
-                $schedule->setMessages(__('Order cannot be created in store %s.', $store->getName()));
+                $schedule->setMessages($helper->getNotCreatedOrderMessage($skyhubCode));
                 return;
             }
             
             $message  = $schedule->getMessages();
-            $message .= __(
-                'Order %s successfully created in store %s.', $order->getIncrementId(), $store->getName()
-            );
+            $message .= $helper->getOrderCreationMessage($order, $skyhubCode);
             
             /** @var \SkyHub\Api\Handler\Response\HandlerDefault $isDeleted */
             $isDeleted = $queueIntegrator->deleteByOrder($order);

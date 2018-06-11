@@ -61,6 +61,7 @@
             <cron_sales_order_import>
                 <enabled>1</enabled>
                 <expression>*/10 * * * *</expression>
+                <limit>50</limit>
             </cron_sales_order_import>
         </bittools_skyhub>
 

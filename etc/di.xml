@@ -65,6 +65,8 @@
                 <item name="createSalesOrderStatusQueue" xsi:type="object">BitTools\SkyHub\Console\Queue\Sales\Order\Status\Create</item>
                 <item name="executeSalesOrderStatusQueue" xsi:type="object">BitTools\SkyHub\Console\Queue\Sales\Order\Status\Execute</item>
 
+                <item name="executeSalesOrderQueueImport" xsi:type="object">BitTools\SkyHub\Console\Queue\Sales\Order\Import</item>
+
                 <item name="createCatalogProductAttributesQueue" xsi:type="object">BitTools\SkyHub\Console\Queue\Catalog\Product\Attribute\Create</item>
                 <item name="executeCatalogProductAttributesQueue" xsi:type="object">BitTools\SkyHub\Console\Queue\Catalog\Product\Attribute\Execute</item>
 

@@ -269,4 +269,25 @@ abstract class AbstractCron
     {
         return $this->context->cronConfig();
     }
+    
+    
+    /**
+     * @return $this
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Exception
+     */
+    protected function initArea()
+    {
+        try {
+            $this->state->getAreaCode();
+        } catch (\Magento\Framework\Exception\LocalizedException $e) {
+            $this->state->setAreaCode(\Magento\Framework\App\Area::AREA_CRONTAB);
+        } catch (\Exception $e) {
+            $this->context->helperContext()->logger()->critical($e);
+            throw $e;
+        }
+        
+        return $this;
+    }
 }

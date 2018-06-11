@@ -92,11 +92,7 @@ class Status extends AbstractQueue
         $collection = $this->getOrderCollection()
             ->addFieldToFilter('entity_id', ['in' => $orderIds]);
         
-        try {
-            $this->state->getAreaCode();
-        } catch (\Magento\Framework\Exception\LocalizedException $e) {
-            $this->state->setAreaCode(\Magento\Framework\App\Area::AREA_CRONTAB);
-        }
+        $this->initArea();
         
         /** @var \Magento\Sales\Model\Order $order */
         foreach ($collection as $order) {

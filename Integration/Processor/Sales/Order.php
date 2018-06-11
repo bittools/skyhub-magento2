@@ -166,6 +166,7 @@ class Order extends AbstractProcessor
              * Order already exists.
              */
             $order = $this->orderRepository->get($orderId);
+            $order->setData('already_exists', true);
             return $order;
         }
 
