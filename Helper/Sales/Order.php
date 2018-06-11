@@ -62,13 +62,18 @@ class Order extends AbstractHelper
 
         return $skyhubCode;
     }
-
-
+    
+    
     /**
      * @return \Magento\Sales\Model\ResourceModel\Order\Collection
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getPendingOrdersFromSkyHub()
     {
+        /** @var \BitTools\SkyHub\Model\ResourceModel\Sales\Order $orderResource */
+        $orderResource = $this->objectManager()->create(\BitTools\SkyHub\Model\ResourceModel\Order::class);
+        
         $deniedStates = [
             SalesOrder::STATE_CANCELED,
             SalesOrder::STATE_CLOSED,
@@ -77,9 +82,8 @@ class Order extends AbstractHelper
 
         /** @var \Magento\Sales\Model\ResourceModel\Order\Collection $collection */
         $collection = $this->objectManager()->create(\Magento\Sales\Model\ResourceModel\Order\Collection::class);
-
-        $collection ->addFieldToFilter('state', ['nin' => $deniedStates])
-            ->addFieldToFilter('bseller_skyhub', 1);
+        $collection->join(['bso' => $orderResource->getMainTable()], 'bso.order_id = main_table.entity_id');
+        $collection->addFieldToFilter('state', ['nin' => $deniedStates]);
 
         return $collection;
     }

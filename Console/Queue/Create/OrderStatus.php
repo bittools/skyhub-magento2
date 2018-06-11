@@ -34,12 +34,12 @@ class OrderStatus extends AbstractConsole
         /** @var \Magento\Cron\Model\Schedule $schedule */
         $schedule = $this->createSchedule();
 
-        /** @var \BitTools\SkyHub\Cron\Queue\Sales\Order\Queue $cron */
+        /** @var \BitTools\SkyHub\Cron\Queue\Sales\Order\Status $cron */
         $cron = $this->context
             ->objectManager()
             ->create(\BitTools\SkyHub\Cron\Queue\Sales\Order\Status::class);
 
-        $cron->execute($schedule);
+        $cron->create($schedule);
     }
 
 
