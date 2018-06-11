@@ -14,7 +14,7 @@ class Create extends AbstractConsole
      */
     protected function configure()
     {
-        $this->setName('skyhub:queue-create:category')
+        $this->setName('skyhub:queue_create:category')
             ->setDescription('Create queue for categories.');
 
         parent::configure();

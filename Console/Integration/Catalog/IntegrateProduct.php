@@ -2,7 +2,6 @@
 
 namespace BitTools\SkyHub\Console\Integration\Catalog;
 
-use BitTools\SkyHub\Helper\Context;
 use BitTools\SkyHub\Integration\Integrator\Catalog\Product as ProductIntegrator;
 use Magento\Store\Api\Data\StoreInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -14,23 +13,6 @@ class IntegrateProduct extends AbstractCatalog
     
     /** @var string */
     const INPUT_KEY_PRODUCT_ID = 'product_id';
-    
-    /** @var ProductIntegrator */
-    protected $productIntegrator;
-    
-    
-    /**
-     * IntegrateProduct constructor.
-     *
-     * @param Context           $context
-     * @param ProductIntegrator $productIntegrator
-     */
-    public function __construct(Context $context, ProductIntegrator $productIntegrator)
-    {
-        parent::__construct($context);
-        
-        $this->productIntegrator = $productIntegrator;
-    }
     
     
     /**
@@ -66,8 +48,11 @@ class IntegrateProduct extends AbstractCatalog
         
         /** @var int $productId */
         foreach ($productIds as $productId) {
+            /** @var ProductIntegrator $productIntegrator */
+            $productIntegrator = $this->objectManager()->create(ProductIntegrator::class);
+            
             /** @var \SkyHub\Api\Handler\Response\HandlerInterfaceSuccess|\SkyHub\Api\Handler\Response\HandlerInterfaceException $response */
-            $response = $this->productIntegrator->createOrUpdateById($productId);
+            $response = $productIntegrator->createOrUpdateById($productId);
             
             if (false == $response) {
                 $this->style()->warning(__('The product ID %1 does not exist or cannot be integrated.', $productId));

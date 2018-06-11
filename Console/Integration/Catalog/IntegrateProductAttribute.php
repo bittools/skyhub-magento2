@@ -2,7 +2,6 @@
 
 namespace BitTools\SkyHub\Console\Integration\Catalog;
 
-use BitTools\SkyHub\Helper\Context;
 use BitTools\SkyHub\Integration\Integrator\Catalog\Product\Attribute as ProductAttributeIntegrator;
 use Magento\Catalog\Model\Product;
 use Magento\Eav\Api\AttributeRepositoryInterface;
@@ -22,29 +21,6 @@ class IntegrateProductAttribute extends AbstractCatalog
     
     /** @var AttributeRepositoryInterface */
     protected $attributeRepository;
-    
-    /** @var ProductAttributeIntegrator */
-    protected $integrator;
-    
-    
-    /**
-     * IntegrateProductAttribute constructor.
-     *
-     * @param Context                      $context
-     * @param AttributeRepositoryInterface $attributeRepository
-     * @param ProductAttributeIntegrator   $integrator
-     */
-    public function __construct(
-        Context $context,
-        AttributeRepositoryInterface $attributeRepository,
-        ProductAttributeIntegrator $integrator
-    )
-    {
-        parent::__construct($context);
-        
-        $this->attributeRepository = $attributeRepository;
-        $this->integrator          = $integrator;
-    }
     
     
     /**
@@ -82,8 +58,11 @@ class IntegrateProductAttribute extends AbstractCatalog
         foreach ($attributes as $attribute) {
             $code = $attribute->getAttributeCode();
             
+            /** @var ProductAttributeIntegrator $integrator */
+            $integrator = $this->objectManager()->create(ProductAttributeIntegrator::class);
+            
             /** @var HandlerInterfaceSuccess|HandlerInterfaceException $response */
-            $response = $this->integrator->createOrUpdate($attribute);
+            $response = $integrator->createOrUpdate($attribute);
             
             if (false == $response) {
                 $this->style()
@@ -124,8 +103,11 @@ class IntegrateProductAttribute extends AbstractCatalog
         /** @var \Magento\Framework\Api\SearchCriteria $result */
         $searchCriteria = $builder->create();
         
+        /** @var AttributeRepositoryInterface $attributeRepository */
+        $attributeRepository = $this->objectManager()->create(AttributeRepositoryInterface::class);
+        
         /** @var \Magento\Framework\Api\SearchResults $result */
-        $result = $this->attributeRepository->getList(Product::ENTITY, $searchCriteria);
+        $result = $attributeRepository->getList(Product::ENTITY, $searchCriteria);
         
         return $result->getItems();
     }

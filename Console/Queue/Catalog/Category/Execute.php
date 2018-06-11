@@ -14,7 +14,7 @@ class Execute extends AbstractConsole
      */
     protected function configure()
     {
-        $this->setName('skyhub:queue-execute:category')
+        $this->setName('skyhub:queue_execute:category')
             ->setDescription('Execute queue for categories.');
 
         parent::configure();

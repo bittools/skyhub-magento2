@@ -16,10 +16,11 @@ abstract class AbstractQueue extends AbstractCron implements QueueInterface
         \BitTools\SkyHub\StoreConfig\Context $configContext,
         \BitTools\SkyHub\Model\StoreIteratorInterface $storeIterator,
         \Magento\Store\Api\GroupRepositoryInterface $groupRepository,
+        \Magento\Framework\App\State $state,
         \BitTools\SkyHub\Model\ResourceModel\QueueFactory $queueResourceFactory
     )
     {
-        parent::__construct($context, $configContext, $storeIterator, $groupRepository);
+        parent::__construct($context, $configContext, $storeIterator, $groupRepository, $state);
         $this->queueResourceFactory = $queueResourceFactory;
     }
     

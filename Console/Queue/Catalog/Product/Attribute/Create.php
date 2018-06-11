@@ -14,7 +14,7 @@ class Create extends AbstractConsole
      */
     protected function configure()
     {
-        $this->setName('skyhub:queue-create:product-attributes')
+        $this->setName('skyhub:queue_create:product_attributes')
             ->setDescription('Create queue for product attributes.');
 
         parent::configure();

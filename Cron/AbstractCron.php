@@ -11,6 +11,8 @@ abstract class AbstractCron
     
     use Functions;
     
+    /** @var \Magento\Framework\App\State */
+    protected $state;
     
     /** @var Context */
     protected $context;
@@ -29,13 +31,15 @@ abstract class AbstractCron
         Context $context,
         \BitTools\SkyHub\StoreConfig\Context $configContext,
         \BitTools\SkyHub\Model\StoreIteratorInterface $storeIterator,
-        \Magento\Store\Api\GroupRepositoryInterface $groupRepository
+        \Magento\Store\Api\GroupRepositoryInterface $groupRepository,
+        \Magento\Framework\App\State $state
     )
     {
         $this->context         = $context;
         $this->configContext   = $configContext;
         $this->storeIterator   = $storeIterator;
         $this->groupRepository = $groupRepository;
+        $this->state           = $state;
     }
     
     

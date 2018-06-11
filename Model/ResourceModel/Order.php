@@ -95,4 +95,64 @@ class Order extends AbstractResourceModel
 
         return $storeIds;
     }
+    
+    
+    /**
+     * @param string $incrementId
+     *
+     * @return string
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getEntityIdByIncrementId($incrementId)
+    {
+        /** @var \Magento\Framework\DB\Select $select */
+        $select = $this->getConnection()
+            ->select()
+            ->from($this->getMainTable(), 'entity_id')
+            ->where('increment_id = ?', $incrementId)
+            ->limit(1);
+        
+        return $this->getConnection()->fetchOne($select);
+    }
+    
+    
+    /**
+     * @param string $code
+     *
+     * @return int
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getEntityIdBySkyhubCode($code)
+    {
+        /** @var \Magento\Framework\DB\Select $select */
+        $select = $this->getConnection()
+            ->select()
+            ->from($this->getMainTable(), 'entity_id')
+            ->where('code = ?', $code)
+            ->limit(1);
+        
+        return $this->getConnection()->fetchOne($select);
+    }
+    
+    
+    /**
+     * @param int $orderId
+     *
+     * @return string
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getSkyhubCodeByOrderId($orderId)
+    {
+        /** @var \Magento\Framework\DB\Select $select */
+        $select = $this->getConnection()
+            ->select()
+            ->from($this->getMainTable(), 'code')
+            ->where('order_id = ?', $orderId)
+            ->limit(1);
+        
+        return $this->getConnection()->fetchOne($select);
+    }
 }

@@ -61,7 +61,9 @@
                 <item name="integrateCatalogProduct" xsi:type="object">BitTools\SkyHub\Console\Integration\Catalog\IntegrateProduct</item>
                 <item name="integrateCatalogProductAttribute" xsi:type="object">BitTools\SkyHub\Console\Integration\Catalog\IntegrateProductAttribute</item>
                 <item name="integrateSalesOrder" xsi:type="object">BitTools\SkyHub\Console\Integration\Sales\IntegrateOrder</item>
-                <item name="createSalesOrderStatusQueue" xsi:type="object">BitTools\SkyHub\Console\Queue\Create\OrderStatus</item>
+
+                <item name="createSalesOrderStatusQueue" xsi:type="object">BitTools\SkyHub\Console\Queue\Sales\Order\Status\Create</item>
+                <item name="executeSalesOrderStatusQueue" xsi:type="object">BitTools\SkyHub\Console\Queue\Sales\Order\Status\Execute</item>
 
                 <item name="createCatalogProductAttributesQueue" xsi:type="object">BitTools\SkyHub\Console\Queue\Catalog\Product\Attribute\Create</item>
                 <item name="executeCatalogProductAttributesQueue" xsi:type="object">BitTools\SkyHub\Console\Queue\Catalog\Product\Attribute\Execute</item>

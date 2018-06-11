@@ -2,7 +2,6 @@
 
 namespace BitTools\SkyHub\Console\Integration\Sales;
 
-use BitTools\SkyHub\Helper\Context;
 use BitTools\SkyHub\Helper\Sales\Order\Created\Message;
 use BitTools\SkyHub\Integration\Integrator\Sales\Order as OrderIntegrator;
 use BitTools\SkyHub\Integration\Processor\Sales\Order as OrderProcessor;
@@ -17,40 +16,6 @@ class IntegrateOrder extends AbstractSales
     
     /** @var string */
     const INPUT_KEY_ORDER_CODE = 'order_code';
-    
-    /** @var OrderIntegrator */
-    protected $integrator;
-    
-    /** @var OrderProcessor */
-    protected $processor;
-    
-    /** @var Message */
-    protected $message;
-    
-    
-    /**
-     * IntegrateOrder constructor.
-     *
-     * @param Context         $context
-     * @param OrderIntegrator $integrator
-     * @param OrderProcessor  $processor
-     * @param Message         $message
-     * @param null            $name
-     */
-    public function __construct(
-        Context $context,
-        OrderIntegrator $integrator,
-        OrderProcessor $processor,
-        Message $message,
-        $name = null
-    )
-    {
-        parent::__construct($context, $name);
-        
-        $this->integrator = $integrator;
-        $this->processor  = $processor;
-        $this->message    = $message;
-    }
     
     
     /**
@@ -85,30 +50,39 @@ class IntegrateOrder extends AbstractSales
      */
     protected function processExecute(InputInterface $input, OutputInterface $output, StoreInterface $store)
     {
+        /** @var Message $message */
+        $message = $this->objectManager()->create(Message::class);
+        
         $orderCodes = array_unique($input->getOption(self::INPUT_KEY_ORDER_CODE));
         $orderCodes = array_filter($orderCodes);
         
         /** @var string $orderCode */
         foreach ($orderCodes as $orderCode) {
+            /** @var OrderIntegrator $integrator */
+            $integrator = $this->objectManager()->create(OrderIntegrator::class);
+            
             /** @var array $orderData */
-            $orderData = $this->integrator->order($orderCode);
+            $orderData = $integrator->order($orderCode);
             
             if (!$orderData) {
-                $this->style()->error($this->message->getNonExistentOrderMessage($orderCode));
+                $this->style()->error($message->getNonExistentOrderMessage($orderCode));
                 continue;
             }
             
             try {
+                /** @var OrderProcessor $processor */
+                $processor = $this->objectManager()->create(OrderProcessor::class);
+                
                 /** @var OrderInterface|bool $order */
-                $order = $this->processor->createOrder($orderData);
+                $order = $processor->createOrder($orderData);
                 
                 if (!$order || !$order->getEntityId()) {
                     $this->style()->error(__('This order could not be created.'));
                     continue;
                 }
                 
-                $message = $this->message->getOrderCreationMessage($order, $orderCode);
-                $this->style()->success($message);
+                $string = $message->getOrderCreationMessage($order, $orderCode);
+                $this->style()->success($string);
             } catch (\Exception $e) {
                 $this->style()->error(__('Error when trying to create an order.'));
                 $this->style()->error(__('Message: %1.', $e->getMessage()));

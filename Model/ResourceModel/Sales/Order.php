@@ -2,6 +2,9 @@
 
 namespace BitTools\SkyHub\Model\ResourceModel\Sales;
 
+/**
+ * @deprecated
+ */
 class Order extends \Magento\Sales\Model\ResourceModel\Order
 {
     

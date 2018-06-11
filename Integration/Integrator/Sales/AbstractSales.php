@@ -2,8 +2,7 @@
 
 namespace BitTools\SkyHub\Integration\Integrator\Sales;
 
-use BitTools\SkyHub\Integration\Context;
-use BitTools\SkyHub\Model\ResourceModel\Sales\Order as OrderResource;
+use BitTools\SkyHub\Model\ResourceModel\Order as OrderResource;
 use BitTools\SkyHub\Integration\Integrator\AbstractIntegrator;
 use BitTools\SkyHub\Model\ResourceModel\Sales\OrderFactory;
 
@@ -38,13 +37,13 @@ abstract class AbstractSales extends AbstractIntegrator
     protected function getOrderIncrementId($orderId)
     {
         try {
-            /** @var OrderResource $resource */
-            $resource   = $this->context->objectManager()->get(OrderResource::class);
+            /** @var \BitTools\SkyHub\Model\ResourceModel\Order $resource */
+            $resource   = $this->context->objectManager()->get(\BitTools\SkyHub\Model\ResourceModel\Order::class);
             $skyhubCode = $resource->getSkyhubCodeByOrderId((int) $orderId);
         } catch (\Exception $e) {
         
         }
         
-        return $skyhubCode;
+        return trim($skyhubCode);
     }
 }

@@ -1,12 +1,12 @@
 <?php
 
-namespace BitTools\SkyHub\Console\Queue\Create;
+namespace BitTools\SkyHub\Console\Queue\Sales\Order\Status;
 
 use BitTools\SkyHub\Console\AbstractConsole;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class OrderStatus extends AbstractConsole
+class Execute extends AbstractConsole
 {
 
     /**
@@ -14,8 +14,8 @@ class OrderStatus extends AbstractConsole
      */
     protected function configure()
     {
-        $this->setName('skyhub:queue:create:order')
-            ->setDescription('Create order status queue.');
+        $this->setName('skyhub:queue_execute:order_status')
+            ->setDescription('Execute order status queue.');
 
         parent::configure();
     }
@@ -39,7 +39,7 @@ class OrderStatus extends AbstractConsole
             ->objectManager()
             ->create(\BitTools\SkyHub\Cron\Queue\Sales\Order\Status::class);
 
-        $cron->create($schedule);
+        $cron->execute($schedule);
     }
 
 

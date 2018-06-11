@@ -2,7 +2,6 @@
 
 namespace BitTools\SkyHub\Console\Integration\Catalog;
 
-use BitTools\SkyHub\Helper\Context;
 use BitTools\SkyHub\Integration\Integrator\Catalog\Category as CategoryIntegrator;
 use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -16,32 +15,6 @@ class IntegrateCategory extends AbstractCatalog
     
     /** @var string */
     const INPUT_KEY_CATEGORY_ID = 'category_id';
-    
-    /** @var CategoryRepositoryInterface */
-    protected $categoryRepository;
-    
-    /** @var CategoryIntegrator */
-    protected $categoryIntegrator;
-    
-    
-    /**
-     * IntegrateCategory constructor.
-     *
-     * @param Context                     $context
-     * @param CategoryRepositoryInterface $categoryRepository
-     * @param CategoryIntegrator          $categoryIntegrator
-     */
-    public function __construct(
-        Context $context,
-        CategoryRepositoryInterface $categoryRepository,
-        CategoryIntegrator $categoryIntegrator
-    )
-    {
-        parent::__construct($context);
-        
-        $this->categoryRepository = $categoryRepository;
-        $this->categoryIntegrator = $categoryIntegrator;
-    }
     
     
     /**
@@ -88,8 +61,11 @@ class IntegrateCategory extends AbstractCatalog
                 continue;
             }
             
+            /** @var CategoryIntegrator $categoryIntegrator */
+            $categoryIntegrator = $this->objectManager()->create(CategoryIntegrator::class);
+            
             /** @var \SkyHub\Api\Handler\Response\HandlerInterfaceSuccess|\SkyHub\Api\Handler\Response\HandlerInterfaceException $response */
-            $response = $this->categoryIntegrator->createOrUpdate($category);
+            $response = $categoryIntegrator->createOrUpdate($category);
             
             if ($response && $response->success()) {
                 $this->style()->success(__('Category ID %1 was successfully integrated.', $categoryId));
@@ -115,8 +91,11 @@ class IntegrateCategory extends AbstractCatalog
     protected function getCategory($categoryId)
     {
         try {
+            /** @var CategoryRepositoryInterface $repository */
+            $repository = $this->objectManager()->create(CategoryRepositoryInterface::class);
+            
             /** @var \Magento\Catalog\Model\Category $category */
-            $category = $this->categoryRepository->get($categoryId);
+            $category = $repository->get($categoryId);
     
             return $category;
         } catch (NoSuchEntityException $e) {
