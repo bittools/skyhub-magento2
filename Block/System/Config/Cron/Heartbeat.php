@@ -42,19 +42,30 @@ class Heartbeat extends AbstractConfig
         $style = null;
         
         if ($this->isOlderThanOneHour()) {
-            $style    = 'color:red;';
-            $message  = 'Your cron seems to be not working properly because the heartbeat is older than one hour.';
+            $style   = 'background-color:orangered;';
+            
+            $message  = 'Your cron seems to be not working properly because the last heartbeat is older than 1 hour.';
             $message .= ' Please check your cron configuration.';
+            
             $message = __($message);
         }
     
         if (!$this->isOlderThanOneHour()) {
-            $style   = 'color:green;';
-            $message = 'Your cron seems to be working properly. Last heartbeat executed %1 minute(s) ago.';
-            $message = __($message, (int) abs($this->getHeartbeatModel()->getLastHeartbeatTimeInMinutes()));
+            $style   = 'background-color:lightseagreen;';
+            $time    = (int) abs($this->getHeartbeatModel()->getLastHeartbeatTimeInMinutes());
+            
+            $message = 'Your cron seems to be working properly.';
+            
+            if ($time >= 1) {
+                $message .= ' Last heartbeat executed %1 minute(s) ago.';
+            } else {
+                $message .= ' Last heartbeat executed less than 1 minute ago.';
+            }
+            
+            $message = __($message, $time);
         }
         
-        return "<p style='{$style}'>$message</p>";
+        return "<p style='padding:10px 10px; border-radius:5px; color:#fff; {$style}'>$message</p>";
     }
     
     
