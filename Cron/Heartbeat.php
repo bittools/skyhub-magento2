@@ -49,7 +49,7 @@ class Heartbeat extends AbstractCron
         }
 
         $lastExecution = strtotime($schedule->getExecutedAt());
-        $duration      = time() - $lastExecution;
+        $duration      = (time()-$lastExecution)/60;
 
         if ($duration > 60) {
             return true;
