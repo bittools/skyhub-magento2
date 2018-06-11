@@ -9,7 +9,7 @@ class Order extends AbstractHelper
 {
 
     /**
-     * @param $skyhubCode
+     * @param string $skyhubCode
      *
      * @return int
      *
@@ -17,8 +17,8 @@ class Order extends AbstractHelper
      */
     public function getOrderId($skyhubCode)
     {
-        /** @var \BitTools\SkyHub\Model\ResourceModel\Sales\Order $orderResource */
-        $orderResource = $this->objectManager()->create(\BitTools\SkyHub\Model\ResourceModel\Sales\Order::class);
+        /** @var \BitTools\SkyHub\Model\ResourceModel\Order $orderResource */
+        $orderResource = $this->objectManager()->create(\BitTools\SkyHub\Model\ResourceModel\Order::class);
         $orderId       = $orderResource->getEntityIdBySkyhubCode($skyhubCode);
 
         return $orderId;
@@ -56,8 +56,8 @@ class Order extends AbstractHelper
      */
     public function getOrderIncrementId($orderId)
     {
-        /** @var \BitTools\SkyHub\Model\ResourceModel\Sales\Order $orderResource */
-        $orderResource = $this->objectManager()->create(\BitTools\SkyHub\Model\ResourceModel\Sales\Order::class);
+        /** @var \BitTools\SkyHub\Model\ResourceModel\Order $orderResource */
+        $orderResource = $this->objectManager()->create(\BitTools\SkyHub\Model\ResourceModel\Order::class);
         $skyhubCode    = $orderResource->getSkyhubCodeByOrderId($orderId);
 
         return $skyhubCode;
@@ -71,7 +71,7 @@ class Order extends AbstractHelper
      */
     public function getPendingOrdersFromSkyHub()
     {
-        /** @var \BitTools\SkyHub\Model\ResourceModel\Sales\Order $orderResource */
+        /** @var \BitTools\SkyHub\Model\ResourceModel\Order $orderResource */
         $orderResource = $this->objectManager()->create(\BitTools\SkyHub\Model\ResourceModel\Order::class);
         
         $deniedStates = [
