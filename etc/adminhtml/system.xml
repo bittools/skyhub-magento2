@@ -80,9 +80,9 @@
                     <comment>After saving a product, it will force real time integration if has changes on attributes: Price, Stock</comment>
                 </field>
                 <field id="product_visibility" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Visibilities for Integration</label>
-                    <source_model>BitTools\SkyHub\Model\Config\Source\Integration\Catalog\Product\Visibilities</source_model>
-                    <comment>Magento will send to Skyhub the products with these visibilities</comment>
+                    <label>Integrate Product Only With These Visibilities</label>
+                    <source_model>Magento\Catalog\Model\Product\Visibility</source_model>
+                    <comment>Magento will send to Skyhub only the products with the selected visibilities above.</comment>
                 </field>
             </group>
 

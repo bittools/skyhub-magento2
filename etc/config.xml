@@ -16,7 +16,7 @@
             </service>
             <catalog>
                 <immediately_integrate_product_after_sensitive_change>1</immediately_integrate_product_after_sensitive_change>
-                <product_visibility>4</product_visibility>
+                <product_visibility>2,3,4</product_visibility>
             </catalog>
             <sales_order_status>
                 <new_order_status>pending</new_order_status>
