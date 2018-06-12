@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="bittools_skyhub_order_import_exception">
+        <observer name="bittools_skyhub_log_order_details" instance="BitTools\SkyHub\Observer\Sales\Order\LogOrderDetailsOnImportException" />
+    </event>
+    <event name="order_cancel_after">
+        <observer name="bittools_skyhub_order_cancel_after" instance="BitTools\SkyHub\Observer\Sales\Order\CancelOrderAfter" />
+        <observer name="bittools_skyhub_reintegrate_order_products" instance="BitTools\SkyHub\Observer\Sales\Order\ReIntegrateOrderProducts" />
+    </event>
+    <event name="sales_model_service_quote_submit_success">
+        <observer name="bittools_skyhub_reintegrate_order_products" instance="BitTools\SkyHub\Observer\Sales\Order\ReIntegrateOrderProducts" />
+    </event>
+</config>

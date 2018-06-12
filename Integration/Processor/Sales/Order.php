@@ -125,7 +125,7 @@ class Order extends AbstractProcessor
             $order = $this->processOrderCreation($data);
         } catch (\Exception $e) {
             $this->eventManager()
-                ->dispatch('bseller_skyhub_order_import_exception', [
+                ->dispatch('bittools_skyhub_order_import_exception', [
                     'exception' => $e,
                     'order_data' => $data,
                 ]);

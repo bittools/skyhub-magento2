@@ -48,4 +48,12 @@ interface QueueRepositoryInterface
      * @return mixed
      */
     public function deleteById($queueId);
+    
+    
+    /**
+     * @param array $data
+     *
+     * @return Data\QueueInterface
+     */
+    public function create($data = []);
 }

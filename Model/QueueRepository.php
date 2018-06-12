@@ -116,6 +116,21 @@ class QueueRepository implements QueueRepositoryInterface
     
     
     /**
+     * @param array $data
+     *
+     * @return Data\QueueInterface
+     */
+    public function create($data = [])
+    {
+        /** @var Queue $queue */
+        $queue = $this->getNewEntity();
+        $queue->addData($data);
+        
+        return $queue;
+    }
+    
+    
+    /**
      * @return Queue
      */
     protected function getNewEntity()
