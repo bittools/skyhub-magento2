@@ -264,9 +264,9 @@
                 </field>
 
                 <field id="use_default_increment_id" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Enabled</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>If disabled the default order's increment ID will be replaced by the SkyHub order code (only applied to imported orders).</comment>
+                    <label>Use Default Order Sequence Number</label>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                    <comment>If DISABLED the default order sequence number will be replaced by the SkyHub order code (applied only to imported orders).</comment>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>

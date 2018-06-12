@@ -62,6 +62,7 @@
                 <enabled>1</enabled>
                 <expression>*/10 * * * *</expression>
                 <limit>50</limit>
+                <use_default_increment_id>1</use_default_increment_id>
             </cron_sales_order_import>
         </bittools_skyhub>
 
