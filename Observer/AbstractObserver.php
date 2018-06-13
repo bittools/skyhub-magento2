@@ -20,6 +20,9 @@ abstract class AbstractObserver implements \Magento\Framework\Event\ObserverInte
     /** @var \Magento\Sales\Api\OrderRepositoryInterface */
     protected $orderRepository;
     
+    /** @var \Magento\Catalog\Api\ProductRepositoryInterface */
+    protected $productRepository;
+    
     /** @var \BitTools\SkyHub\Integration\Integrator\Sales\Order */
     protected $orderIntegrator;
     
@@ -49,6 +52,7 @@ abstract class AbstractObserver implements \Magento\Framework\Event\ObserverInte
         \BitTools\SkyHub\Helper\Context $context,
         \BitTools\SkyHub\Model\StoreIteratorInterface $storeIterator,
         \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         \BitTools\SkyHub\Integration\Integrator\Sales\Order $orderIntegrator,
         \BitTools\SkyHub\Integration\Integrator\Catalog\Product $productIntegrator,
         \BitTools\SkyHub\Integration\Integrator\Catalog\Product\Attribute $productAttributeIntegrator,
@@ -62,6 +66,7 @@ abstract class AbstractObserver implements \Magento\Framework\Event\ObserverInte
         $this->context                    = $context;
         $this->storeIterator              = $storeIterator;
         $this->orderRepository            = $orderRepository;
+        $this->productRepository          = $productRepository;
         $this->orderIntegrator            = $orderIntegrator;
         $this->productIntegrator          = $productIntegrator;
         $this->productAttributeIntegrator = $productAttributeIntegrator;
