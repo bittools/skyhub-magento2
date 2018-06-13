@@ -2,10 +2,10 @@
 
 namespace BitTools\SkyHub\Observer\Sales\Order\Shipment;
 
-use BitTools\SkyHub\Observer\Sales\Order\AbstractOrder;
+use BitTools\SkyHub\Observer\Sales\AbstractSales;
 use Magento\Framework\Event\Observer;
 
-class IntegrateOrderShipmentTracking extends AbstractOrder
+class IntegrateOrderShipmentTracking extends AbstractSales
 {
     
     /**

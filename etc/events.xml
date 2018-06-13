@@ -3,6 +3,19 @@
     <event name="bittools_skyhub_order_import_exception">
         <observer name="bittools_skyhub_log_order_details" instance="BitTools\SkyHub\Observer\Sales\Order\LogOrderDetailsOnImportException" />
     </event>
+
+    <!-- CATALOG EVENTS -->
+    <event name="catalog_entity_attribute_save_after">
+        <observer name="bittools_skyhub_integrate_catalog_product_attribute" instance="BitTools\SkyHub\Observer\Catalog\Product\Attribute\IntegrateProductAttribute"/>
+    </event>
+    <event name="catalog_category_save_after">
+        <observer name="bittools_skyhub_integrate_catalog_category" instance="BitTools\SkyHub\Observer\Catalog\Category\IntegrateCategory"/>
+    </event>
+    <event name="catalog_category_delete_after">
+        <observer name="bittools_skyhub_delete_catalog_category" instance="BitTools\SkyHub\Observer\Catalog\Category\DeleteCategory"/>
+    </event>
+
+    <!-- SALES EVENTS -->
     <event name="order_cancel_after">
         <observer name="bittools_skyhub_order_cancel_after" instance="BitTools\SkyHub\Observer\Sales\Order\CancelOrderAfter" />
         <observer name="bittools_skyhub_reintegrate_order_products" instance="BitTools\SkyHub\Observer\Sales\Order\ReIntegrateOrderProducts" />

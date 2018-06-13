@@ -2,9 +2,10 @@
 
 namespace BitTools\SkyHub\Observer\Sales\Order;
 
+use BitTools\SkyHub\Observer\Sales\AbstractSales;
 use Magento\Framework\Event\Observer;
 
-class LogOrderDetailsOnImportException extends AbstractOrder
+class LogOrderDetailsOnImportException extends AbstractSales
 {
     
     /**

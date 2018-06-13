@@ -14,10 +14,10 @@
 
 namespace BitTools\SkyHub\Observer\Sales\Order\Status;
 
-use BitTools\SkyHub\Observer\Sales\Order\AbstractOrder;
+use BitTools\SkyHub\Observer\Sales\AbstractSales;
 use Magento\Framework\Event\Observer;
 
-class ProcessCompleteStatusOrder extends AbstractOrder
+class ProcessCompleteStatusOrder extends AbstractSales
 {
     
     /**

@@ -14,10 +14,10 @@
 
 namespace BitTools\SkyHub\Observer\Sales\Order\Creditmemo;
 
-use BitTools\SkyHub\Observer\Sales\Order\AbstractOrder;
+use BitTools\SkyHub\Observer\Sales\AbstractSales;
 use Magento\Framework\Event\Observer;
 
-class CancelOrderAfterRefund extends AbstractOrder
+class CancelOrderAfterRefund extends AbstractSales
 {
     
     /**
