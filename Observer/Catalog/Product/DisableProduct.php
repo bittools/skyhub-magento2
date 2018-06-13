@@ -35,6 +35,8 @@ class DisableProduct extends AbstractCatalog
         
         //disable the item and set 0 to stock items
         $product->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_DISABLED);
+        
+        /** @var \Magento\CatalogInventory\Model\Stock\Item $stockItem */
         $stockItem = $product->getStockItem();
         
         if ($stockItem) {
