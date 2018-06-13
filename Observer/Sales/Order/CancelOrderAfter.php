@@ -26,6 +26,6 @@ class CancelOrderAfter extends AbstractOrder
         /** @var \Magento\Store\Api\Data\StoreInterface $store */
         $store = $this->getStore($order->getStoreId());
     
-        $this->getStoreIterator()->call($this->orderIntegrator(), 'cancel', [$order->getEntityId()], $store);
+        $this->storeIterator->call($this->orderIntegrator, 'cancel', [$order->getEntityId()], $store);
     }
 }

@@ -45,11 +45,8 @@ class LogOrderDetailsOnImportException extends AbstractOrder
             'store_id'        => (int) $this->getStore()->getId(),
         ];
         
-        /** @var \BitTools\SkyHub\Api\QueueRepositoryInterface $repository */
-        $repository = $this->context->objectManager()->create(\BitTools\SkyHub\Api\QueueRepositoryInterface::class);
-        
         /** @var \BitTools\SkyHub\Model\Queue $queue */
-        $queue = $repository->create($data);
-        $repository->save($queue);
+        $queue = $this->queueRepository->create($data);
+        $this->queueRepository->save($queue);
     }
 }

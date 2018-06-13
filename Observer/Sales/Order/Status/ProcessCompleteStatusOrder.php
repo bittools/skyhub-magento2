@@ -53,8 +53,7 @@ class ProcessCompleteStatusOrder extends AbstractOrder
         }
         
         try {
-            $this->getStoreIterator()
-                ->call($this->orderIntegrator(), 'delivery', [$order->getEntityId()], $order->getStore());
+            $this->storeIterator->call($this->orderIntegrator, 'delivery', [$order->getEntityId()], $order->getStore());
         } catch (\Exception $e) {
             $this->context->logger()->critical($e);
         }

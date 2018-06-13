@@ -23,25 +23,15 @@ class ReIntegrateOrderProducts extends AbstractOrder
             return;
         }
     
-        /** @var \BitTools\SkyHub\Integration\Integrator\Catalog\ProductValidation $validator */
-        $validator = $this->context
-            ->objectManager()
-            ->create(\BitTools\SkyHub\Integration\Integrator\Catalog\ProductValidation::class);
-    
         $items      = $order->getAllVisibleItems();
         $productIds = [];
-        
-        /** @var \BitTools\SkyHub\Integration\Integrator\Catalog\Product $integrator */
-        $integrator = $this->context
-            ->objectManager()
-            ->create(\BitTools\SkyHub\Integration\Integrator\Catalog\Product::class);;
     
         /** @var \Magento\Sales\Model\Order\Item $item */
         foreach ($items as $item) {
             /** @var \Magento\Catalog\Api\Data\ProductInterface $product */
             $product = $item->getProduct();
             
-            if (!$validator->canIntegrateProduct($product)) {
+            if (!$this->productValidation->canIntegrateProduct($product)) {
                 continue;
             }
         
@@ -55,7 +45,7 @@ class ReIntegrateOrderProducts extends AbstractOrder
                 /**
                  * integrate all order items on skyhub (mainly to update stock qty)
                  */
-                $response = $integrator->createOrUpdate($product);
+                $response = $this->productIntegrator->createOrUpdate($product);
             
                 if ($response && $response->exception()) {
                     $success = false;
@@ -72,13 +62,9 @@ class ReIntegrateOrderProducts extends AbstractOrder
         }
     
         /** @var \BitTools\SkyHub\Model\ResourceModel\Queue $queueResource */
-        $queueResource = $this->context
-            ->objectManager()
-            ->create(\BitTools\SkyHub\Model\ResourceModel\Queue::class);
+        $queueResource = $this->queueResourceFactory->create();
         
-        /**
-         * put the product on the line
-         */
+        /** Queue product. */
         $queueResource->queue(
             $productIds,
             \BitTools\SkyHub\Model\Entity::TYPE_CATALOG_PRODUCT,
