@@ -2,10 +2,9 @@
 
 namespace BitTools\SkyHub\Observer\Sales\Order;
 
-use BitTools\SkyHub\Observer\AbstractObserver;
 use Magento\Framework\Event\Observer;
 
-class ReIntegrateOrderProducts extends AbstractObserver
+class ReIntegrateOrderProducts extends AbstractOrder
 {
     
     /**
