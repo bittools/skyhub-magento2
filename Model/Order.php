@@ -36,18 +36,26 @@ class Order extends AbstractModel implements OrderInterface
     /** @var \Magento\Store\Model\StoreManagerInterface */
     protected $storeManager;
     
+    /** @var \Magento\Sales\Api\OrderRepositoryInterface */
+    protected $orderRepository;
+    
+    /** @var \Magento\Sales\Model\Order */
+    protected $order;
+    
     
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
         
-        $this->storeManager = $storeManager;
+        $this->storeManager    = $storeManager;
+        $this->orderRepository = $orderRepository;
     }
 
 
@@ -75,6 +83,19 @@ class Order extends AbstractModel implements OrderInterface
     public function getOrderId()
     {
         return $this->_getData(self::KEY_ORDER_ID);
+    }
+    
+    
+    /**
+     * @return \Magento\Sales\Api\Data\OrderInterface|\Magento\Sales\Model\Order
+     */
+    public function getOrder()
+    {
+        if (!$this->order) {
+            $this->order = $this->orderRepository->get($this->getOrderId());
+        }
+        
+        return $this->order;
     }
 
     /**
