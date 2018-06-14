@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="sales_order_tabs">
+            <action method="addTabAfter">
+                <argument name="name" xsi:type="string">bittools_skyhub_order_data_source</argument>
+                <argument name="block" xsi:type="string">BitTools\SkyHub\Block\Adminhtml\Sales\Order\View\Tab\SkyhubDataSource</argument>
+                <argument name="afterTabId" xsi:type="string">order_history</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>
