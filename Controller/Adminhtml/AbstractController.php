@@ -51,6 +51,17 @@ abstract class AbstractController extends Action
     
     
     /**
+     * @return \Magento\Framework\Controller\Result\Json
+     */
+    protected function createJsonResult()
+    {
+        /** @var \Magento\Framework\Controller\Result\Json $result */
+        $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
+        return $result;
+    }
+    
+    
+    /**
      * @return \Magento\Framework\Controller\Result\Redirect
      */
     protected function redirectToRefererUrl()

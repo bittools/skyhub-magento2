@@ -46,4 +46,20 @@ class Order
 
         return $result;
     }
+    
+    
+    /**
+     * @param OrderRepositoryInterface $subject
+     * @param OrderInterface           $result
+     *
+     * @return OrderInterface
+     */
+    public function afterSave(OrderRepositoryInterface $subject, OrderInterface $result)
+    {
+        /** @var \BitTools\SkyHub\Api\Data\OrderInterface $relation */
+        $relation = $result->getExtensionAttributes()->getSkyhubInfo();
+        $this->orderRelationRepository->save($relation);
+        
+        return $result;
+    }
 }

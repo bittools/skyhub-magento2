@@ -13,6 +13,7 @@ namespace BitTools\SkyHub\Model;
 use BitTools\SkyHub\Api\Data\OrderInterface;
 use BitTools\SkyHub\Model\ResourceModel\Order as ResourceModel;
 use Magento\Framework\Model\AbstractModel;
+use Magento\Store\Model\StoreManagerInterface;
 
 class Order extends AbstractModel implements OrderInterface
 {
@@ -24,6 +25,30 @@ class Order extends AbstractModel implements OrderInterface
     const KEY_INTEREST    = 'interest';
     const KEY_INVOICE_KEY = 'invoice_key';
     const KEY_DATA_SOURCE = 'data_source';
+    
+    
+    /** @var string */
+    protected $_eventPrefix = 'bittools_skyhub_order_relation';
+    
+    /** @var string */
+    protected $_eventObject = 'order_relation';
+    
+    /** @var \Magento\Store\Model\StoreManagerInterface */
+    protected $storeManager;
+    
+    
+    public function __construct(
+        \Magento\Framework\Model\Context $context,
+        \Magento\Framework\Registry $registry,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
+        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+        array $data = []
+    ) {
+        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
+        
+        $this->storeManager = $storeManager;
+    }
 
 
     /**
@@ -135,17 +160,50 @@ class Order extends AbstractModel implements OrderInterface
         $this->setData(self::KEY_CHANNEL, $channel);
         return $this;
     }
-
+    
+    
     /**
      * @param string $invoiceKey
      *
+     * @param bool   $graceful
+     *
      * @return $this
+     *
+     * @throws \Exception
      */
-    public function setInvoiceKey($invoiceKey)
+    public function setInvoiceKey($invoiceKey, $graceful = false)
     {
+        if (!$this->validateInvoiceKey($invoiceKey)) {
+            if (!$graceful) {
+                throw new \Exception(__('Invoice key number is not valid.'));
+            }
+            
+            return $this;
+        }
+        
         $this->setData(self::KEY_INVOICE_KEY, $invoiceKey);
         return $this;
     }
+    
+    
+    /**
+     * @param null|string $invoiceKey
+     *
+     * @return bool
+     */
+    public function validateInvoiceKey($invoiceKey = null)
+    {
+        if (empty($invoiceKey)) {
+            $invoiceKey = $this->_getData(self::KEY_INVOICE_KEY);
+        }
+    
+        if (!preg_match('/.*?([0-9]{44}).*?/', $invoiceKey)) {
+            return false;
+        }
+        
+        return true;
+    }
+    
 
     /**
      * @param string $dataSource
@@ -167,5 +225,16 @@ class Order extends AbstractModel implements OrderInterface
     {
         $this->setData(self::KEY_INTEREST, (float) $interest);
         return $this;
+    }
+    
+    
+    /**
+     * @return int|\Magento\Store\Api\Data\StoreInterface
+     *
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getStore()
+    {
+        return $this->storeManager->getStore($this->getStoreId());
     }
 }

@@ -3,51 +3,18 @@
 namespace BitTools\SkyHub\Block\Adminhtml\Sales\Order\View\Tab;
 
 use Magento\Backend\Block\Widget\Tab\TabInterface;
+use Magento\Sales\Block\Adminhtml\Order\AbstractOrder;
 
-class SkyhubDataSource extends \Magento\Backend\Block\Template implements TabInterface
+class SkyhubDataSource extends AbstractOrder implements TabInterface
 {
     
     /** @var string */
     protected $_template = 'order/view/tab/skyhub_data_source.phtml';
     
-    /** @var \Magento\Framework\Registry */
-    protected $coreRegistry = null;
-    
-    /** @var \Magento\Sales\Helper\Admin */
-    protected $adminHelper;
-    
-    /**
-     * @param \Magento\Backend\Block\Template\Context $context
-     * @param \Magento\Framework\Registry $registry
-     * @param \Magento\Sales\Helper\Admin $adminHelper
-     * @param array $data
-     */
-    public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        \Magento\Framework\Registry $registry,
-        \Magento\Sales\Helper\Admin $adminHelper,
-        array $data = []
-    ) {
-        parent::__construct($context, $data);
-        
-        $this->coreRegistry = $registry;
-        $this->adminHelper  = $adminHelper;
-    }
-    
-    
-    /**
-     * Retrieve order model instance
-     *
-     * @return \Magento\Sales\Model\Order
-     */
-    public function getOrder()
-    {
-        return $this->coreRegistry->registry('current_order');
-    }
-    
     
     /**
      * @return bool|string
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getEncodedJsonDataSource()
     {

@@ -86,12 +86,12 @@ class StoreIterator implements StoreIteratorInterface
             $eventParams['initial_store']  = $this->getInitialStore();
             $eventParams['previous_store'] = $this->getPreviousStore();
     
-            $this->context->eventManager()->dispatch('bseller_skyhub_store_iterate', $eventParams);
+            $this->context->eventManager()->dispatch('bittools_skyhub_store_iterate', $eventParams);
             
             $this->call($subject, $method, $params, $store);
         }
     
-        $this->context->eventManager()->dispatch('bseller_skyhub_store_iterate_after', $eventParams);
+        $this->context->eventManager()->dispatch('bittools_skyhub_store_iterate_after', $eventParams);
         
         $this->endIterator();
         
@@ -110,6 +110,10 @@ class StoreIterator implements StoreIteratorInterface
      */
     public function call($subject, $method, array $params = [], StoreInterface $store, $force = false)
     {
+        if (!$this->initialStore) {
+            $this->initialStore = $store;
+        }
+        
         if (!$this->validateStore($store) && !$force) {
             return false;
         }

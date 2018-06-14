@@ -44,4 +44,9 @@
     <event name="sales_order_creditmemo_refund">
         <observer name="bittools_skyhub_cancel_order_after_refund" instance="BitTools\SkyHub\Observer\Sales\Order\Creditmemo\CancelOrderAfterRefund"/>
     </event>
+
+    <!-- INVOICE KEY -->
+    <event name="bittools_skyhub_order_relation_save_after">
+        <observer name="bittools_skyhub_integrate_invoice_key" instance="BitTools\SkyHub\Observer\Sales\Order\Invoice\IntegrateInvoiceKey"/>
+    </event>
 </config>

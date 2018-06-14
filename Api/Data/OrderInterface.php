@@ -4,11 +4,21 @@ namespace BitTools\SkyHub\Api\Data;
 
 interface OrderInterface
 {
+    
+    /**
+     * @return int
+     */
+    public function getId();
 
     /**
      * @return int
      */
     public function getStoreId();
+
+    /**
+     * @return \Magento\Store\Api\Data\StoreInterface
+     */
+    public function getStore();
 
     /**
      * @return int

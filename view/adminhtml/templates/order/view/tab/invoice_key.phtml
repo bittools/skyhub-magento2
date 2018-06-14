@@ -1,0 +1,22 @@
+<?php
+/** @var BitTools\SkyHub\Block\Adminhtml\Sales\Order\View\Tab\InvoiceKey $block */
+?>
+<div id="<?php echo $block->getContainerId() ?>">
+    <div class="admin__page-section-title">
+        <span class="title"><?php echo __('Invoice Key Assignment') ?></span>
+    </div>
+    <div id="skyhub_order_invoice_key">
+        <div class="skyhub-order-invoice-key-block" id="invoice_key_form">
+            <div class="admin__field">
+                <label for="history_status" class="admin__field-label"><?= /* @noEscape */ __('Invoice Key Number') ?></label>
+                <div class="admin__field-control">
+                    <input type="text" name="invoice_key_number" id="invoice_key_number" class="admin__control-text" value="<?php echo $block->getInvoiceKey() ?>"/>
+                    <div class="admin__field-note">
+                        <span><?php echo __('44 digits required. Be careful! By submitting the invoice key the order will be invoiced automatically in SkyHub and this cannot be undone.') ?></span>
+                    </div>
+                </div>
+                <div class="order-history-comments-actions"><?= $block->getChildHtml('submit_button') ?> </div>
+            </div>
+        </div>
+    </div>
+</div>

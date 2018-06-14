@@ -2,10 +2,13 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceBlock name="sales_order_tabs">
-            <action method="addTabAfter">
+            <action method="addTab">
                 <argument name="name" xsi:type="string">bittools_skyhub_order_data_source</argument>
                 <argument name="block" xsi:type="string">BitTools\SkyHub\Block\Adminhtml\Sales\Order\View\Tab\SkyhubDataSource</argument>
-                <argument name="afterTabId" xsi:type="string">order_history</argument>
+            </action>
+            <action method="addTab">
+                <argument name="name" xsi:type="string">bittools_skyhub_invoice_key</argument>
+                <argument name="block" xsi:type="string">BitTools\SkyHub\Block\Adminhtml\Sales\Order\View\Tab\InvoiceKey</argument>
             </action>
         </referenceBlock>
     </body>
