@@ -192,11 +192,6 @@ class Order extends AbstractProcessor
         $shippingCost    = (float)  $this->arrayExtract($data, 'shipping_cost', 0.0000);
         $discountAmount  = (float)  $this->arrayExtract($data, 'discount', 0.0000);
         $interestAmount  = (float)  $this->arrayExtract($data, 'interest', 0.0000);
-    
-        /** @todo Removed this hard coded values. */
-        $shippingCost   = 06.93;
-        $discountAmount = 11.43;
-        $interestAmount = 32.98;
         
         /** @var \BitTools\SkyHub\Integration\Support\Sales\Order\Create $creator */
         $creator = $this->orderCreatorFactory->create();
