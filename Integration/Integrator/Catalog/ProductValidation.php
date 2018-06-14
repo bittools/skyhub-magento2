@@ -63,7 +63,7 @@ class ProductValidation
         $allowedTypes = [
             SimpleProductType::TYPE_SIMPLE,
             Configurable::TYPE_CODE,
-            Grouped::TYPE_CODE,
+            // Grouped::TYPE_CODE,
         ];
         
         if (!in_array($product->getTypeId(), $allowedTypes)) {
