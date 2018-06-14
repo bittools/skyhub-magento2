@@ -554,7 +554,6 @@ class Create
         }
     
         $this->getQuote()->setData('skyhub_interest', $interest);
-        $registry->register($key, $interest, true);
 
         return $this;
     }

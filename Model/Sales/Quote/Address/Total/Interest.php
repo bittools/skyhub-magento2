@@ -2,7 +2,7 @@
 
 namespace BitTools\SkyHub\Model\Sales\Quote\Address\Total;
 
-class Interest extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
+class Interest extends AbstractTotal
 {
     
     /**
@@ -20,6 +20,8 @@ class Interest extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
      * @param \Magento\Quote\Model\Quote\Address\Total            $total
      *
      * @return $this
+     *
+     * @throws \Exception
      */
     public function collect(
         \Magento\Quote\Model\Quote $quote,
@@ -27,6 +29,18 @@ class Interest extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
         \Magento\Quote\Model\Quote\Address\Total $total
     ) {
         parent::collect($quote, $shippingAssignment, $total);
+    
+        $interest = (float) $quote->getData('skyhub_interest');
+    
+        if (!$interest) {
+            return $this;
+        }
+    
+        $interest     = abs($interest);
+        $baseInterest = $this->convertToBasePrice($interest);
+    
+        $total->addTotalAmount('tax', $interest);
+        $total->addBaseTotalAmount('tax', $baseInterest);
         
         return $this;
     }

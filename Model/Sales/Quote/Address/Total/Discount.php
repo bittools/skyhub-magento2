@@ -2,27 +2,8 @@
 
 namespace BitTools\SkyHub\Model\Sales\Quote\Address\Total;
 
-class Discount extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
+class Discount extends AbstractTotal
 {
-    
-    /** @var \Magento\Directory\Model\CurrencyFactory */
-    protected $currencyFactory;
-    
-    /** @var \Magento\Directory\Api\Data\CurrencyInformationInterface */
-    protected $currencyInformation;
-    
-    
-    public function __construct(
-        \Magento\Directory\Api\Data\CurrencyInformationInterface $currencyInformation,
-        \Magento\Directory\Model\CurrencyFactory $currencyFactory
-    )
-    {
-        $this->setCode('discount');
-        
-        $this->currencyFactory     = $currencyFactory;
-        $this->currencyInformation = $currencyInformation;
-    }
-    
     
     /**
      * @return \Magento\Framework\Phrase|string
@@ -49,20 +30,17 @@ class Discount extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
     ) {
         parent::collect($quote, $shippingAssignment, $total);
     
-        $skyhubDiscount = (float) $quote->getData('skyhub_discount_amount');
+        $discount = (float) $quote->getData('skyhub_discount_amount');
     
-        if (!$skyhubDiscount) {
+        if (!$discount) {
             return $this;
         }
-        
-        /** @var \Magento\Directory\Model\Currency $currency */
-        $currency = $this->currencyFactory->create();
     
-        $skyhubDiscount     = abs($skyhubDiscount);
-        $skyhubBaseDiscount = $currency->convert($skyhubDiscount, $this->currencyInformation->getBaseCurrencyCode());
+        $discount     = abs($discount);
+        $baseDiscount = $this->convertToBasePrice($discount);
         
-        $total->addTotalAmount('discount', $skyhubDiscount * (-1));
-        $total->addBaseTotalAmount('discount', $skyhubBaseDiscount * (-1));
+        $total->addTotalAmount('discount', $discount * (-1));
+        $total->addBaseTotalAmount('discount', $baseDiscount * (-1));
         
         return $this;
     }
