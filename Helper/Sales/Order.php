@@ -32,16 +32,11 @@ class Order extends AbstractHelper
      */
     public function getNewOrderIncrementId($code)
     {
-        /**
-         * @todo Adapt this code to use the current configuration scope.
-         */
-        /*
-        $useDefaultIncrementId = $this->getSkyHubModuleConfig('use_default_increment_id', 'cron_sales_order_import');
+        $useDefaultIncrementId = $this->context->configContext()->salesOrderImport()->useDefaultIncrementId();
 
         if (!$useDefaultIncrementId) {
             return $code;
         }
-        */
 
         return null;
     }

@@ -409,7 +409,7 @@ class Create
                     ->addData($paymentData);
             }
 
-            $this->context->eventManager()->dispatch('bseller_skyhub_order_import_before', [
+            $this->context->eventManager()->dispatch('bittools_skyhub_order_import_before', [
                 'order'      => $order,
                 'order_data' => $orderData,
                 'creator'    => $this,
@@ -421,10 +421,10 @@ class Create
                     ->importPostData($this->arrayExtract($orderData, 'order'))
                     ->createOrder();
 
-                $eventName = 'bseller_skyhub_order_import_success';
+                $eventName = 'bittools_skyhub_order_import_success';
             } catch (\Exception $e) {
                 $this->context->helperContext()->logger()->critical($e);
-                $eventName = 'bseller_skyhub_order_import_fail';
+                $eventName = 'bittools_skyhub_order_import_fail';
             }
 
             $this->context->eventManager()->dispatch($eventName, [
@@ -470,7 +470,7 @@ class Create
         foreach ($products as $item) {
             $orderCreator->addProductByData($item);
         }
-
+        
         $this->registerDiscount($orderData);
         $this->registerInterest($orderData);
 
@@ -516,18 +516,18 @@ class Create
     {
         $registry = $this->context->helperContext()->registryManager();
 
-        $key = 'bseller_skyhub_discount_amount';
+        $key = 'bittools_skyhub_discount_amount';
         if ($registry->registry($key)) {
             $registry->unregister($key);
         }
-
+        
         $discount = (float) $this->arrayExtract($data, 'discount_amount');
 
         if (!$discount) {
             return $this;
         }
-
-        $registry->register($key, $discount, true);
+    
+        $this->getQuote()->setData('skyhub_discount_amount', $discount);
 
         return $this;
     }
@@ -542,17 +542,18 @@ class Create
     {
         $registry = $this->context->helperContext()->registryManager();
 
-        $key = 'bseller_skyhub_interest';
+        $key = 'bittools_skyhub_interest';
         if ($registry->registry($key)) {
             $registry->unregister($key);
         }
-
+    
         $interest = (float) $this->arrayExtract($data, 'interest');
 
         if (!$interest) {
             return $this;
         }
-
+    
+        $this->getQuote()->setData('skyhub_interest', $interest);
         $registry->register($key, $interest, true);
 
         return $this;

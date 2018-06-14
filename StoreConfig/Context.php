@@ -20,6 +20,9 @@ class Context
     /** @var SalesOrderStatus */
     protected $salesOrderStatus;
 
+    /** @var SalesOrderImport */
+    protected $salesOrderImport;
+
 
     /**
      * Context constructor.
@@ -35,7 +38,8 @@ class Context
         ServiceConfig $serviceConfig,
         LogConfig $logConfig,
         CatalogConfig $catalogConfig,
-        SalesOrderStatus $salesOrderStatus
+        SalesOrderStatus $salesOrderStatus,
+        SalesOrderImport $salesOrderImport
     )
     {
         $this->general          = $generalConfig;
@@ -43,6 +47,7 @@ class Context
         $this->log              = $logConfig;
         $this->catalog          = $catalogConfig;
         $this->salesOrderStatus = $salesOrderStatus;
+        $this->salesOrderImport = $salesOrderImport;
     }
 
 
@@ -88,5 +93,14 @@ class Context
     public function salesOrderStatus()
     {
         return $this->salesOrderStatus;
+    }
+
+
+    /**
+     * @return SalesOrderImport
+     */
+    public function salesOrderImport()
+    {
+        return $this->salesOrderImport;
     }
 }

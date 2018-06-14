@@ -10,6 +10,9 @@ use Magento\Store\Model\StoreManager;
 
 class SalesOrderStatus extends AbstractConfig
 {
+    
+    /** @var string */
+    protected $group = 'sales_order_status';
 
     /** @var Order\StatusFactory */
     protected $statusFactory;
@@ -43,7 +46,7 @@ class SalesOrderStatus extends AbstractConfig
      */
     public function getNewOrdersStatus($scopeCode = null)
     {
-        $status = (string) $this->getSkyHubModuleConfig('new_order_status', 'sales_order_status', $scopeCode);
+        $status = (string) $this->getSkyHubModuleConfig('new_order_status', $this->group, $scopeCode);
 
         if (empty($status)) {
             $status = $this->getDefaultStatusByState(Order::STATE_NEW);
@@ -60,7 +63,7 @@ class SalesOrderStatus extends AbstractConfig
      */
     public function getApprovedOrdersStatus($scopeCode = null)
     {
-        $status = (string) $this->getSkyHubModuleConfig('approved_order_status', 'sales_order_status', $scopeCode);
+        $status = (string) $this->getSkyHubModuleConfig('approved_order_status', $this->group, $scopeCode);
 
         if (empty($status)) {
             $status = $this->getDefaultStatusByState(Order::STATE_PROCESSING);
@@ -77,7 +80,7 @@ class SalesOrderStatus extends AbstractConfig
      */
     public function getDeliveredOrdersStatus($scopeCode = null)
     {
-        $status = (string) $this->getSkyHubModuleConfig('delivered_order_status', 'sales_order_status', $scopeCode);
+        $status = (string) $this->getSkyHubModuleConfig('delivered_order_status', $this->group, $scopeCode);
 
         if (empty($status)) {
             $status = $this->getDefaultStatusByState(Order::STATE_COMPLETE);
@@ -94,9 +97,7 @@ class SalesOrderStatus extends AbstractConfig
      */
     public function getShipmentExceptionOrderStatus($scopeCode = null)
     {
-        $status = (string) $this->getSkyHubModuleConfig(
-            'shipment_exception_order_status', 'sales_order_status', $scopeCode
-        );
+        $status = (string) $this->getSkyHubModuleConfig('shipment_exception_order_status', $this->group, $scopeCode);
 
         if (empty($status)) {
             $status = $this->getDefaultStatusByState(Order::STATE_COMPLETE);
