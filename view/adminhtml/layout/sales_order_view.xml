@@ -11,5 +11,8 @@
                 <argument name="block" xsi:type="string">BitTools\SkyHub\Block\Adminhtml\Sales\Order\View\Tab\InvoiceKey</argument>
             </action>
         </referenceBlock>
+        <referenceBlock name="order_info">
+            <block name="bittools_skyhub.skyhub_info" class="BitTools\SkyHub\Block\Adminhtml\Sales\Order\View\SkyhubInfo" template="BitTools_SkyHub::order/view/skyhub_info.phtml"/>
+        </referenceBlock>
     </body>
 </page>

@@ -1,0 +1,17 @@
+<?php
+/** @var BitTools\SkyHub\Block\Adminhtml\Sales\Order\View\SkyhubInfo $block */
+?>
+<?php if ($block->canDisplay()): ?>
+    <?php if ($block->getSkyhubCode()): ?>
+    <tr>
+        <th><?= $block->escapeHtml(__('SkyHub Code')) ?></th>
+        <td><span id="skyhub_code"><?= $block->escapeHtml($block->getSkyhubCode()) ?></span></td>
+    </tr>
+    <?php endif; ?>
+    <?php if ($block->getSkyhubChannel()): ?>
+    <tr>
+        <th><?= $block->escapeHtml(__('SkyHub Channel')) ?></th>
+        <td><span id="skyhub_channel"><?= $block->escapeHtml($block->getSkyhubChannel()) ?></span></td>
+    </tr>
+    <?php endif; ?>
+<?php endif; ?>
