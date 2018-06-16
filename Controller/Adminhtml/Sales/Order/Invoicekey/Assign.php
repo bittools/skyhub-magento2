@@ -63,7 +63,7 @@ class Assign extends AbstractController
             /** @var \BitTools\SkyHub\Model\Order $info */
             $info = $order->getExtensionAttributes()->getSkyhubInfo();
             
-            if (!$info->validateInvoiceKey($invoiceKey)) {
+            if (!$info || !$info->validateInvoiceKey($invoiceKey)) {
                 return false;
             }
             

@@ -17,6 +17,7 @@
     <module name="BitTools_SkyHub" setup_version="1.0.0">
         <sequence>
             <Magento_Ui/>
+            <Magento_Backend/>
         </sequence>
     </module>
 </config>

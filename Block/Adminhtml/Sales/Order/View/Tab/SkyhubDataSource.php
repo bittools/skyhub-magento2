@@ -50,7 +50,7 @@ class SkyhubDataSource extends AbstractOrder implements TabInterface
      */
     public function getTabTitle()
     {
-        return __('SkyHub Data Source');
+        return $this->getTabLabel();
     }
     
     

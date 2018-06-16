@@ -32,7 +32,7 @@ class Message
         }
         
         return __(
-            'The order code %1 already exists did not need to be updated. Order ID %2.',
+            'The order code %1 already exists and did not need to be updated. Order ID %2.',
             $skyhubCode,
             $order->getIncrementId()
         );

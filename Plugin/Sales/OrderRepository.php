@@ -3,11 +3,12 @@
 namespace BitTools\SkyHub\Plugin\Sales;
 
 use BitTools\SkyHub\Api\OrderRepositoryInterface as OrderRelationRepositoryInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 
-class Order
+class OrderRepository
 {
-    
+
     /** @var OrderRelationRepositoryInterface */
     protected $orderRelationRepository;
 
@@ -17,26 +18,24 @@ class Order
      *
      * @param OrderRelationRepositoryInterface $orderRelationRepository
      */
-    public function __construct(
-        OrderRelationRepositoryInterface $orderRelationRepository
-    )
+    public function __construct(OrderRelationRepositoryInterface $orderRelationRepository)
     {
         $this->orderRelationRepository = $orderRelationRepository;
     }
-    
-    
+
+
     /**
-     * @param OrderInterface $subject
-     * @param OrderInterface $result
+     * @param OrderRepositoryInterface $subject
+     * @param OrderInterface           $result
      *
      * @return OrderInterface
      */
-    public function afterSave(OrderInterface $subject, OrderInterface $result)
+    public function afterGet(OrderRepositoryInterface $subject, OrderInterface $result)
     {
         /** @var \BitTools\SkyHub\Api\Data\OrderInterface $relation */
-        $relation = $result->getExtensionAttributes()->getSkyhubInfo();
-        $this->orderRelationRepository->save($relation);
-        
+        $relation = $this->orderRelationRepository->getByOrderId($result->getEntityId());
+        $result->getExtensionAttributes()->setSkyhubInfo($relation);
+
         return $result;
     }
 }

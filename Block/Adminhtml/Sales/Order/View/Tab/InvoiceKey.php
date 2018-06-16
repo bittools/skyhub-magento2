@@ -48,7 +48,7 @@ class InvoiceKey extends AbstractOrder implements TabInterface
      */
     public function getTabTitle()
     {
-        return __('Invoice Key');
+        return $this->getTabLabel();
     }
     
     

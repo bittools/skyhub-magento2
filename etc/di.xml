@@ -85,7 +85,7 @@
     </type>
 
     <type name="Magento\Sales\Api\OrderRepositoryInterface">
-        <plugin name="skyhub_information" type="BitTools\SkyHub\Plugin\Sales\Order"/>
+        <plugin name="skyhub_information" type="BitTools\SkyHub\Plugin\Sales\OrderRepository"/>
     </type>
 
     <!-- *********************************************************************************************************** -->
