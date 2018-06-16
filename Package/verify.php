@@ -56,7 +56,10 @@ class PackageVerify extends PackageAbstract
 }
 
 $verifier = new PackageVerify();
+$verified = $verifier->verify();
 
-if (!$verifier->verify()) {
+if (!$verified) {
     return $verifier->differences();
 }
+
+return $verified;
