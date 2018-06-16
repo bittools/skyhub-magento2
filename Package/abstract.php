@@ -5,17 +5,6 @@ define('MODULE_ROOT', dirname(PACKAGE_ROOT));
 
 abstract class PackageAbstract
 {
-    
-    /**
-     * Key of md5 algorithm
-     */
-    const HASH_VERSION_MD5 = 'md5';
-    
-    /**
-     * Key of sha256 algorithm
-     */
-    const HASH_VERSION_SHA256 = 'sha256';
-    
     const DIFF_NONEXISTENT    = 'nonexistent';
     const DIFF_MODIFIED       = 'modified';
     const DIFF_NEW            = 'new';
@@ -33,15 +22,9 @@ abstract class PackageAbstract
     protected $files = [];
     
     /** @var array */
-    protected $allowedFileExtensions = [
+    protected $readableFileExtensions = [
         'php', 'xml', 'json'
     ];
-    
-    /**
-     * @deprecated
-     * @var string
-     */
-    protected $mainContent;
     
     
     /**
@@ -101,13 +84,13 @@ abstract class PackageAbstract
     /**
      * @return $this
      */
-    protected function initFiles()
+    protected function initFiles(array $extensions = [])
     {
         $this->files = [];
         $packageDir  = dirname(__FILE__);
         
         /** @var string $file */
-        foreach ((array) $this->loadFiles() as $file) {
+        foreach ((array) $this->loadFiles($extensions) as $file) {
             if (false !== strpos($file, $packageDir)) {
                 continue;
             }
@@ -179,7 +162,6 @@ abstract class PackageAbstract
     
     
     /**
-     * @deprecated
      * @return null|string
      */
     protected function getCurrentHash()
@@ -193,50 +175,8 @@ abstract class PackageAbstract
     
     
     /**
-     * @deprecated
-     * @return string
-     */
-    protected function getNewHash()
-    {
-        $this->initMainContent();
-        return hash(self::HASH_VERSION_SHA256, $this->mainContent);
-    }
-    
-    
-    /**
-     * @deprecated
-     * @return $this
-     */
-    protected function initMainContent()
-    {
-        $this->mainContent = null;
-        
-        /** @var string $file */
-        foreach ((array) $this->loadFiles() as $file) {
-            $this->mergeContent($this->getFileContent($file));
-        }
-        
-        return $this;
-    }
-    
-    
-    /**
-     * @param string $content
-     *
-     * @deprecated
-     * @return $this
-     */
-    protected function mergeContent($content)
-    {
-        $this->mainContent .= $this->clearString($content);
-        return $this;
-    }
-    
-    
-    /**
      * @param string $string
      *
-     * @deprecated
      * @return mixed
      */
     protected function clearString($string)
@@ -246,43 +186,26 @@ abstract class PackageAbstract
     
     
     /**
-     * @param string $filePath
-     *
-     * @deprecated
-     * @return bool|string
-     */
-    protected function getFileContent($filePath)
-    {
-        if (!file_exists($filePath) || !is_readable($filePath)) {
-            return false;
-        }
-        
-        $content = file_get_contents($filePath);
-        return $content;
-    }
-    
-    
-    /**
      * @return array
      */
-    protected function loadFiles()
+    protected function loadFiles(array $extensions = [])
     {
-        return glob($this->getFilePattern(), GLOB_BRACE);
+        return glob($this->getFilePattern($extensions), GLOB_BRACE);
     }
     
     
     /**
-     * @param array $allowedExtensions
+     * @param array $extensions
      *
      * @return string
      */
-    protected function getFilePattern($allowedExtensions = [])
+    protected function getFilePattern(array $extensions = [])
     {
         $dirs = [];
     
-        $allowedExtensions = array_merge($this->allowedFileExtensions, $allowedExtensions);
+        $extensions = array_merge($this->readableFileExtensions, $extensions);
         
-        foreach ($allowedExtensions as $extension) {
+        foreach ($extensions as $extension) {
             $dirs[] = MODULE_ROOT."/*.{$extension}";
             $dirs[] = MODULE_ROOT."/**/*.{$extension}";
         }

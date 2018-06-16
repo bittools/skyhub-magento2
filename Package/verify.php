@@ -39,6 +39,10 @@ class PackageVerify extends PackageAbstract
     {
         $differences = $this->differences();
         
+        if (!$differences) {
+            return false;
+        }
+        
         if (count($differences[self::DIFF_NONEXISTENT])) {
             return false;
         }
