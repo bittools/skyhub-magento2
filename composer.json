@@ -1,10 +1,4 @@
 {
-    "repositories": [
-        {
-            "type": "git",
-            "url": "/Users/tiagosampaio/Sites/e-smart/skyhub/sdk"
-        }
-    ],
     "name": "bittools/skyhub-m2",
     "type": "magento2-module",
     "version": "1.0.0",
