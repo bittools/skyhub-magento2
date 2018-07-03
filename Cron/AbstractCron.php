@@ -33,8 +33,7 @@ abstract class AbstractCron
         \BitTools\SkyHub\Model\StoreIteratorInterface $storeIterator,
         \Magento\Store\Api\GroupRepositoryInterface $groupRepository,
         \Magento\Framework\App\State $state
-    )
-    {
+    ) {
         $this->context         = $context;
         $this->configContext   = $configContext;
         $this->storeIterator   = $storeIterator;

@@ -49,7 +49,7 @@ class Queue extends AbstractCron
     
             /** @var \BitTools\SkyHub\Helper\Sales\Order\Created\Message $helper */
             $helper     = $this->createObject(\BitTools\SkyHub\Helper\Sales\Order\Created\Message::class);
-            $skyhubCode = $this->arrayExtract($orderData, 'code');;
+            $skyhubCode = $this->arrayExtract($orderData, 'code');
             
             try {
                 /** @var \Magento\Sales\Api\Data\OrderInterface $order */

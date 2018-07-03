@@ -29,8 +29,7 @@ class Product extends AbstractCatalog
         ProductValidation $productValidation,
         ProductTransformerFactory $transformerFactory,
         ProductRepositoryInterface $repository
-    )
-    {
+    ) {
         parent::__construct($context);
         
         $this->validator          = $productValidation;

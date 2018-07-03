@@ -2,7 +2,6 @@
 
 namespace BitTools\SkyHub\StoreConfig;
 
-
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Sales\Model\Order;
@@ -31,8 +30,7 @@ class SalesOrderStatus extends AbstractConfig
         EncryptorInterface $encryptor,
         Order\StatusFactory $statusFactory,
         StoreManager $storeManager
-    )
-    {
+    ) {
         parent::__construct($scopeConfig, $encryptor, $storeManager);
 
         $this->statusFactory = $statusFactory;

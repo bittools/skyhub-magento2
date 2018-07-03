@@ -38,8 +38,7 @@ class ProductValidation
         Registry $registry,
         ObjectManagerInterface $objectManager,
         Mapping $attributesMappingHelper
-    )
-    {
+    ) {
         $this->resourceFactory         = $resourceFactory;
         $this->configContext           = $configContext;
         $this->objectManager           = $objectManager;

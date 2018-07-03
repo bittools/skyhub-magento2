@@ -21,8 +21,7 @@ abstract class AbstractResourceModel extends AbstractDb
     public function __construct(
         \Magento\Framework\Model\ResourceModel\Db\Context $context,
         HelperContext $helperContext
-    )
-    {
+    ) {
         parent::__construct($context);
         $this->helperContext = $helperContext;
     }

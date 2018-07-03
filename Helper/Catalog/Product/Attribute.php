@@ -238,7 +238,8 @@ class Attribute extends AbstractHelper
         $attributeData['group'] = $groupName;
         
         /** @var \Magento\Eav\Setup\EavSetup $installer */
-        $installer = $this->eavSetupFactory->create();;
+        $installer = $this->eavSetupFactory->create();
+        ;
         $installer->addAttribute(CatalogProduct::ENTITY, $code, $attributeData);
         
         return $this->loadProductAttribute($code);
@@ -253,7 +254,8 @@ class Attribute extends AbstractHelper
     public function initSkyHubAttributeGroup($groupName)
     {
         /** @var AttributeSetCollection $collection */
-        $collection = $this->context->objectManager()->create(AttributeSetCollection::class);;
+        $collection = $this->context->objectManager()->create(AttributeSetCollection::class);
+        ;
         $collection->setEntityTypeFilter($this->getEntityType(CatalogProduct::ENTITY)->getId());
         
         /** @var \Magento\Eav\Model\Entity\Attribute\Set $attributeSet */
@@ -263,8 +265,7 @@ class Attribute extends AbstractHelper
                 $group = $this->context->objectManager()->create(\Magento\Eav\Model\Entity\Attribute\Group::class);
                 $group->setAttributeSetId($attributeSet->getId())
                     ->setAttributeGroupName($groupName)
-                    ->setSortOrder(900)
-                ;
+                    ->setSortOrder(900);
                 
                 $group->save();
             } catch (\Exception $e) {

@@ -40,8 +40,7 @@ class Context
         CatalogConfig $catalogConfig,
         SalesOrderStatus $salesOrderStatus,
         SalesOrderImport $salesOrderImport
-    )
-    {
+    ) {
         $this->general          = $generalConfig;
         $this->service          = $serviceConfig;
         $this->log              = $logConfig;

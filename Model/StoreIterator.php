@@ -34,8 +34,7 @@ class StoreIterator implements StoreIteratorInterface
         Context $context,
         \BitTools\SkyHub\StoreConfig\Context $configContext,
         \BitTools\SkyHub\Integration\Context $integrationContext
-    )
-    {
+    ) {
         $this->context            = $context;
         $this->configContext      = $configContext;
         $this->integrationContext = $integrationContext;

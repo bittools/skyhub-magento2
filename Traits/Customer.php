@@ -65,7 +65,8 @@ trait Customer
                 $number,
                 $complement,
                 $neighborhood,
-            ], $addressSize
+            ],
+            $addressSize
         );
     }
 
@@ -116,8 +117,7 @@ trait Customer
         $neighborhood = null,
         $complement = null,
         $linesCount = 2
-    )
-    {
+    ) {
         $linesCount = min(4, max(2, $linesCount));
         
         switch ($linesCount) {

@@ -61,8 +61,7 @@ abstract class AbstractObserver implements \Magento\Framework\Event\ObserverInte
         \BitTools\SkyHub\Integration\Integrator\Catalog\ProductValidation $productValidation,
         \BitTools\SkyHub\Integration\Integrator\Catalog\CategoryValidation $categoryValidation,
         \BitTools\SkyHub\Model\ResourceModel\QueueFactory $queueResourceFactory
-    )
-    {
+    ) {
         $this->context                    = $context;
         $this->storeIterator              = $storeIterator;
         $this->orderRepository            = $orderRepository;

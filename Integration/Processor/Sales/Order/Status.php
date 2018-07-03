@@ -25,8 +25,7 @@ class Status extends AbstractProcessor
         ConfigContext $configContext,
         IntegrationContext $integrationContext,
         OrderRepositoryInterface $orderRepository
-    )
-    {
+    ) {
         parent::__construct($integrationContext);
 
         $this->orderRepository = $orderRepository;

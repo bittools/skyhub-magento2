@@ -37,8 +37,7 @@ class Queue extends SearchResult
         $identifierName = null,
         $connectionName = null,
         $entityType = null
-    )
-    {
+    ) {
         parent::__construct(
             $entityFactory,
             $logger,

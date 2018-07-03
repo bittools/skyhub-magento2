@@ -19,8 +19,7 @@ class Order
      */
     public function __construct(
         OrderRelationRepositoryInterface $orderRelationRepository
-    )
-    {
+    ) {
         $this->orderRelationRepository = $orderRelationRepository;
     }
     

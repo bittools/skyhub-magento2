@@ -25,8 +25,7 @@ trait SetupHelper
         Table $table,
         $field,
         $type = AdapterInterface::INDEX_TYPE_INDEX
-    )
-    {
+    ) {
         $table->addIndex(
             $this->setup()->getIdxName($table->getName(), $field, $type),
             $field,
@@ -55,8 +54,7 @@ trait SetupHelper
         $referenceTable,
         $referenceColumn,
         $onDelete = Table::ACTION_CASCADE
-    )
-    {
+    ) {
         $fkName = $this->setup
             ->getFkName($table->getName(), $column, $this->setup->getTable($referenceTable), $referenceColumn);
         

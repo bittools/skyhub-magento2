@@ -29,8 +29,7 @@ class Category extends AbstractCatalog
         Context $context,
         CategoryValidation $categoryValidation,
         CategoryFactory $transformerFactory
-    )
-    {
+    ) {
         parent::__construct($context);
         
         $this->validator          = $categoryValidation;

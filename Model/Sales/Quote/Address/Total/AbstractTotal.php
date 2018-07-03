@@ -15,8 +15,7 @@ abstract class AbstractTotal extends \Magento\Quote\Model\Quote\Address\Total\Ab
     public function __construct(
         \Magento\Directory\Api\Data\CurrencyInformationInterface $currencyInformation,
         \Magento\Directory\Model\CurrencyFactory $currencyFactory
-    )
-    {
+    ) {
         $this->currencyFactory     = $currencyFactory;
         $this->currencyInformation = $currencyInformation;
     }

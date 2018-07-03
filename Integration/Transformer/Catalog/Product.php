@@ -49,7 +49,7 @@ class Product extends AbstractProduct
      */
     protected function prepareProductVariations(CatalogProduct $product, ProductEntityInterface $interface)
     {
-        switch($product->getTypeId()) {
+        switch ($product->getTypeId()) {
             case \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE:
                 /** @var Product\Variation\Type\Configurable $variation */
                 $variation = $this->context->objectManager()->create(Product\Variation\Type\Configurable::class);
@@ -262,7 +262,7 @@ class Product extends AbstractProduct
         /**
          * @todo Confirm if it's really unnecessary.
         $mappedAttribute = $this->getMappedAttribute('qty');
-        
+
         if (!$mappedAttribute || !$mappedAttribute->getId()) {
             return $this;
         }

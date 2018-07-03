@@ -92,8 +92,7 @@ class Order extends AbstractProcessor
         OrderHelper $orderHelper,
         StatusProcessor $statusProcessor,
         OrderInterfaceFactory $orderFactory
-    )
-    {
+    ) {
         parent::__construct($integrationContext);
 
         $this->orderRepository       = $orderRepository;
@@ -248,8 +247,7 @@ class Order extends AbstractProcessor
             ->setCode($code)
             ->setChannel($channel)
             ->setInterest($interestAmount)
-            ->setDataSource(json_encode($data))
-        ;
+            ->setDataSource(json_encode($data));
 
         $this->skyhubOrderRepository->save($relation);
 
@@ -405,7 +403,6 @@ class Order extends AbstractProcessor
                 
                 break;
             }
-            
         } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
             $customer = $this->createCustomer($data, $storeId);
         } catch (\Exception $e) {
@@ -531,8 +528,7 @@ class Order extends AbstractProcessor
             ->setCity($city)
             ->setRegion($region)
             ->setPostcode($postcode)
-            ->setCountryId($country ?: 'BR')
-        ;
+            ->setCountryId($country ?: 'BR');
         
         $this->pushAddress($address, $type);
         

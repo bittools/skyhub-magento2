@@ -16,8 +16,7 @@ class Set extends \Magento\Eav\Model\ResourceModel\Entity\Attribute\Set
         \Magento\Eav\Model\Config $eavConfig,
         Context $helperContext,
         $connectionName = null
-    )
-    {
+    ) {
         parent::__construct($context, $attrGroupFactory, $eavConfig, $connectionName);
         $this->helperContext = $helperContext;
     }
@@ -45,8 +44,7 @@ class Set extends \Magento\Eav\Model\ResourceModel\Entity\Attribute\Set
                 'attribute_group_id'
             )
             ->where('entity_type_id = ?', (int) $entityTypeId)
-            ->where('ISNULL(attribute_group_id)')
-        ;
+            ->where('ISNULL(attribute_group_id)');
         
         try {
             $results = (array) $this->getConnection()->fetchAll($select);

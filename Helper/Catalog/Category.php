@@ -24,8 +24,7 @@ class Category
     public function __construct(
         \Magento\Catalog\Model\CategoryFactory $categoryFactory,
         CategoryResourceFactory $resourceCategoryFactory
-    )
-    {
+    ) {
         $this->resourceCategoryFactory = $resourceCategoryFactory;
         $this->categoryFactory         = $categoryFactory;
     }
@@ -105,6 +104,5 @@ class Category
 
     protected function getModel()
     {
-
     }
 }

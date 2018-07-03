@@ -49,8 +49,7 @@ class Queue extends AbstractResourceModel
         $storeId = Store::DEFAULT_STORE_ID,
         $canProcess = true,
         $processAfter = null
-    )
-    {
+    ) {
         $entityIds = $this->filterEntityIds((array) $entityIds);
         
         if (empty($entityIds)) {
@@ -112,7 +111,7 @@ class Queue extends AbstractResourceModel
      * @param null $storeId
      *
      * @return array
-     *              
+     *
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getPendingEntityIds(
@@ -120,8 +119,7 @@ class Queue extends AbstractResourceModel
         $processType = QueueModel::PROCESS_TYPE_EXPORT,
         $limit = null,
         $storeId = null
-    )
-    {
+    ) {
         $integrableStatuses = [
             QueueModel::STATUS_PENDING,
             QueueModel::STATUS_RETRY
@@ -136,8 +134,7 @@ class Queue extends AbstractResourceModel
             ->where('process_type = ?', (int) $processType)
             ->where('store_id IN (?)', $this->getStoreIds($storeId))
             ->where('process_after <= ?', $this->now())
-            ->where('entity_type = ?', (string) $entityType)
-        ;
+            ->where('entity_type = ?', (string) $entityType);
         
         if (!is_null($limit)) {
             $select->limit((int) $limit);

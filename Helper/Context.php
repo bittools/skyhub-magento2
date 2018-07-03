@@ -53,8 +53,7 @@ class Context implements \Magento\Framework\ObjectManager\ContextInterface
         State $state,
         Registry $registry,
         ScopeConfigInterface $scopeConfig
-    )
-    {
+    ) {
         $this->skyhubConfig    = $skyhubConfig;
         $this->configContext   = $configContext;
         $this->storeManager    = $storeManager;

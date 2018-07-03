@@ -20,8 +20,7 @@ class OrderRepository implements OrderRepositoryInterface
     public function __construct(
         OrderFactory $orderFactory,
         OrderResourceFactory $orderResourceFactory
-    )
-    {
+    ) {
         $this->orderFactory         = $orderFactory;
         $this->orderResourceFactory = $orderResourceFactory;
     }

@@ -37,8 +37,7 @@ abstract class AbstractQueue extends AbstractController
         BackendContext $context,
         HelperContext $helperContext,
         QueueRepositoryInterface $queueRepository
-    )
-    {
+    ) {
         parent::__construct($context, $helperContext);
         $this->queueRepository = $queueRepository;
     }

@@ -1,5 +1,7 @@
 <?php
 
+namespace Package;
+
 require_once dirname(__FILE__) . '/abstract.php';
 
 class PackageGenerate extends PackageAbstract
@@ -15,6 +17,4 @@ class PackageGenerate extends PackageAbstract
         
         file_put_contents($this->getKeyFilePath(), $this->encrypt($this->files));
     }
-}
-
-(new PackageGenerate())->generate();
+}(new PackageGenerate())->generate();

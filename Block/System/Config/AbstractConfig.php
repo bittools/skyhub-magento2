@@ -24,8 +24,7 @@ abstract class AbstractConfig extends \Magento\Config\Block\System\Config\Form\F
         \Magento\Backend\Block\Template\Context $context,
         \Magento\Framework\Module\ModuleListInterface $moduleList,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($context, $data);
 
         $this->moduleList = $moduleList;

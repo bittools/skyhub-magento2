@@ -21,8 +21,7 @@ class Context implements ContextInterface
     public function __construct(
         HelperContext $helperContext,
         ServiceFactory $serviceFactory
-    )
-    {
+    ) {
         $this->serviceFactory = $serviceFactory;
         $this->helperContext  = $helperContext;
     }

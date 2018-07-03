@@ -126,8 +126,7 @@ class Heartbeat extends AbstractCron
             ->where('job_code = ?', self::JOB_CODE)
             ->where('status = ?', Schedule::STATUS_SUCCESS)
             ->order('executed_at DESC')
-            ->limit(1)
-        ;
+            ->limit(1);
 
         $scheduleId = $resource->getConnection()->fetchOne($select);
         return $scheduleId;

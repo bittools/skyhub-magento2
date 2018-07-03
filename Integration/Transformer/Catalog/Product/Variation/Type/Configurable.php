@@ -135,7 +135,6 @@ class Configurable extends AbstractType
     
                 $variation->addSpecification($code, $text);
             } catch (\Exception $e) {
-            
             }
         }
         

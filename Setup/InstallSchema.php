@@ -107,8 +107,8 @@ class InstallSchema implements InstallSchemaInterface
                 'nullable' => true,
                 'unsigned' => true,
             ])
-            ->setComment('SkyHub Product Attributes Mapping.')
-        ;;
+            ->setComment('SkyHub Product Attributes Mapping.');
+        ;
         
         /** Add Unique Index */
         $this->addTableIndex($table, ['skyhub_code', 'attribute_id'], AdapterInterface::INDEX_TYPE_UNIQUE);
@@ -169,8 +169,7 @@ class InstallSchema implements InstallSchemaInterface
             ->addColumn('updated_at', Table::TYPE_DATETIME, null, [
                 'nullable' => true,
                 'unsigned' => true,
-            ])
-        ;
+            ]);
         
         /** Add Store ID foreign key. */
         $this->addTableForeignKey($table, 'store_id', 'store', 'store_id');
@@ -178,8 +177,7 @@ class InstallSchema implements InstallSchemaInterface
         /** Add indexes */
         $this->addTableIndex($table, 'entity_id')
             ->addTableIndex($table, 'entity_type')
-            ->addTableIndex($table, ['entity_id', 'entity_type', 'store_id'], AdapterInterface::INDEX_TYPE_UNIQUE)
-        ;
+            ->addTableIndex($table, ['entity_id', 'entity_type', 'store_id'], AdapterInterface::INDEX_TYPE_UNIQUE);
         
         $this->getConnection()->createTable($table);
         
@@ -254,15 +252,13 @@ class InstallSchema implements InstallSchemaInterface
             ->addColumn('updated_at', Table::TYPE_DATETIME, null, [
                 'nullable' => true,
                 'unsigned' => true,
-            ])
-        ;
+            ]);
         
         $this->addTableForeignKey($table, 'store_id', 'store', 'store_id');
         
         $this->addTableIndex($table, 'entity_id')
             ->addTableIndex($table, 'entity_type')
-            ->addTableIndex($table, ['entity_id', 'entity_type', 'store_id'], AdapterInterface::INDEX_TYPE_UNIQUE)
-        ;
+            ->addTableIndex($table, ['entity_id', 'entity_type', 'store_id'], AdapterInterface::INDEX_TYPE_UNIQUE);
         
         $this->getConnection()->createTable($table);
         
@@ -318,8 +314,7 @@ class InstallSchema implements InstallSchemaInterface
             ->addColumn('data_source', Table::TYPE_TEXT, null, [
                 'nullable' => true,
                 'default' => null,
-            ], 'SkyHub Order JSON')
-        ;
+            ], 'SkyHub Order JSON');
         
         /**
          * Add relations.
@@ -346,8 +341,7 @@ class InstallSchema implements InstallSchemaInterface
         foreach ($this->getUpdatableTables() as $tableName => $columns) {
             foreach ($columns as $columnName => $definition) {
                 $this->setup->getConnection()
-                    ->addColumn($this->setup->getTable($tableName), $columnName, $definition)
-                ;
+                    ->addColumn($this->setup->getTable($tableName), $columnName, $definition);
             }
         }
         

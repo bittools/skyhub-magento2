@@ -2,7 +2,6 @@
 
 namespace BitTools\SkyHub\Console\Integration\Catalog;
 
-
 use BitTools\SkyHub\Console\Integration\AbstractIntegration;
 use Symfony\Component\Console\Input\InputOption;
 

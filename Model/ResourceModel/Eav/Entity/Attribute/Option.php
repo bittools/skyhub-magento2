@@ -35,8 +35,7 @@ class Option extends \Magento\Eav\Model\ResourceModel\Entity\Attribute\Option
             ->where('o.attribute_id = ?', (int) $attribute)
             ->where('ov.store_id IN (?)', (array) $this->filterIds([0, $store]))
             ->where('o.option_id = ?', (int) $optionId)
-            ->order('ov.store_id DESC')
-        ;
+            ->order('ov.store_id DESC');
         
         try {
             $results = $this->getConnection()->fetchAll($select);

@@ -22,11 +22,10 @@ abstract class AbstractMapping extends AbstractController
      * @param ProductAttributeMappingRepositoryInterface $productAttributeMappingRepository
      */
     public function __construct(
-        Context                                    $context,
-        HelperContext                              $helperContext,
+        Context $context,
+        HelperContext $helperContext,
         ProductAttributeMappingRepositoryInterface $productAttributeMappingRepository
-    )
-    {
+    ) {
         parent::__construct($context, $helperContext);
         $this->productAttributeMappingRepository = $productAttributeMappingRepository;
     }

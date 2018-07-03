@@ -9,7 +9,7 @@
         <div class="skyhub-order-invoice-key-block" id="invoice_key_form">
             <div class="admin__field">
                 <label for="history_status" class="admin__field-label"><?= /* @noEscape */ __('Invoice Key Number') ?></label>
-                <?php if (!$block->getInvoiceKey()): ?>
+                <?php if (!$block->getInvoiceKey()) : ?>
                     <div class="admin__field-control">
                         <input type="text" name="invoice_key_number" id="invoice_key_number" class="admin__control-text" maxlength="44"/>
                         <div class="admin__field-note">
@@ -17,7 +17,7 @@
                         </div>
                     </div>
                     <div class="order-history-comments-actions"><?= $block->getChildHtml('submit_button') ?> </div>
-                <?php else: ?>
+                <?php else : ?>
                     <div class="admin__field-control">
                         <span ><?php echo $block->getInvoiceKey() ?></span>
                         <div class="admin__field-note">

@@ -93,7 +93,6 @@ abstract class AbstractIntegration extends AbstractConsole
         try {
             $this->context->storeManager()->setCurrentStore($this->getStore($storeId));
             $this->context->appState()->setAreaCode(Area::AREA_ADMINHTML);
-            
         } catch (\Exception $e) {
             $this->context->logger()->critical($e);
         }

@@ -38,8 +38,7 @@ class Attributes extends AbstractSource
         \BitTools\SkyHub\Helper\Catalog\Product\Attribute $attributeHelper,
         ProductAttributeRepositoryInterface $productAttributeRepository,
         SearchCriteriaFactory $searchCriteriaFactory
-    )
-    {
+    ) {
         $this->productAttributeRepository = $productAttributeRepository;
         $this->searchCriteriaFactory      = $searchCriteriaFactory;
         $this->attributeHelper            = $attributeHelper;

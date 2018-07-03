@@ -28,8 +28,7 @@ abstract class AbstractImport extends AbstractController
         OrderIntegratorFactory $orderIntegratorFactory,
         OrderProcessorFactory $orderProcessorFactory,
         Message $message
-    )
-    {
+    ) {
         parent::__construct($context, $helperContext);
         
         $this->orderIntegratorFactory = $orderIntegratorFactory;

@@ -1,5 +1,7 @@
 <?php
 
+namespace Package;
+
 define('PACKAGE_ROOT', dirname(__FILE__));
 define('MODULE_ROOT', dirname(PACKAGE_ROOT));
 

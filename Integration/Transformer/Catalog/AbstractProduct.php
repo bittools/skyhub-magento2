@@ -59,8 +59,7 @@ abstract class AbstractProduct extends AbstractTransformer
         AttributeMappingHelper $attributeMappingHelper,
         EavOptionHelper $eavOptionHelper,
         Data $skyhubConfig
-    )
-    {
+    ) {
         parent::__construct($context);
         
         $this->stockState             = $stockState;

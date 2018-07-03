@@ -25,8 +25,7 @@ abstract class AbstractConsole extends \Symfony\Component\Console\Command\Comman
         \Magento\Framework\App\State $state,
         Context $context,
         $name = null
-    )
-    {
+    ) {
         parent::__construct($name);
         
         $this->state   = $state;

@@ -447,7 +447,7 @@ class Create
      *
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    protected function processQuote($data = array())
+    protected function processQuote($data = [])
     {
         $orderData = (array) $this->arrayExtract($data, 'order', []);
 

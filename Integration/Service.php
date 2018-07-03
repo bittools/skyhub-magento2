@@ -37,8 +37,7 @@ class Service
         HelperContext $helperContext,
         ConfigContext $configContext,
         DirectoryList $directoryList
-    )
-    {
+    ) {
         $this->helperContext = $helperContext;
         $this->configContext = $configContext;
         $this->directoryList = $directoryList;
@@ -93,8 +92,7 @@ class Service
                 $this->apiService()
                     ->setLogAllowed(true)
                     ->setLogFileName($logFileName)
-                    ->setLogFilePath($logFilePath)
-                ;
+                    ->setLogFilePath($logFilePath);
             } catch (\Exception $e) {
                 $this->helperContext->logger()->critical($e);
             }

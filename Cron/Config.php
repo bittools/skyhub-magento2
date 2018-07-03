@@ -34,8 +34,7 @@ class Config
         Config\Sales\Order $orderConfig,
         Config\Sales\Order\Status $orderStatusConfig,
         Config\Queue $queueConfig
-    )
-    {
+    ) {
         $this->productConfig          = $productConfig;
         $this->productAttributeConfig = $productAttributeConfig;
         $this->categoryConfig         = $categoryConfig;

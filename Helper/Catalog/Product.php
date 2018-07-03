@@ -23,8 +23,7 @@ class Product extends AbstractHelper
         Context $context,
         StoreConfigContext $storeConfigContext,
         ProductResourceFactory $productResourceFactory
-    )
-    {
+    ) {
         parent::__construct($context);
         
         $this->productResourceFactory = $productResourceFactory;

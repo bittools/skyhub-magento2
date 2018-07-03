@@ -116,15 +116,15 @@ class Entity extends AbstractDb
             return false;
         }
         
-        $data = array(
+        $data = [
             'updated_at' => $this->now(),
-        );
+        ];
         
-        $where = array(
+        $where = [
             'entity_id = ?'   => (int)    $entityId,
             'entity_type = ?' => (string) $entityType,
             'store_id = ?'    => (int)    $this->getStoreId($storeId),
-        );
+        ];
         
         try {
             $this->beginTransaction();

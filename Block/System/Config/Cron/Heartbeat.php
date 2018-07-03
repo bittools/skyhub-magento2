@@ -22,8 +22,7 @@ class Heartbeat extends AbstractConfig
         \Magento\Framework\Module\ModuleListInterface $moduleList,
         \BitTools\SkyHub\Cron\HeartbeatFactory $heartbeatFactory,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($context, $moduleList, $data);
         
         $this->heartbeatFactory = $heartbeatFactory;

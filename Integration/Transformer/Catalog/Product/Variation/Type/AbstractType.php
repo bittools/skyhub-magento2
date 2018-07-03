@@ -115,8 +115,7 @@ abstract class AbstractType extends AbstractProduct implements TypeInterface
     protected function addMappedAttributesToProductVariation(
         Product $product,
         ProductEntityInterface\Variation $variation
-    )
-    {
+    ) {
         /** @var Mapping $mappedAttribute */
         foreach ($this->getFixedMappedAttributes() as $mappedAttribute) {
             $code  = $mappedAttribute->getAttribute()->getAttributeCode();

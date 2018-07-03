@@ -34,8 +34,7 @@ abstract class AbstractConfig
         ScopeConfigInterface $scopeConfig,
         EncryptorInterface $encryptor,
         StoreManager $storeManager
-    )
-    {
+    ) {
         $this->scopeConfig  = $scopeConfig;
         $this->encryptor    = $encryptor;
         $this->storeManager = $storeManager;

@@ -15,7 +15,7 @@ trait Arrays
      */
     protected function arrayExtract(array $data, $index, $default = false, $shiftOriginal = false)
     {
-        if (strpos($index, '/')) {
+        if (false !== strpos($index, '/')) {
             $parts = explode('/', $index);
             
             foreach ($parts as $index) {

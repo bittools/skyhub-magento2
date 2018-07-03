@@ -218,7 +218,6 @@ class InstallData implements InstallDataInterface
             $attribute   = $this->attributeFactory->create();
             $attributeId = $attribute->getIdByCode(Product::ENTITY, $code);
         } catch (\Exception $e) {
-        
         }
         
         return $attributeId;

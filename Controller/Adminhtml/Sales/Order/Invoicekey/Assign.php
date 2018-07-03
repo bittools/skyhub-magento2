@@ -19,8 +19,7 @@ class Assign extends AbstractController
         \BitTools\SkyHub\Helper\Context $helperContext,
         \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
         \BitTools\SkyHub\Api\OrderRepositoryInterface $orderRelationRepository
-    )
-    {
+    ) {
         parent::__construct($context, $helperContext);
         
         $this->orderRepository         = $orderRepository;
@@ -35,7 +34,6 @@ class Assign extends AbstractController
         
         if (!($result = $this->saveInvoiceKey())) {
             /** @todo Add the correct treatment here. */
-            die('xXx');
         }
         
         return $pageResult;

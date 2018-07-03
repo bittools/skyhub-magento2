@@ -47,14 +47,14 @@ class Product extends AbstractQueue
         /** @var \Magento\Framework\DB\Select $select */
         $select = $collection->getSelect()
             ->joinLeft(
-                array('bseller_skyhub_entity' => $skyhubEntityTable),
+                ['bseller_skyhub_entity' => $skyhubEntityTable],
                 "bseller_skyhub_entity.entity_id = e.entity_id
                  AND bseller_skyhub_entity.entity_type = '".\BitTools\SkyHub\Model\Entity::TYPE_CATALOG_PRODUCT."'"
             )
             ->reset('columns')
             ->columns('e.entity_id')
             ->where('bseller_skyhub_entity.updated_at IS NULL OR e.updated_at >= bseller_skyhub_entity.updated_at')
-            ->order(array('e.updated_at DESC', 'e.created_at DESC'));
+            ->order(['e.updated_at DESC', 'e.created_at DESC']);
         
         /** Set limitation. */
         $limit = abs($this->cronConfig()->catalogProduct()->getQueueCreateLimit());

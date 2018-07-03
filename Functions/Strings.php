@@ -27,12 +27,12 @@ trait Strings
      *
      * @return string
      */
-    public function removeAccents($string, $german=false)
+    public function removeAccents($string, $german = false)
     {
         static $replacements;
         
         if (empty($replacements[$german])) {
-            $subst = array(
+            $subst = [
                 // single ISO-8859-1 letters
                 192=>'A', 193=>'A', 194=>'A', 195=>'A', 196=>'A', 197=>'A', 199=>'C',
                 208=>'D', 200=>'E', 201=>'E', 202=>'E', 203=>'E', 204=>'I', 205=>'I',
@@ -54,17 +54,17 @@ trait Strings
                 369=>'u', 378=>'z', 380=>'z',
                 // ligatures
                 198=>'Ae', 230=>'ae', 140=>'Oe', 156=>'oe', 223=>'ss',
-            );
+            ];
             
             if ($german) {
                 // umlauts
-                $subst = array_merge($subst, array(
+                $subst = array_merge($subst, [
                     196=>'Ae', 228=>'ae', 214=>'Oe', 246=>'oe', 220=>'Ue', 252=>'ue'
-                ));
+                ]);
             }
             
-            $replacements[$german] = array();
-            foreach ($subst as $k=>$v) {
+            $replacements[$german] = [];
+            foreach ($subst as $k => $v) {
                 $replacements[$german][$k<256 ? chr($k) : '&#'.$k.';'] = $v;
             }
         }

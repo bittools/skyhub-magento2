@@ -62,8 +62,7 @@ class Mapping extends AbstractModel implements ProductAttributeMappingInterface
         Context $helperContext,
         ProductHelper $productHelper,
         SkyHubConfig $skyhubConfig
-    )
-    {
+    ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
         
         $this->helperContext = $helperContext;

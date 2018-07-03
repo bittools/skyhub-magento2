@@ -64,7 +64,8 @@ class Create extends \Magento\Sales\Model\AdminOrder\Create
                 $config['config']          = $productData;
                 $config['super_attribute'] = $this->getConfigurableSuperAttributes($product, $productData);
                 
-            case ProductTypeSimple::TYPE_SIMPLE: /** It's applied to configurable product too. */
+            case ProductTypeSimple::TYPE_SIMPLE:
+                /** It's applied to configurable product too. */
             default:
                 $qty           = (float) $this->arrayExtract($productData, 'qty');
                 $config['qty'] = $qty;

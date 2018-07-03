@@ -22,8 +22,7 @@ class Mapping
     public function __construct(
         Context $context,
         Registry $registry
-    )
-    {
+    ) {
         $this->context  = $context;
         $this->registry = $registry;
     }

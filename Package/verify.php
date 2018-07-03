@@ -1,5 +1,7 @@
 <?php
 
+namespace Package;
+
 require_once dirname(__FILE__) . '/abstract.php';
 
 class PackageVerify extends PackageAbstract
