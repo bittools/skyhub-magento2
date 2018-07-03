@@ -15,10 +15,10 @@ abstract class PackageAbstract
     protected $encryptMethod  = "AES-256-CBC";
     
     /** @var string */
-    protected $secretKey      = 'MY SECRET KEY.';
+    protected $secretKey      = 'MY SECRET KEY';
     
     /** @var string */
-    protected $secretIv       = 'MY SECRET IV.';
+    protected $secretIv       = 'MY SECRET IV 123';
     
     /** @var array */
     protected $files = [];
