@@ -34,7 +34,7 @@ class Execute extends AbstractConsole
         /** @var \Magento\Cron\Model\Schedule $schedule */
         $schedule = $this->context->objectManager()->create(\Magento\Cron\Model\Schedule::class);
 
-        /** @var \BitTools\SkyHub\Cron\Queue\Catalog\Product\Attribute $cron */
+        /** @var \BitTools\SkyHub\Cron\Queue\Catalog\Category $cron */
         $cron = $this->context
             ->objectManager()
             ->create(\BitTools\SkyHub\Cron\Queue\Catalog\Category::class);
