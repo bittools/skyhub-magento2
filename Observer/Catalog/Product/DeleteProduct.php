@@ -14,7 +14,7 @@ class DeleteProduct extends AbstractCatalog
      */
     public function execute(Observer $observer)
     {
-        $this->storeIterator->iterate($this, 'processDeleteProduct', $observer);
+        $this->storeIterator->iterate($this, 'processDeleteProduct', [$observer]);
     }
     
     

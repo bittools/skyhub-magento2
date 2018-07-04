@@ -14,7 +14,7 @@ class IntegrateProductAttribute extends AbstractObserver
      */
     public function execute(Observer $observer)
     {
-        $this->storeIterator->iterate($this, 'processIntegrateProductAttribute', $observer);
+        $this->storeIterator->iterate($this, 'processIntegrateProductAttribute', [$observer]);
     }
     
     

@@ -14,7 +14,7 @@ class DeleteCategory extends AbstractObserver
      */
     public function execute(Observer $observer)
     {
-        $this->storeIterator->iterate($this, 'processDeleteCategory', $observer);
+        $this->storeIterator->iterate($this, 'processDeleteCategory', [$observer]);
     }
     
     

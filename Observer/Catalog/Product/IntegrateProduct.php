@@ -14,7 +14,7 @@ class IntegrateProduct extends AbstractCatalog
      */
     public function execute(Observer $observer)
     {
-        $this->storeIterator->iterate($this, 'prepareIntegrationProduct', $observer);
+        $this->storeIterator->iterate($this, 'prepareIntegrationProduct', [$observer]);
     }
     
     

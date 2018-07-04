@@ -14,7 +14,7 @@ class IntegrateCategory extends AbstractObserver
      */
     public function execute(Observer $observer)
     {
-        $this->storeIterator->iterate($this, 'processIntegrateCategory', $observer);
+        $this->storeIterator->iterate($this, 'processIntegrateCategory', [$observer]);
     }
     
     
