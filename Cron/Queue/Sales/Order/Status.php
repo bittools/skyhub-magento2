@@ -57,8 +57,7 @@ class Status extends AbstractQueue
         
         $schedule->setMessages(__('Order IDs Queued: %s.', implode(',', $orderIds)));
     }
-    
-    
+
     /**
      * @param Schedule $schedule
      *
@@ -119,8 +118,7 @@ class Status extends AbstractQueue
             );
         }
     }
-    
-    
+
     /**
      * @return \Magento\Sales\Model\ResourceModel\Order\Collection
      */
@@ -131,8 +129,7 @@ class Status extends AbstractQueue
         
         return $collection;
     }
-    
-    
+
     /**
      * @param Schedule $schedule
      * @param int|null $storeId

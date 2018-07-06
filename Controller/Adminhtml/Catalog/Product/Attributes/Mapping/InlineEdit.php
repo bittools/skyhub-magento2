@@ -26,8 +26,7 @@ class InlineEdit extends AbstractMapping
     
     /** @var JsonFactory */
     protected $resultJsonFactory;
-    
-    
+
     /**
      * @return \Magento\Framework\App\ResponseInterface|Json|\Magento\Framework\Controller\ResultInterface
      *

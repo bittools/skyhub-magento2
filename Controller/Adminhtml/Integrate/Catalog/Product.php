@@ -14,7 +14,6 @@ class Product extends AbstractIntegrate
     /** @var Integrator */
     protected $integrator;
 
-
     /**
      * Product constructor.
      *
@@ -27,7 +26,6 @@ class Product extends AbstractIntegrate
         parent::__construct($backendContext, $helperContext);
         $this->integrator = $integrator;
     }
-
 
     /**
      * @return \Magento\Framework\Controller\Result\Redirect

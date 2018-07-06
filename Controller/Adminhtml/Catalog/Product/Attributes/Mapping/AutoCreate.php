@@ -21,8 +21,7 @@ class AutoCreate extends AbstractMapping
      * @see _isAllowed()
      */
     const ADMIN_RESOURCE = 'BitTools_SkyHub::skyhub_product_attributes_mapping_save';
-    
-    
+
     /**
      * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Redirect|\Magento\Framework\Controller\ResultInterface
      *
@@ -107,7 +106,6 @@ class AutoCreate extends AbstractMapping
         
         return $this->redirectIndex();
     }
-    
     
     /**
      * @param string $code

@@ -81,8 +81,7 @@ class Product extends AbstractQueue
             __('%s product(s) were queued. IDs: %s.', count($productIds), implode(',', $productIds))
         );
     }
-    
-    
+
     /**
      * @param Schedule $schedule
      *
@@ -110,7 +109,6 @@ class Product extends AbstractQueue
             implode(',', $failedQueueIds)
         ));
     }
-    
     
     /**
      * @param Schedule       $schedule
@@ -190,7 +188,6 @@ class Product extends AbstractQueue
         $this->mergeResults($schedule, $successQueueIds, $failedQueueIds);
     }
     
-    
     /**
      * @return \Magento\Catalog\Model\ResourceModel\Product\Collection
      */
@@ -200,8 +197,7 @@ class Product extends AbstractQueue
         $collection = $this->createObject(\Magento\Catalog\Model\ResourceModel\Product\Collection::class);
         return $collection;
     }
-    
-    
+
     /**
      * @param array $ids
      *
@@ -216,7 +212,6 @@ class Product extends AbstractQueue
         
         return (array) $ids;
     }
-    
     
     /**
      * @param Schedule $schedule

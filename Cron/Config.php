@@ -26,7 +26,6 @@ class Config
     /** @var Config\Queue */
     protected $queueConfig;
     
-    
     public function __construct(
         Config\Catalog\Product $productConfig,
         Config\Catalog\Product\Attribute $productAttributeConfig,
@@ -43,7 +42,6 @@ class Config
         $this->queueConfig            = $queueConfig;
     }
     
-    
     /**
      * @return Config\Catalog\Product\Attribute
      */
@@ -51,8 +49,7 @@ class Config
     {
         return $this->productAttributeConfig;
     }
-    
-    
+
     /**
      * @return Config\Catalog\Product
      */
@@ -60,8 +57,7 @@ class Config
     {
         return $this->productConfig;
     }
-    
-    
+
     /**
      * @return Config\Catalog\Category
      */
@@ -69,8 +65,7 @@ class Config
     {
         return $this->categoryConfig;
     }
-    
-    
+
     /**
      * @return Config\Sales\Order\Status
      */
@@ -78,8 +73,7 @@ class Config
     {
         return $this->orderStatusConfig;
     }
-    
-    
+
     /**
      * @return Config\Sales\Order
      */
@@ -87,7 +81,6 @@ class Config
     {
         return $this->orderConfig;
     }
-    
     
     /**
      * @return Config\Queue

@@ -10,8 +10,7 @@ abstract class AbstractCatalog extends AbstractIntegration
     
     /** @var string */
     const INPUT_KEY_LIMIT = 'limit';
-    
-    
+
     /**
      * @return InputOption
      */

@@ -9,7 +9,7 @@ abstract class AbstractConsole extends \Symfony\Component\Console\Command\Comman
 {
 
     /** @var \Magento\Framework\App\State */
-    protected $state;
+    private $state;
     
     /** @var Context */
     protected $context;
@@ -19,10 +19,13 @@ abstract class AbstractConsole extends \Symfony\Component\Console\Command\Comman
     
     /** @var \BitTools\SkyHub\Cron\Queue\Catalog\Product\AttributeFactory */
     protected $productAttributeFactory;
-    
-    
+
     /**
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * AbstractConsole constructor.
+     * @param \Magento\Framework\App\State                                 $state
+     * @param \BitTools\SkyHub\Cron\Queue\Catalog\Product\AttributeFactory $productAttributeFactory
+     * @param Context                                                      $context
+     * @param null                                                         $name
      */
     public function __construct(
         \Magento\Framework\App\State $state,
@@ -36,8 +39,7 @@ abstract class AbstractConsole extends \Symfony\Component\Console\Command\Comman
         $this->context = $context;
         $this->productAttributeFactory = $productAttributeFactory;
     }
-    
-    
+
     /**
      * @return \Magento\Framework\ObjectManagerInterface
      */

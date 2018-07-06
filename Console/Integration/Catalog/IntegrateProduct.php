@@ -13,8 +13,7 @@ class IntegrateProduct extends AbstractCatalog
     
     /** @var string */
     const INPUT_KEY_PRODUCT_ID = 'product_id';
-    
-    
+
     /**
      * {@inheritdoc}
      */
@@ -34,7 +33,6 @@ class IntegrateProduct extends AbstractCatalog
         
         parent::configure();
     }
-    
     
     /**
      * @param InputInterface  $input
@@ -73,7 +71,6 @@ class IntegrateProduct extends AbstractCatalog
             $this->style()->warning(__('Something went wrong on this integration...'));
         }
     }
-    
     
     /**
      * @param InputInterface  $input

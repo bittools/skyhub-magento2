@@ -13,7 +13,6 @@ class Option extends AbstractHelper
         parent::__construct($context);
     }
     
-    
     /**
      * @param \Magento\Eav\Model\Entity\Attribute $attribute
      * @param int                                 $optionId
@@ -28,8 +27,7 @@ class Option extends AbstractHelper
     {
         return $this->getEavAttributeOptionResource()->getAttributeOptionText($attribute, $optionId, $store);
     }
-    
-    
+
     /**
      * @return \BitTools\SkyHub\Model\ResourceModel\Eav\Entity\Attribute\Option
      */

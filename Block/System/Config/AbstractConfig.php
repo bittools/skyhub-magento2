@@ -15,10 +15,8 @@ abstract class AbstractConfig extends \Magento\Config\Block\System\Config\Form\F
 
     use Functions;
 
-
     /** @var \Magento\Framework\Module\ModuleListInterface */
     protected $moduleList;
-
 
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -29,7 +27,6 @@ abstract class AbstractConfig extends \Magento\Config\Block\System\Config\Form\F
 
         $this->moduleList = $moduleList;
     }
-
 
     /**
      * @param \Magento\Framework\Data\Form\Element\AbstractElement $element
@@ -46,7 +43,6 @@ abstract class AbstractConfig extends \Magento\Config\Block\System\Config\Form\F
         return $this;
     }
 
-
     /**
      * @param \Magento\Framework\Data\Form\Element\AbstractElement $element
      * @return string
@@ -61,7 +57,6 @@ abstract class AbstractConfig extends \Magento\Config\Block\System\Config\Form\F
 
         return parent::render($element);
     }
-
 
     /**
      * @param \Magento\Framework\Data\Form\Element\AbstractElement $element

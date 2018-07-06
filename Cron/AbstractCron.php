@@ -26,7 +26,6 @@ abstract class AbstractCron
     /** @var \Magento\Store\Api\GroupRepositoryInterface */
     protected $groupRepository;
     
-    
     public function __construct(
         Context $context,
         \BitTools\SkyHub\StoreConfig\Context $configContext,
@@ -40,7 +39,6 @@ abstract class AbstractCron
         $this->groupRepository = $groupRepository;
         $this->state           = $state;
     }
-    
     
     /**
      * @param Schedule $schedule
@@ -74,7 +72,6 @@ abstract class AbstractCron
         return true;
     }
     
-    
     /**
      * Get the current Store. Please, consider the Store Iterator.
      *
@@ -101,7 +98,6 @@ abstract class AbstractCron
         return false;
     }
     
-    
     /**
      * @return int
      */
@@ -109,8 +105,7 @@ abstract class AbstractCron
     {
         return $this->getStore()->getId();
     }
-    
-    
+
     /**
      * @param \SkyHub\Api\Handler\Response\HandlerInterface $response
      *
@@ -132,7 +127,6 @@ abstract class AbstractCron
         
         return false;
     }
-    
     
     /**
      * Process the iteration for any class that needs to be iterated through the stores.
@@ -169,7 +163,6 @@ abstract class AbstractCron
         return false;
     }
     
-    
     /**
      * @param Schedule $schedule
      * @param array    $successIds
@@ -200,8 +193,7 @@ abstract class AbstractCron
         
         return $this;
     }
-    
-    
+
     /**
      * @param Schedule $schedule
      *
@@ -212,8 +204,7 @@ abstract class AbstractCron
         $successQueueIds = (array) $schedule->getData('success_queue_ids');
         return $successQueueIds;
     }
-    
-    
+
     /**
      * @param Schedule $schedule
      *
@@ -224,8 +215,7 @@ abstract class AbstractCron
         $failQueueIds = (array) $schedule->getData('failed_queue_ids');
         return $failQueueIds;
     }
-    
-    
+
     /**
      * @param string $class
      *
@@ -238,8 +228,7 @@ abstract class AbstractCron
             ->objectManager()
             ->create($class);
     }
-    
-    
+
     /**
      * @param null|int $storeId
      *
@@ -259,8 +248,7 @@ abstract class AbstractCron
         
         return $group;
     }
-    
-    
+
     /**
      * @return Config
      */
@@ -268,8 +256,7 @@ abstract class AbstractCron
     {
         return $this->context->cronConfig();
     }
-    
-    
+
     /**
      * @return $this
      *

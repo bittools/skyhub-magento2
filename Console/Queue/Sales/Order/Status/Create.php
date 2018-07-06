@@ -20,7 +20,6 @@ class Create extends AbstractConsole
         parent::configure();
     }
 
-
     /**
      * @param InputInterface  $input
      * @param OutputInterface $output
@@ -41,7 +40,6 @@ class Create extends AbstractConsole
 
         $cron->create($schedule);
     }
-
 
     /**
      * @return mixed

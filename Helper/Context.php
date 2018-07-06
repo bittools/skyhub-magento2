@@ -42,7 +42,6 @@ class Context implements \Magento\Framework\ObjectManager\ContextInterface
     /** @var ScopeConfigInterface */
     protected $scopeConfig;
     
-    
     public function __construct(
         SkyHubConfig $skyhubConfig,
         ConfigContext $configContext,
@@ -64,8 +63,7 @@ class Context implements \Magento\Framework\ObjectManager\ContextInterface
         $this->registryManager = $registry;
         $this->scopeConfig     = $scopeConfig;
     }
-    
-    
+
     /**
      * @return ManagerInterface
      */
@@ -74,7 +72,6 @@ class Context implements \Magento\Framework\ObjectManager\ContextInterface
         return $this->eventManager;
     }
     
-    
     /**
      * @return ObjectManagerInterface
      */
@@ -82,8 +79,7 @@ class Context implements \Magento\Framework\ObjectManager\ContextInterface
     {
         return $this->objectManager;
     }
-    
-    
+
     /**
      * @return StoreManagerInterface
      */
@@ -91,8 +87,7 @@ class Context implements \Magento\Framework\ObjectManager\ContextInterface
     {
         return $this->storeManager;
     }
-    
-    
+
     /**
      * @return LoggerInterface
      */
@@ -100,7 +95,6 @@ class Context implements \Magento\Framework\ObjectManager\ContextInterface
     {
         return $this->logger;
     }
-    
     
     /**
      * @return SkyHubConfig
@@ -110,7 +104,6 @@ class Context implements \Magento\Framework\ObjectManager\ContextInterface
         return $this->skyhubConfig;
     }
     
-    
     /**
      * @return State
      */
@@ -118,7 +111,6 @@ class Context implements \Magento\Framework\ObjectManager\ContextInterface
     {
         return $this->state;
     }
-
 
     /**
      * @return ConfigContext
@@ -128,7 +120,6 @@ class Context implements \Magento\Framework\ObjectManager\ContextInterface
         return $this->configContext;
     }
 
-
     /**
      * @return Registry
      */
@@ -136,7 +127,6 @@ class Context implements \Magento\Framework\ObjectManager\ContextInterface
     {
         return $this->registryManager;
     }
-
 
     /**
      * @return ScopeConfigInterface

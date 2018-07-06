@@ -15,31 +15,27 @@ interface ProductAttributeMappingRepositoryInterface
      * @return \Magento\Catalog\Api\Data\ProductAttributeSearchResultsInterface
      */
     public function getList(SearchCriteriaInterface $searchCriteria);
-    
-    
+
     /**
      * @param $mappingId
      *
      * @return mixed
      */
     public function get($mappingId);
-    
-    
+
     /**
      * @param Data\ProductAttributeMappingInterface $mapping
      *
      * @return mixed
      */
     public function save(Data\ProductAttributeMappingInterface $mapping);
-    
-    
+
     /**
      * @param Data\ProductAttributeMappingInterface $mapping
      *
      * @return mixed
      */
     public function delete(Data\ProductAttributeMappingInterface $mapping);
-    
     
     /**
      * @param int $mappingId

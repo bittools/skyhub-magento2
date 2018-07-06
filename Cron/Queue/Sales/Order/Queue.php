@@ -13,8 +13,7 @@ class Queue extends AbstractCron
     {
         $this->processStoreIteration($this, 'executeIntegration', $schedule);
     }
-    
-    
+
     /**
      * @param Schedule       $schedule
      * @param StoreInterface $store
@@ -78,8 +77,7 @@ class Queue extends AbstractCron
             $count++;
         }
     }
-    
-    
+
     /**
      * @param Schedule $schedule
      * @param int|null $storeId

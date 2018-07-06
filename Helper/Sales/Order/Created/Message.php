@@ -37,8 +37,7 @@ class Message
             $order->getIncrementId()
         );
     }
-    
-    
+
     /**
      * @param string $skyhubCode
      *
@@ -48,7 +47,6 @@ class Message
     {
         return __('The order reference "%1" does not exist in Skyhub.', $skyhubCode);
     }
-    
     
     /**
      * @param string $skyhubCode

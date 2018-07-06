@@ -21,8 +21,7 @@ class IntegrateProductAttribute extends AbstractCatalog
     
     /** @var AttributeRepositoryInterface */
     protected $attributeRepository;
-    
-    
+
     /**
      * {@inheritdoc}
      */
@@ -42,7 +41,6 @@ class IntegrateProductAttribute extends AbstractCatalog
         
         parent::configure();
     }
-    
     
     /**
      * @param InputInterface  $input
@@ -84,8 +82,7 @@ class IntegrateProductAttribute extends AbstractCatalog
             $this->style()->warning(__('Something went wrong on this integration...'));
         }
     }
-    
-    
+
     /**
      * @param InputInterface  $input
      *

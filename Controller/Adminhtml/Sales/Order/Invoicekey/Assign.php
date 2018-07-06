@@ -12,8 +12,7 @@ class Assign extends AbstractController
     
     /** @var \BitTools\SkyHub\Api\OrderRepositoryInterface */
     protected $orderRelationRepository;
-    
-    
+
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
         \BitTools\SkyHub\Helper\Context $helperContext,
@@ -25,8 +24,7 @@ class Assign extends AbstractController
         $this->orderRepository         = $orderRepository;
         $this->orderRelationRepository = $orderRelationRepository;
     }
-    
-    
+
     public function execute()
     {
         /** @var \Magento\Framework\View\Result\Layout $result */
@@ -38,7 +36,6 @@ class Assign extends AbstractController
         
         return $pageResult;
     }
-    
     
     /**
      * @return bool
@@ -74,7 +71,6 @@ class Assign extends AbstractController
         
         return true;
     }
-    
     
     /**
      * @return bool|\Magento\Sales\Model\Order

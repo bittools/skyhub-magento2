@@ -17,8 +17,7 @@ class Mapping
     
     /** @var array */
     protected $mappedAttributes = [];
-    
-    
+
     public function __construct(
         Context $context,
         Registry $registry
@@ -26,8 +25,7 @@ class Mapping
         $this->context  = $context;
         $this->registry = $registry;
     }
-    
-    
+
     /**
      * @param string $skyhubCode
      *
@@ -43,8 +41,7 @@ class Mapping
         
         return null;
     }
-    
-    
+
     /**
      * @return array
      */
@@ -54,8 +51,7 @@ class Mapping
         
         return (array) $this->mappedAttributes;
     }
-    
-    
+
     /**
      * @return $this
      */
@@ -72,8 +68,7 @@ class Mapping
         
         return $this;
     }
-    
-    
+
     /**
      * @return bool
      */
@@ -81,8 +76,7 @@ class Mapping
     {
         return (bool) ($this->getPendingAttributesCollection()->getSize() > 0);
     }
-    
-    
+
     /**
      * @return AttributesMappingCollection
      */
@@ -100,8 +94,7 @@ class Mapping
         
         return $this->registry->registry($key);
     }
-    
-    
+
     /**
      * @return AttributesMappingCollection
      */
@@ -112,8 +105,7 @@ class Mapping
         
         return $collection;
     }
-    
-    
+
     /**
      * @return AttributesMappingCollection
      */

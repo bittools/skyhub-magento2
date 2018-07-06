@@ -9,8 +9,7 @@ class Order extends AbstractCronConfig
     
     /** @var string */
     protected $group = 'cron_sales_order_import';
-    
-    
+
     /**
      * @var $scopeCode
      *

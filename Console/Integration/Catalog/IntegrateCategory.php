@@ -15,8 +15,7 @@ class IntegrateCategory extends AbstractCatalog
     
     /** @var string */
     const INPUT_KEY_CATEGORY_ID = 'category_id';
-    
-    
+
     /**
      * {@inheritdoc}
      */
@@ -36,7 +35,6 @@ class IntegrateCategory extends AbstractCatalog
         
         parent::configure();
     }
-    
     
     /**
      * @param InputInterface  $input
@@ -81,8 +79,7 @@ class IntegrateCategory extends AbstractCatalog
             $this->style()->warning(__('Something went wrong on this integration...'));
         }
     }
-    
-    
+
     /**
      * @param integer $categoryId
      *

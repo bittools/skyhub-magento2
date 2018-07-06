@@ -14,7 +14,6 @@ class Category
     /** @var \Magento\Catalog\Model\CategoryFactory */
     protected $categoryFactory;
     
-    
     /**
      * Category constructor.
      *
@@ -28,8 +27,7 @@ class Category
         $this->resourceCategoryFactory = $resourceCategoryFactory;
         $this->categoryFactory         = $categoryFactory;
     }
-    
-    
+
     /**
      * @param CatalogCategory $category
      * @param null            $store
@@ -60,8 +58,7 @@ class Category
         
         return implode(' > ', $categoryPieces);
     }
-    
-    
+
     /**
      * @param CatalogCategory $category
      * @param string|null     $scopeCode
@@ -90,7 +87,6 @@ class Category
         return (array) array_reverse($pathIds);
     }
     
-    
     /**
      * @return \Magento\Catalog\Model\ResourceModel\Category
      */
@@ -100,7 +96,6 @@ class Category
         $resource = $this->resourceCategoryFactory->create();
         return $resource;
     }
-
 
     protected function getModel()
     {

@@ -47,8 +47,7 @@ trait Arrays
         
         return $value;
     }
-    
-    
+
     /**
      * @param array            $data
      * @param array|string|int $indexes
@@ -66,7 +65,6 @@ trait Arrays
         return $data;
     }
     
-    
     /**
      * @param array                   $data
      * @param string                  $index
@@ -82,8 +80,7 @@ trait Arrays
         
         return $data[$index];
     }
-    
-    
+
     /**
      * @param array  $data
      * @param string $index
@@ -94,7 +91,6 @@ trait Arrays
     {
         return (bool) ($this->arrayIndexExists($data, $index) && $data[$index]);
     }
-    
     
     /**
      * @param array  $data

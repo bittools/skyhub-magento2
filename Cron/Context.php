@@ -12,14 +12,18 @@ class Context
     
     /** @var Config */
     protected $cronConfig;
-    
-    
+
+    /**
+     * Context constructor.
+     *
+     * @param HelperContext $helperContext
+     * @param Config        $cronConfig
+     */
     public function __construct(HelperContext $helperContext, Config $cronConfig)
     {
         $this->helperContext = $helperContext;
         $this->cronConfig    = $cronConfig;
     }
-    
     
     /**
      * @return HelperContext
@@ -28,8 +32,7 @@ class Context
     {
         return $this->helperContext;
     }
-    
-    
+
     /**
      * @return Config
      */

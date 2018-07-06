@@ -17,7 +17,6 @@ abstract class AbstractIntegration extends AbstractConsole
     /** @var string */
     const INPUT_KEY_STORE_ID = 'store_id';
 
-    
     /**
      * @param InputInterface  $input
      * @param OutputInterface $output
@@ -29,8 +28,7 @@ abstract class AbstractIntegration extends AbstractConsole
         $this->style = new SymfonyStyle($input, $output);
         return $this;
     }
-    
-    
+
     /**
      * @return StyleInterface
      */
@@ -38,8 +36,7 @@ abstract class AbstractIntegration extends AbstractConsole
     {
         return $this->style;
     }
-    
-    
+
     /**
      * @return $this
      */
@@ -47,8 +44,7 @@ abstract class AbstractIntegration extends AbstractConsole
     {
         return $this;
     }
-    
-    
+
     /**
      * @param InputInterface  $input
      * @param OutputInterface $output
@@ -56,8 +52,7 @@ abstract class AbstractIntegration extends AbstractConsole
      * @return mixed
      */
     abstract protected function processExecute(InputInterface $input, OutputInterface $output, StoreInterface $store);
-    
-    
+
     /**
      * @param InputInterface  $input
      * @param OutputInterface $output
@@ -77,8 +72,7 @@ abstract class AbstractIntegration extends AbstractConsole
             $this->afterExecute($input, $output, $store);
         }
     }
-    
-    
+
     /**
      * @param null|int|string $storeId
      *
@@ -99,8 +93,7 @@ abstract class AbstractIntegration extends AbstractConsole
         
         return $this;
     }
-    
-    
+
     /**
      * @param null|int|string $storeId
      *
@@ -112,8 +105,7 @@ abstract class AbstractIntegration extends AbstractConsole
     {
         return $this->context->storeManager()->getStore($storeId);
     }
-    
-    
+
     /**
      * @param null|int $storeId
      *
@@ -125,8 +117,7 @@ abstract class AbstractIntegration extends AbstractConsole
     {
         return $this->getStore($storeId)->getId();
     }
-    
-    
+
     /**
      * @param InputInterface $input
      *
@@ -144,8 +135,7 @@ abstract class AbstractIntegration extends AbstractConsole
         
         return $this->context->storeManager()->getStores();
     }
-    
-    
+
     /**
      * @return InputOption
      */

@@ -16,8 +16,7 @@ class IntegrateOrder extends AbstractSales
     
     /** @var string */
     const INPUT_KEY_ORDER_CODE = 'order_code';
-    
-    
+
     /**
      * {@inheritdoc}
      */
@@ -37,8 +36,7 @@ class IntegrateOrder extends AbstractSales
         
         parent::configure();
     }
-    
-    
+
     /**
      * @param InputInterface  $input
      * @param OutputInterface $output

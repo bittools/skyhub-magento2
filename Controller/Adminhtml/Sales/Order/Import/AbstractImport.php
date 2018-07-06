@@ -20,8 +20,7 @@ abstract class AbstractImport extends AbstractController
     
     /** @var Message */
     protected $message;
-    
-    
+
     public function __construct(
         BackendContext $context,
         HelperContext $helperContext,
@@ -35,8 +34,7 @@ abstract class AbstractImport extends AbstractController
         $this->orderProcessorFactory  = $orderProcessorFactory;
         $this->message                = $message;
     }
-    
-    
+
     /**
      * @return \BitTools\SkyHub\Integration\Integrator\Sales\Order
      */
@@ -44,8 +42,7 @@ abstract class AbstractImport extends AbstractController
     {
         return $this->orderIntegratorFactory->create();
     }
-    
-    
+
     /**
      * @return \BitTools\SkyHub\Integration\Processor\Sales\Order
      */

@@ -12,8 +12,7 @@ abstract class AbstractMapping extends AbstractController
     
     /** @var ProductAttributeMappingRepositoryInterface */
     protected $productAttributeMappingRepository;
-    
-    
+
     /**
      * AbstractMapping constructor.
      *
@@ -29,7 +28,6 @@ abstract class AbstractMapping extends AbstractController
         parent::__construct($context, $helperContext);
         $this->productAttributeMappingRepository = $productAttributeMappingRepository;
     }
-    
     
     /**
      * @return \Magento\Framework\Controller\Result\Redirect

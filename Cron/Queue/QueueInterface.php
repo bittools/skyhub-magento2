@@ -14,7 +14,6 @@ interface QueueInterface
      */
     public function create(Schedule $schedule);
     
-    
     /**
      * @param Schedule $schedule
      *

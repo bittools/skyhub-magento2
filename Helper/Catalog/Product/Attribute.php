@@ -30,15 +30,13 @@ class Attribute extends AbstractHelper
     
     /** @var EavSetupFactory */
     protected $eavSetupFactory;
-    
-    
+
     public function __construct(Context $context, EavSetupFactory $eavSetupFactory)
     {
         parent::__construct($context);
         
         $this->eavSetupFactory = $eavSetupFactory;
     }
-    
     
     /**
      * @param string $attributeCode
@@ -55,8 +53,7 @@ class Attribute extends AbstractHelper
         
         return $this->productAttributes[$attributeCode];
     }
-    
-    
+
     /**
      * @param int $attributeId
      *
@@ -75,8 +72,7 @@ class Attribute extends AbstractHelper
         
         return false;
     }
-    
-    
+
     /**
      * @return array
      */
@@ -91,8 +87,7 @@ class Attribute extends AbstractHelper
         
         return $attributeIds;
     }
-    
-    
+
     /**
      * @return array
      */
@@ -109,8 +104,7 @@ class Attribute extends AbstractHelper
         
         return $this->productAttributes;
     }
-    
-    
+
     /**
      * @return EntityAttributeCollection
      */
@@ -122,8 +116,7 @@ class Attribute extends AbstractHelper
         
         return $collection;
     }
-    
-    
+
     /**
      * @return array
      */
@@ -142,7 +135,6 @@ class Attribute extends AbstractHelper
         
         return $integrable;
     }
-    
     
     /**
      * @param array $ids
@@ -174,8 +166,7 @@ class Attribute extends AbstractHelper
         
         return $attributes;
     }
-    
-    
+
     /**
      * @param string $code
      *
@@ -196,7 +187,6 @@ class Attribute extends AbstractHelper
         return $type;
     }
     
-    
     /**
      * @param string $attributeCode
      *
@@ -208,8 +198,7 @@ class Attribute extends AbstractHelper
             ->skyhubConfig()
             ->isAttributeCodeInBlacklist($attributeCode);
     }
-    
-    
+
     /**
      * @param string $code
      * @param array  $attributeData
@@ -245,7 +234,6 @@ class Attribute extends AbstractHelper
         return $this->loadProductAttribute($code);
     }
     
-    
     /**
      * @param string $groupName
      *
@@ -275,8 +263,7 @@ class Attribute extends AbstractHelper
         
         return $this;
     }
-    
-    
+
     /**
      * @param string $code
      *
@@ -292,8 +279,7 @@ class Attribute extends AbstractHelper
         
         return $attribute;
     }
-    
-    
+
     /**
      * @param EntityAttribute $attribute
      *

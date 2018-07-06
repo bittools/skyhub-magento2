@@ -40,7 +40,6 @@ class Save extends AbstractImport
         return $redirectResult;
     }
     
-    
     /**
      * @param string   $referenceCode
      * @param null|int $storeId

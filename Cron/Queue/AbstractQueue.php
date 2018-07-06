@@ -9,8 +9,7 @@ abstract class AbstractQueue extends AbstractCron implements QueueInterface
     
     /** @var \BitTools\SkyHub\Model\ResourceModel\QueueFactory */
     protected $queueResourceFactory;
-    
-    
+
     public function __construct(
         \BitTools\SkyHub\Cron\Context $context,
         \BitTools\SkyHub\StoreConfig\Context $configContext,
@@ -22,7 +21,6 @@ abstract class AbstractQueue extends AbstractCron implements QueueInterface
         parent::__construct($context, $configContext, $storeIterator, $groupRepository, $state);
         $this->queueResourceFactory = $queueResourceFactory;
     }
-    
     
     /**
      * @return \BitTools\SkyHub\Model\ResourceModel\Queue

@@ -13,7 +13,6 @@ abstract class AbstractController extends Action
     /** @var HelperContext */
     protected $helperContext;
 
-
     /**
      * AbstractController constructor.
      *
@@ -27,7 +26,6 @@ abstract class AbstractController extends Action
         $this->helperContext = $helperContext;
     }
     
-    
     /**
      * @return \Magento\Backend\Model\View\Result\Page
      */
@@ -37,8 +35,7 @@ abstract class AbstractController extends Action
         $result = $this->resultFactory->create(ResultFactory::TYPE_PAGE);
         return $result;
     }
-    
-    
+
     /**
      * @return \Magento\Framework\Controller\Result\Redirect
      */
@@ -48,8 +45,7 @@ abstract class AbstractController extends Action
         $result = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         return $result;
     }
-    
-    
+
     /**
      * @return \Magento\Framework\Controller\Result\Json
      */
@@ -59,7 +55,6 @@ abstract class AbstractController extends Action
         $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         return $result;
     }
-    
     
     /**
      * @return \Magento\Framework\Controller\Result\Redirect
@@ -72,8 +67,7 @@ abstract class AbstractController extends Action
         
         return $result;
     }
-    
-    
+
     /**
      * @param null $storeId
      *

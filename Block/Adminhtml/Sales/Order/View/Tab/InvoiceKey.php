@@ -10,8 +10,7 @@ class InvoiceKey extends AbstractOrder implements TabInterface
     
     /** @var string */
     protected $_template = 'order/view/tab/invoice_key.phtml';
-    
-    
+
     /**
      * @return bool|string
      *
@@ -33,7 +32,6 @@ class InvoiceKey extends AbstractOrder implements TabInterface
         return $info->getInvoiceKey();
     }
     
-    
     /**
      * {@inheritdoc}
      */
@@ -41,8 +39,7 @@ class InvoiceKey extends AbstractOrder implements TabInterface
     {
         return __('Invoice Key');
     }
-    
-    
+
     /**
      * {@inheritdoc}
      */
@@ -50,7 +47,6 @@ class InvoiceKey extends AbstractOrder implements TabInterface
     {
         return $this->getTabLabel();
     }
-    
     
     /**
      * @return bool
@@ -67,8 +63,7 @@ class InvoiceKey extends AbstractOrder implements TabInterface
     
         return true;
     }
-    
-    
+
     /**
      * @return bool
      *
@@ -78,8 +73,7 @@ class InvoiceKey extends AbstractOrder implements TabInterface
     {
         return !$this->canShowTab();
     }
-    
-    
+
     /**
      * Submit URL getter
      *
@@ -94,7 +88,6 @@ class InvoiceKey extends AbstractOrder implements TabInterface
         ]);
     }
     
-    
     /**
      * @return string
      */
@@ -102,7 +95,6 @@ class InvoiceKey extends AbstractOrder implements TabInterface
     {
         return 'invoice_key_container';
     }
-    
     
     /**
      * @{inheritdoc}

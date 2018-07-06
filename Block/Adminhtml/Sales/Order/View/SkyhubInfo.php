@@ -18,8 +18,7 @@ class SkyhubInfo extends AbstractOrder
         
         return $this->getSkyhubInfo()->getCode();
     }
-    
-    
+
     /**
      * @return null|string
      */
@@ -31,8 +30,7 @@ class SkyhubInfo extends AbstractOrder
     
         return $this->getSkyhubInfo()->getChannel();
     }
-    
-    
+
     /**
      * @return \BitTools\SkyHub\Api\Data\OrderInterface|null
      */
@@ -45,8 +43,7 @@ class SkyhubInfo extends AbstractOrder
         
         return null;
     }
-    
-    
+
     /**
      * @return bool
      */

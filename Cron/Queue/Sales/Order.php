@@ -20,7 +20,6 @@ class Order extends AbstractCron
         $this->processStoreIteration($this, 'executeIntegration', $schedule);
     }
     
-    
     /**
      * @param Schedule       $schedule
      * @param StoreInterface $store
@@ -85,8 +84,7 @@ class Order extends AbstractCron
             $schedule->setMessages($message);
         }
     }
-    
-    
+
     /**
      * @param Schedule $schedule
      * @param int|null $storeId

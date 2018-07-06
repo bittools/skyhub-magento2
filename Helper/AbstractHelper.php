@@ -7,8 +7,7 @@ abstract class AbstractHelper
     
     /** @var Context */
     protected $context;
-    
-    
+
     /**
      * AbstractHelper constructor.
      *
@@ -18,7 +17,6 @@ abstract class AbstractHelper
     {
         $this->context = $context;
     }
-
 
     /**
      * @return \Magento\Framework\ObjectManagerInterface

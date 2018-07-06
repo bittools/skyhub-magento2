@@ -20,7 +20,6 @@ class Execute extends AbstractConsole
         parent::configure();
     }
 
-
     /**
      * @param InputInterface  $input
      * @param OutputInterface $output

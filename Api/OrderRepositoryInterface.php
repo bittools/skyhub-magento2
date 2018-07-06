@@ -12,7 +12,6 @@ interface OrderRepositoryInterface
      */
     public function save(Data\OrderInterface $order);
 
-
     /**
      * @param int $orderId
      * @return Data\OrderInterface

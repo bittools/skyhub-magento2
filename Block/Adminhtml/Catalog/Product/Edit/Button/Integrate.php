@@ -13,12 +13,17 @@ class Integrate extends GenericButton implements ButtonProviderInterface
     /** @var ActionContext */
     protected $actionContext;
 
+    /**
+     * Integrate constructor.
+     *
+     * @param WidgetContext $widgetContext
+     * @param ActionContext $actionContext
+     */
     public function __construct(WidgetContext $widgetContext, ActionContext $actionContext)
     {
         parent::__construct($widgetContext);
         $this->actionContext = $actionContext;
     }
-
 
     /**
      * Retrieve button-specified settings
@@ -39,7 +44,6 @@ class Integrate extends GenericButton implements ButtonProviderInterface
         ];
     }
 
-
     /**
      * Get integrate URL
      *
@@ -52,7 +56,6 @@ class Integrate extends GenericButton implements ButtonProviderInterface
         return $this->getUrl('bittools_skyhub/integrate_catalog/product', ['id' => $productId]);
     }
 
-
     /**
      * @return integer|null
      */
@@ -61,7 +64,6 @@ class Integrate extends GenericButton implements ButtonProviderInterface
         $productId = $this->getRequest()->getParam('id', null);
         return $productId;
     }
-
 
     /**
      * @return \Magento\Framework\App\RequestInterface

@@ -20,7 +20,6 @@ class Execute extends AbstractConsole
         parent::configure();
     }
 
-
     /**
      * @param InputInterface  $input
      * @param OutputInterface $output
@@ -41,7 +40,6 @@ class Execute extends AbstractConsole
 
         $cron->execute($schedule);
     }
-
 
     /**
      * @return mixed

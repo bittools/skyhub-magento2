@@ -8,8 +8,7 @@ class Index extends AbstractController
 {
     
     const ADMIN_RESOURCE = 'BitTools_SkyHub::skyhub_queues_sales_order_status';
-    
-    
+
     /**
      * @return \Magento\Backend\Model\View\Result\Page
      */

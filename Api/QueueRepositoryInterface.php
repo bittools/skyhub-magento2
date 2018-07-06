@@ -16,40 +16,35 @@ interface QueueRepositoryInterface
      * @return \Magento\Catalog\Api\Data\ProductAttributeSearchResultsInterface
      */
     public function getList(SearchCriteriaInterface $searchCriteria);
-    
-    
+
     /**
      * @param int $queueId
      *
      * @return Queue
      */
     public function get($queueId);
-    
-    
+
     /**
      * @param Data\QueueInterface $queue
      *
      * @return mixed
      */
     public function save(Data\QueueInterface $queue);
-    
-    
+
     /**
      * @param Data\QueueInterface $queue
      *
      * @return mixed
      */
     public function delete(Data\QueueInterface $queue);
-    
-    
+
     /**
      * @param int $queueId
      *
      * @return mixed
      */
     public function deleteById($queueId);
-    
-    
+
     /**
      * @param array $data
      *

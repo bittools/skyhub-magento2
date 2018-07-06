@@ -17,8 +17,7 @@ class Product extends AbstractHelper
     
     /** @var StoreConfigContext */
     protected $storeConfigContext;
-    
-    
+
     public function __construct(
         Context $context,
         StoreConfigContext $storeConfigContext,
@@ -29,8 +28,7 @@ class Product extends AbstractHelper
         $this->productResourceFactory = $productResourceFactory;
         $this->storeConfigContext     = $storeConfigContext;
     }
-    
-    
+
     /**
      * @param CatalogProduct         $product
      * @param string|EntityAttribute $attribute
@@ -67,8 +65,7 @@ class Product extends AbstractHelper
         
         return $data;
     }
-    
-    
+
     /**
      * @param CatalogProduct         $product
      * @param EntityAttribute|string $attribute
@@ -93,8 +90,7 @@ class Product extends AbstractHelper
         
         return null;
     }
-    
-    
+
     /**
      * @param CatalogProduct $product
      * @param null|string                $attributeCode
@@ -119,8 +115,7 @@ class Product extends AbstractHelper
         
         return null;
     }
-    
-    
+
     /**
      * @param CatalogProduct $product
      *
@@ -137,7 +132,6 @@ class Product extends AbstractHelper
         return (string) $value;
     }
     
-    
     /**
      * @param CatalogProduct $product
      *
@@ -151,8 +145,7 @@ class Product extends AbstractHelper
         
         return (string) $this->productAttributeRawValue($product, $attributeCode);
     }
-    
-    
+
     /**
      * @param float       $specialPrice
      * @param float       $price
@@ -183,8 +176,7 @@ class Product extends AbstractHelper
         
         return true;
     }
-    
-    
+
     /**
      * @param EntityAttribute $attribute
      *
@@ -206,7 +198,6 @@ class Product extends AbstractHelper
         
         return true;
     }
-    
     
     /**
      * @param CatalogProduct $product

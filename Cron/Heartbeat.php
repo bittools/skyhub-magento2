@@ -13,7 +13,6 @@ class Heartbeat extends AbstractCron
     /** @var Schedule */
     protected $lastHeartbeat;
 
-
     /**
      * @param Schedule $schedule
      *
@@ -25,7 +24,6 @@ class Heartbeat extends AbstractCron
         return true;
     }
 
-
     /**
      * @return bool
      *
@@ -35,7 +33,6 @@ class Heartbeat extends AbstractCron
     {
         return (bool) $this->getLastHeartbeat();
     }
-    
     
     /**
      * @return bool|float|int
@@ -56,7 +53,6 @@ class Heartbeat extends AbstractCron
         
         return $duration;
     }
-
 
     /**
      * @return bool
@@ -83,7 +79,6 @@ class Heartbeat extends AbstractCron
         return false;
     }
 
-
     /**
      * @return bool|Schedule
      *
@@ -107,7 +102,6 @@ class Heartbeat extends AbstractCron
 
         return $this->lastHeartbeat;
     }
-
 
     /**
      * @return string

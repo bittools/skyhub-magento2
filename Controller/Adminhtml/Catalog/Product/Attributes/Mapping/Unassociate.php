@@ -22,7 +22,6 @@ class Unassociate extends AbstractMapping
      */
     const ADMIN_RESOURCE = 'BitTools_SkyHub::skyhub_product_attributes_mapping_save';
     
-    
     /**
      * @return \Magento\Framework\Controller\Result\Redirect
      */

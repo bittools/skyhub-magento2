@@ -9,7 +9,6 @@ class Status extends AbstractCronConfig
     
     protected $group = 'cron_sales_order_status';
     
-    
     /**
      * @var $scopeCode
      *
@@ -19,7 +18,6 @@ class Status extends AbstractCronConfig
     {
         return (int) $this->getGroupConfig('queue_create_limit', $scopeCode);
     }
-    
     
     /**
      * @var $scopeCode

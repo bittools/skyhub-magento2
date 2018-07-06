@@ -20,7 +20,6 @@ class Index extends AbstractMapping
      */
     const ADMIN_RESOURCE = 'BitTools_SkyHub::skyhub_product_attributes_mapping';
 
-
     /**
      * Start by creating your controller's logic...
      *

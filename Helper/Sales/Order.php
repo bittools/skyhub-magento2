@@ -24,7 +24,6 @@ class Order extends AbstractHelper
         return $orderId;
     }
 
-
     /**
      * @param string $code
      *
@@ -41,7 +40,6 @@ class Order extends AbstractHelper
         return null;
     }
 
-
     /**
      * @param int $orderId (entity_id)
      *
@@ -57,8 +55,7 @@ class Order extends AbstractHelper
 
         return $skyhubCode;
     }
-    
-    
+
     /**
      * @return \Magento\Sales\Model\ResourceModel\Order\Collection
      *

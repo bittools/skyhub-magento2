@@ -9,7 +9,6 @@ class Index extends AbstractController
     
     const ADMIN_RESOURCE = 'BitTools_SkyHub::skyhub_queues_catalog_product';
     
-    
     /**
      * @return \Magento\Framework\View\Result\Page
      */

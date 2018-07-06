@@ -17,8 +17,7 @@ trait Strings
         
         return $method;
     }
-    
-    
+
     /**
      * Taken from Magento 1's Core module.
      *
@@ -80,8 +79,7 @@ trait Strings
         
         return $string;
     }
-    
-    
+
     /**
      * @param string $value
      * @param string $char
@@ -104,7 +102,6 @@ trait Strings
         
         return $value;
     }
-    
     
     /**
      * @param string $separator

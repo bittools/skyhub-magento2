@@ -14,7 +14,6 @@ abstract class AbstractCronConfig extends \BitTools\SkyHub\StoreConfig\AbstractC
     /** @var string */
     protected $enabledField = 'enabled';
     
-    
     /**
      * @param int|null $scopeCode
      *
@@ -24,7 +23,6 @@ abstract class AbstractCronConfig extends \BitTools\SkyHub\StoreConfig\AbstractC
     {
         return (bool) $this->getSkyHubModuleConfig($this->enabledField, $this->group, $scopeCode);
     }
-    
     
     /**
      * @param string   $field

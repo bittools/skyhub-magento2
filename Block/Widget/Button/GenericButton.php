@@ -21,7 +21,6 @@ abstract class GenericButton implements ButtonProviderInterface
         $this->context = $context;
     }
 
-
     /**
      * Generate url by route and parameters
      *

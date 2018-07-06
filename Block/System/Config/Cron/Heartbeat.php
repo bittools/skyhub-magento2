@@ -15,8 +15,7 @@ class Heartbeat extends AbstractConfig
     
     /** @var bool */
     protected $isOlderThanOneHour = null;
-    
-    
+
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
         \Magento\Framework\Module\ModuleListInterface $moduleList,
@@ -27,8 +26,7 @@ class Heartbeat extends AbstractConfig
         
         $this->heartbeatFactory = $heartbeatFactory;
     }
-    
-    
+
     /**
      * @param \Magento\Framework\Data\Form\Element\AbstractElement $element
      *
@@ -66,8 +64,7 @@ class Heartbeat extends AbstractConfig
         
         return "<p style='padding:10px 10px; border-radius:5px; color:#fff; {$style}'>$message</p>";
     }
-    
-    
+
     /**
      * @return bool
      *
@@ -81,8 +78,7 @@ class Heartbeat extends AbstractConfig
         
         return $this->isOlderThanOneHour;
     }
-    
-    
+
     /**
      * @return \BitTools\SkyHub\Cron\Heartbeat
      */

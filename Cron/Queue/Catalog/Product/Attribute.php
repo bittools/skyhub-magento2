@@ -37,8 +37,7 @@ class Attribute extends AbstractQueue
         
         $schedule->setMessages($message);
     }
-    
-    
+
     /**
      * @param Schedule $schedule
      *
@@ -66,8 +65,7 @@ class Attribute extends AbstractQueue
         
         $schedule->setMessages($message);
     }
-    
-    
+
     /**
      * @param Schedule       $schedule
      * @param StoreInterface $store
@@ -120,8 +118,7 @@ class Attribute extends AbstractQueue
         
         $this->mergeResults($schedule, $successQueueIds, $failedQueueIds);
     }
-    
-    
+
     /**
      * @return \BitTools\SkyHub\Helper\Catalog\Product\Attribute
      */
@@ -131,7 +128,6 @@ class Attribute extends AbstractQueue
         $helper = $this->createObject(\BitTools\SkyHub\Helper\Catalog\Product\Attribute::class);
         return $helper;
     }
-    
     
     /**
      * @param Schedule $schedule

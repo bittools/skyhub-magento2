@@ -9,8 +9,7 @@ class Product extends AbstractCronConfig
     
     /** @var string */
     protected $group = 'cron_catalog_product';
-    
-    
+
     /**
      * @var $scopeCode
      *
@@ -20,8 +19,7 @@ class Product extends AbstractCronConfig
     {
         return (int) $this->getGroupConfig('queue_create_limit', $scopeCode);
     }
-    
-    
+
     /**
      * @var $scopeCode
      *

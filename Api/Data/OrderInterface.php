@@ -57,14 +57,12 @@ interface OrderInterface
      */
     public function setStoreId($storeId);
 
-
     /**
      * @param int $orderId
      *
      * @return $this
      */
     public function setOrderId($orderId);
-
 
     /**
      * @param string $code
@@ -73,14 +71,12 @@ interface OrderInterface
      */
     public function setCode($code);
 
-
     /**
      * @param string $channel
      *
      * @return $this
      */
     public function setChannel($channel);
-
 
     /**
      * @param string $invoiceKey
@@ -89,14 +85,12 @@ interface OrderInterface
      */
     public function setInvoiceKey($invoiceKey);
 
-
     /**
      * @param string $dataSource
      *
      * @return $this
      */
     public function setDataSource($dataSource);
-
 
     /**
      * @param float $interest

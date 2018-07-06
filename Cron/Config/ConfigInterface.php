@@ -10,7 +10,6 @@ interface ConfigInterface
      */
     public function isEnabled();
     
-    
     /**
      * @param string $field
      *

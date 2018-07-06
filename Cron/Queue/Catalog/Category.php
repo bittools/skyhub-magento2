@@ -53,8 +53,7 @@ class Category extends AbstractQueue
             __('The categories were successfully queued. Category IDs: %1.', implode(',', $categoryIds))
         );
     }
-    
-    
+
     /**
      * @param Schedule $schedule
      *
@@ -89,7 +88,6 @@ class Category extends AbstractQueue
         
         $schedule->setMessages($message);
     }
-    
     
     /**
      * @param Schedule       $schedule
@@ -145,8 +143,7 @@ class Category extends AbstractQueue
         
         $this->mergeResults($schedule, $successQueueIds, $failedQueueIds);
     }
-    
-    
+
     /**
      * @param int                 $categoryId
      * @param StoreInterface|null $store
@@ -173,7 +170,6 @@ class Category extends AbstractQueue
         return $category;
     }
     
-    
     /**
      * @return \Magento\Catalog\Model\ResourceModel\Category\Collection
      */
@@ -186,8 +182,7 @@ class Category extends AbstractQueue
         
         return $collection;
     }
-    
-    
+
     /**
      * @param array $categoryIds
      *
@@ -206,7 +201,6 @@ class Category extends AbstractQueue
         return $categoryIds;
     }
     
-    
     /**
      * @param Schedule $schedule
      * @param int|null $storeId
@@ -222,7 +216,6 @@ class Category extends AbstractQueue
         
         return parent::canRun($schedule, $storeId);
     }
-
 
     /**
      * @return int

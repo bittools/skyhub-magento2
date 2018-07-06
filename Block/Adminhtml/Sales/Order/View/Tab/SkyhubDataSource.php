@@ -10,8 +10,7 @@ class SkyhubDataSource extends AbstractOrder implements TabInterface
     
     /** @var string */
     protected $_template = 'order/view/tab/skyhub_data_source.phtml';
-    
-    
+
     /**
      * @return bool|string
      * @throws \Magento\Framework\Exception\LocalizedException
@@ -34,8 +33,7 @@ class SkyhubDataSource extends AbstractOrder implements TabInterface
         
         return $pretty;
     }
-    
-    
+
     /**
      * {@inheritdoc}
      */
@@ -44,7 +42,6 @@ class SkyhubDataSource extends AbstractOrder implements TabInterface
         return __('SkyHub Data Source');
     }
     
-    
     /**
      * {@inheritdoc}
      */
@@ -52,8 +49,7 @@ class SkyhubDataSource extends AbstractOrder implements TabInterface
     {
         return $this->getTabLabel();
     }
-    
-    
+
     /**
      * Can show tab in tabs
      *
@@ -64,7 +60,6 @@ class SkyhubDataSource extends AbstractOrder implements TabInterface
     {
         return true;
     }
-    
     
     /**
      * Tab is hidden
