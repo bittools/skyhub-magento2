@@ -112,9 +112,10 @@ class Product extends AbstractProduct
     {
         /** @var \Magento\Catalog\Model\ResourceModel\Category\Collection $categories */
         $categories = $product->getCategoryCollection();
-        $categories->addAttributeToSelect([
-            'name',
-        ]);
+        $categories->addFieldToFilter('level', ['gteq' => 2])
+            ->addAttributeToSelect([
+                'name',
+            ]);
         
         /** @var \Magento\Catalog\Model\Category $category */
         foreach ($categories as $category) {
