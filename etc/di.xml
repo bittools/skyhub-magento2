@@ -40,6 +40,9 @@
     <preference for="BitTools\SkyHub\Api\ProductAttributeMappingRepositoryInterface" type="BitTools\SkyHub\Model\Catalog\Product\Attributes\MappingRepository"/>
     <preference for="BitTools\SkyHub\Api\Data\ProductAttributeMappingInterface" type="BitTools\SkyHub\Model\Catalog\Product\Attributes\Mapping"/>
 
+    <preference for="BitTools\SkyHub\Api\CustomerAttributeMappingRepositoryInterface" type="BitTools\SkyHub\Model\Customer\Attributes\MappingRepository"/>
+    <preference for="BitTools\SkyHub\Api\Data\CustomerAttributeMappingInterface" type="BitTools\SkyHub\Model\Customer\Attributes\Mapping"/>
+
     <preference for="BitTools\SkyHub\Api\QueueRepositoryInterface" type="BitTools\SkyHub\Model\QueueRepository"/>
     <preference for="BitTools\SkyHub\Api\Data\Data\QueueInterface" type="BitTools\SkyHub\Model\Queue"/>
 
@@ -99,6 +102,13 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Customer\Attribute\Mapping\Customer" type="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">bittools_skyhub_customer_attributes_mapping</argument>
+            <argument name="resourceModel" xsi:type="string">BitTools\SkyHub\Model\ResourceModel\Customer\Attributes\Mapping</argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Sales\Order" type="BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue">
         <arguments>
             <argument name="entityType" xsi:type="string">sales_order</argument>
@@ -109,6 +119,7 @@
         <arguments>
             <argument name="collections" xsi:type="array">
                 <item name="bittools_skyhub_catalog_product_attributes_mapping_listing_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Catalog\Product\Attribute\Mapping\Product</item>
+                <item name="bittools_skyhub_customer_attributes_mapping_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Customer</item>
                 <item name="bittools_skyhub_queue_product_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Catalog\Product</item>
                 <item name="bittools_skyhub_queue_product_attribute_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Catalog\ProductAttribute</item>
                 <item name="bittools_skyhub_queue_category_data_source" xsi:type="string">BitTools\SkyHub\Ui\Component\DataProvider\SearchResult\Queue\Catalog\Category</item>
