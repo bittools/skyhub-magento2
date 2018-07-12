@@ -104,6 +104,14 @@ class IntegrateProduct extends AbstractCatalog
         if ($product->getOrigData('promotional_price') != $product->getData('promotional_price')) {
             return true;
         }
+        
+        if ($product->getOrigData('special_from_date') != $product->getSpecialFromDate()) {
+            return true;
+        }
+        
+        if ($product->getOrigData('special_to_date') != $product->getSpecialToDate()) {
+            return true;
+        }
     
         /**
          * This may stop working further once the method getStockData is deprecated.

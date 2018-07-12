@@ -286,19 +286,9 @@ class Product extends AbstractProduct
     protected function prepareProductPrices(CatalogProduct $product, ProductEntityInterface $interface)
     {
         /**
-         * @var AttributesMapping $mappedPrice
-         * @var AttributesMapping $mappedPromoPrice
-         */
-        $mappedPrice      = $this->attributeMappingHelper->getMappedAttribute('price');
-        $mappedPromoPrice = $this->attributeMappingHelper->getMappedAttribute('promotional_price');
-        
-        $priceCode        = $mappedPrice->getAttribute()->getAttributeCode();
-        $specialPriceCode = $mappedPromoPrice->getAttribute()->getAttributeCode();
-        
-        /**
          * Add Price.
          */
-        $price = $this->productHelper->extractProductPrice($product, $priceCode);
+        $price = $this->getProductPrice($product, 'price');
         
         if (!empty($price)) {
             $price = (float) $price;
@@ -308,14 +298,12 @@ class Product extends AbstractProduct
         
         $interface->setPrice($price);
         
-        $this->addProcessedAttribute($product, $mappedPrice->getAttribute());
-        
         /**
          * Add Promotional Price.
          */
-        $specialPrice = $this->productHelper->extractProductSpecialPrice($product, $specialPriceCode, $price);
+        $specialPrice = $this->getProductPrice($product, 'promotional_price');
         
-        if (!empty($specialPrice)) {
+        if ($this->validateProductSpecialPrice($product, $price, $specialPrice)) {
             $specialPrice = (float) $specialPrice;
         } else {
             $specialPrice = null;
@@ -323,9 +311,56 @@ class Product extends AbstractProduct
         
         $interface->setPromotionalPrice($specialPrice);
         
-        $this->addProcessedAttribute($product, $mappedPromoPrice->getAttribute());
-        
         return $this;
+    }
+    
+    
+    /**
+     * @param CatalogProduct $product
+     * @param string         $type
+     *
+     * @return float|null
+     */
+    protected function getProductPrice(CatalogProduct $product, $type, $setAttributeAsProcessed = true)
+    {
+        /** @var AttributesMapping $mappedPrice */
+        $mappedPrice = $this->attributeMappingHelper->getMappedAttribute($type);
+        $priceCode   = $mappedPrice->getAttribute()->getAttributeCode();
+        $price       = $this->productHelper->extractProductPrice($product, $priceCode);
+    
+        if (true === $setAttributeAsProcessed) {
+            $this->addProcessedAttribute($product, $mappedPrice->getAttribute());
+        }
+        
+        return $price;
+    }
+    
+    
+    /**
+     * @param CatalogProduct $product
+     * @param float          $price
+     * @param float          $specialPrice
+     *
+     * @return bool
+     */
+    protected function validateProductSpecialPrice(CatalogProduct $product, $price, $specialPrice)
+    {
+        $price        = (float) $price;
+        $specialPrice = (float) $specialPrice;
+        
+        if ($specialPrice >= $price) {
+            return false;
+        }
+        
+        if ($product->getSpecialFromDate() && ($product->getSpecialFromDate() > $this->now())) {
+            return false;
+        }
+        
+        if ($product->getSpecialToDate() && ($product->getSpecialToDate() < $this->now())) {
+            return false;
+        }
+        
+        return true;
     }
     
     
