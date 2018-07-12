@@ -47,6 +47,9 @@ abstract class AbstractObserver implements \Magento\Framework\Event\ObserverInte
     /** @var \BitTools\SkyHub\Model\ResourceModel\QueueFactory */
     protected $queueResourceFactory;
     
+    /** @var \Magento\ConfigurableProduct\Model\Product\Type\ConfigurableFactory */
+    protected $typeConfigurableFactory;
+    
     
     public function __construct(
         \BitTools\SkyHub\Helper\Context $context,
@@ -60,7 +63,8 @@ abstract class AbstractObserver implements \Magento\Framework\Event\ObserverInte
         \BitTools\SkyHub\Api\QueueRepositoryInterface $queueRepository,
         \BitTools\SkyHub\Integration\Integrator\Catalog\ProductValidation $productValidation,
         \BitTools\SkyHub\Integration\Integrator\Catalog\CategoryValidation $categoryValidation,
-        \BitTools\SkyHub\Model\ResourceModel\QueueFactory $queueResourceFactory
+        \BitTools\SkyHub\Model\ResourceModel\QueueFactory $queueResourceFactory,
+        \Magento\ConfigurableProduct\Model\Product\Type\ConfigurableFactory $typeConfigurableFactory
     ) {
         $this->context                    = $context;
         $this->storeIterator              = $storeIterator;
@@ -74,6 +78,7 @@ abstract class AbstractObserver implements \Magento\Framework\Event\ObserverInte
         $this->productValidation          = $productValidation;
         $this->categoryValidation         = $categoryValidation;
         $this->queueResourceFactory       = $queueResourceFactory;
+        $this->typeConfigurableFactory    = $typeConfigurableFactory;
     }
     
     

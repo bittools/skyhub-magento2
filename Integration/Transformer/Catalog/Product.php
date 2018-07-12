@@ -262,16 +262,27 @@ class Product extends AbstractProduct
         /**
          * This may stop working further once the method getStockData is deprecated.
          * @todo Change the logic to grab the current and prior stock qty.
+         * @var \Magento\CatalogInventory\Api\Data\StockItemInterface $stockItem
          */
+        $stockItem = $product->getExtensionAttributes()->getStockItem();
+        $status    = $product->getData('stock_data/is_in_stock');
         
-        $qty    = 0;
-        $status = (bool) $product->getData('stock_data/is_in_stock');
+        if (is_null($status)) {
+            $status = $stockItem->getIsInStock();
+        }
         
-        if (true === $status) {
-            $qty = (float) $product->getData('stock_data/qty');
+        if (!$status) {
+            $interface->setQty(0);
+            return $this;
         }
     
-        $interface->setQty($qty);
+        $qty = $product->getData('stock_data/qty');
+        
+        if (is_null($qty)) {
+            $qty = $stockItem->getQty();
+        }
+    
+        $interface->setQty((float) $qty);
         
         return $this;
     }

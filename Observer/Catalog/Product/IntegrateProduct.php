@@ -44,12 +44,7 @@ class IntegrateProduct extends AbstractCatalog
      */
     protected function processIntegrationProduct(\Magento\Catalog\Model\Product $product, $forceQueue = false)
     {
-        /** @var \Magento\ConfigurableProduct\Model\Product\Type\Configurable $typeInstance */
-        $typeInstance = $this->context
-            ->objectManager()
-            ->create(\Magento\ConfigurableProduct\Model\Product\Type\Configurable::class);
-        
-        $parentIds = (array) $typeInstance->getParentIdsByChild($product->getId());
+        $parentIds = (array) $this->typeConfigurableFactory->create()->getParentIdsByChild($product->getId());
         
         /** @var integer $parentId */
         foreach ($parentIds as $parentId) {
