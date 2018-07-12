@@ -6,7 +6,7 @@
 
     <!-- CATALOG EVENTS -->
     <event name="catalog_product_save_after">
-        <observer name="bittools_skyhub_integrate_catalog_product" instance="BitTools\SkyHub\Observer\Catalog\Product\DeleteProduct"/>
+        <observer name="bittools_skyhub_integrate_catalog_product" instance="BitTools\SkyHub\Observer\Catalog\Product\IntegrateProduct"/>
     </event>
     <!--
     The product cannot be deleted from SkyHub when it's already related to any order.
