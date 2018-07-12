@@ -104,8 +104,17 @@ class IntegrateProduct extends AbstractCatalog
         if ($product->getOrigData('promotional_price') != $product->getData('promotional_price')) {
             return true;
         }
+    
+        /**
+         * This may stop working further once the method getStockData is deprecated.
+         * @todo Change the logic to grab the current and prior stock qty.
+         */
+        $origData = (array) $product->getOrigData('quantity_and_stock_status');
         
-        if ($product->getStockData('qty') != $product->getStockData('original_inventory_qty')) {
+        $currentQty = (float) $product->getData('stock_data/qty');
+        $priorQty   = (float) $origData['qty'] ?: $currentQty;
+        
+        if ($currentQty != $priorQty) {
             return true;
         }
         

@@ -18,6 +18,9 @@
         <sequence>
             <Magento_Ui/>
             <Magento_Backend/>
+            <Magento_Sales/>
+            <Magento_Catalog/>
+            <Magento_CatalogInventory/>
         </sequence>
     </module>
 </config>

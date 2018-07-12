@@ -49,7 +49,6 @@ abstract class AbstractProduct extends AbstractTransformer
     /** @var EavOptionHelper */
     protected $eavOptionHelper;
     
-    
     public function __construct(
         Context $context,
         StockState $stockState,

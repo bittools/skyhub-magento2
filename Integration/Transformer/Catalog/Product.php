@@ -259,17 +259,18 @@ class Product extends AbstractProduct
      */
     protected function prepareProductQty(CatalogProduct $product, ProductEntityInterface $interface)
     {
-        /** @var AttributesMapping $mappedAttribute */
         /**
-         * @todo Confirm if it's really unnecessary.
-        $mappedAttribute = $this->getMappedAttribute('qty');
-
-        if (!$mappedAttribute || !$mappedAttribute->getId()) {
-            return $this;
-        }
-        */
+         * This may stop working further once the method getStockData is deprecated.
+         * @todo Change the logic to grab the current and prior stock qty.
+         */
         
-        $qty = (float) $this->stockState->getStockQty($product->getId());
+        $qty    = 0;
+        $status = (bool) $product->getData('stock_data/is_in_stock');
+        
+        if (true === $status) {
+            $qty = (float) $product->getData('stock_data/qty');
+        }
+    
         $interface->setQty($qty);
         
         return $this;
