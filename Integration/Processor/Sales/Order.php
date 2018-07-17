@@ -22,6 +22,7 @@ use BitTools\SkyHub\Integration\Support\Sales\Order\CreateFactory as OrderCreato
 use BitTools\SkyHub\Helper\Sales\Order as OrderHelper;
 use BitTools\SkyHub\Integration\Processor\Sales\Order\Status as StatusProcessor;
 use BitTools\SkyHub\Api\Data\OrderInterfaceFactory;
+use BitTools\SkyHub\Helper\Customer\Attribute\Mapping as CustomerAttributeMappingHelper;
 
 class Order extends AbstractProcessor
 {
@@ -70,6 +71,9 @@ class Order extends AbstractProcessor
 
     /** @var OrderInterfaceFactory */
     protected $orderFactory;
+
+    /** @var CustomerAttributeMappingHelper  */
+    protected $customerAttributeMappingHelper;
     
     /** @var array|AddressInterface[] */
     protected $addresses = [
@@ -91,7 +95,8 @@ class Order extends AbstractProcessor
         OrderCreatorFactory $orderCreatorFactory,
         OrderHelper $orderHelper,
         StatusProcessor $statusProcessor,
-        OrderInterfaceFactory $orderFactory
+        OrderInterfaceFactory $orderFactory,
+        CustomerAttributeMappingHelper $customerAttributeMappingHelper
     )
     {
         parent::__construct($integrationContext);
@@ -108,6 +113,7 @@ class Order extends AbstractProcessor
         $this->orderHelper           = $orderHelper;
         $this->statusProcessor       = $statusProcessor;
         $this->orderFactory          = $orderFactory;
+        $this->customerAttributeMappingHelper = $customerAttributeMappingHelper;
     }
 
 
@@ -447,8 +453,7 @@ class Order extends AbstractProcessor
         $customer->setEmail($email);
         $customer->setDob($dateOfBirth);
 
-        /** @todo Make this method works after customer attributes mapping logic is created. */
-        // $this->setPersonTypeInformation($data, $customer);
+        $this->setPersonTypeInformation($data, $customer);
 
         /** @var string $phone */
         foreach ($phones as $phone) {
@@ -659,10 +664,6 @@ class Order extends AbstractProcessor
      */
     protected function setPersonTypeInformation(array $data, CustomerInterface $customer)
     {
-        /**
-         * @todo Check this entire method.
-         */
-
         //get the vat number
         $vatNumber = $this->arrayExtract($data, 'vat_number');
         
@@ -673,20 +674,22 @@ class Order extends AbstractProcessor
         $customerIsPj = $this->customerIsPj($vatNumber);
 
         //get customer mapped attributes
-        $mappedCustomerAttributes = $this->getMappedAttributes();
+        $mappedCustomerAttributes = $this->customerAttributeMappingHelper->getMappedAttributes();
 
         //if the store has the attribute "person_type" mapped
         if (isset($mappedCustomerAttributes['person_type'])) {
-            $personTypeAttributeId = $mappedCustomerAttributes['person_type']->getAttributeId();
-            $personTypeAttribute = $this->getAttributeById($personTypeAttributeId);
+            $personTypeAttribute = $mappedCustomerAttributes['person_type']->getAttribute();
 
             if ($customerIsPj) {
-                $personTypeAttributeValue = $this->getAttributeMappingOptionMagentoValue('person_type', 'legal_person');
+                $personTypeAttributeValue = $this->customerAttributeMappingHelper
+                    ->getAttributeMappingOptionMagentoValue($mappedCustomerAttributes['person_type']->getId(), 'legal_person');
             } else {
-                $personTypeAttributeValue = $this->getAttributeMappingOptionMagentoValue('person_type', 'physical_person');
+                $personTypeAttributeValue = $this->customerAttributeMappingHelper
+                    ->getAttributeMappingOptionMagentoValue($mappedCustomerAttributes['person_type']->getId(), 'physical_person');
             }
-            
-            $customer->setData($personTypeAttribute->getAttributeCode(), $personTypeAttributeValue);
+            if($personTypeAttributeValue && $personTypeAttributeValue->getId()) {
+                $customer->setCustomAttribute($personTypeAttribute->getAttributeCode(), $personTypeAttributeValue->getMagentoValue());
+            }
         }
 
         if ($customerIsPj) {
@@ -694,29 +697,26 @@ class Order extends AbstractProcessor
             if (isset($mappedCustomerAttributes['cnpj'])) {
                 $mappedAttribute = $mappedCustomerAttributes['cnpj'];
                 $attribute = $this->getAttributeById($mappedAttribute->getAttributeId());
-                $customer->setData($attribute->getAttributeCode(), $vatNumber);
+                $customer->setCustomAttribute($attribute->getAttributeCode(), $vatNumber);
             }
         } else {
             //set the mapped PF attribute value on customer if exists
             if (isset($mappedCustomerAttributes['cpf'])) {
-                $mappedAttribute = $mappedCustomerAttributes['cpf'];
-                $attribute = $this->getAttributeById($mappedAttribute->getAttributeId());
-                $customer->setData($attribute->getAttributeCode(), $vatNumber);
+                $attribute = $mappedCustomerAttributes['cpf']->getAttribute();
+                $customer->setCustomAttribute($attribute->getAttributeCode(), $vatNumber);
             }
         }
 
         //set the mapped IE attribute value on customer if exists
         if (isset($mappedCustomerAttributes['ie'])) {
-            $mappedAttribute = $mappedCustomerAttributes['ie'];
-            $attribute = $this->getAttributeById($mappedAttribute->getAttributeId());
-            $customer->setData($attribute->getAttributeCode(), $this->arrayExtract($data, 'state_registration'));
+            $attribute = $mappedCustomerAttributes['ie']->getAttribute();
+            $customer->setCustomAttribute($attribute->getAttributeCode(), $this->arrayExtract($data, 'state_registration'));
         }
 
         //set the mapped IE attribute value on customer if exists
         if (isset($mappedCustomerAttributes['social_name'])) {
-            $mappedAttribute = $mappedCustomerAttributes['social_name'];
-            $attribute = $this->getAttributeById($mappedAttribute->getAttributeId());
-            $customer->setData($attribute->getAttributeCode(), $this->arrayExtract($data, 'name'));
+            $attribute = $mappedCustomerAttributes['social_name']->getAttribute();
+            $customer->setCustomAttribute($attribute->getAttributeCode(), $this->arrayExtract($data, 'name'));
         }
     }
     

@@ -1,9 +1,10 @@
 <?php
 
-namespace BitTools\SkyHub\Helper\Catalog\Product\Attribute;
+namespace BitTools\SkyHub\Helper\Customer\Attribute;
 
 use BitTools\SkyHub\Helper\Context;
-use BitTools\SkyHub\Model\ResourceModel\Catalog\Product\Attributes\Mapping\Collection as AttributesMappingCollection;
+use BitTools\SkyHub\Model\ResourceModel\Customer\Attributes\Mapping\Collection as AttributesMappingCollection;
+use BitTools\SkyHub\Model\ResourceModel\Customer\Attributes\Mapping\Options\Collection as AttributesMappingOptionsCollection;
 use Magento\Framework\Registry;
 
 class Mapping
@@ -65,7 +66,7 @@ class Mapping
         if (empty($this->mappedAttributes)) {
             $this->mappedAttributes = [];
             
-            /** @var \BitTools\SkyHub\Model\Catalog\Product\Attributes\Mapping $mappedAttribute */
+            /** @var \BitTools\SkyHub\Model\Customer\Attributes\Mapping $mappedAttribute */
             foreach ($this->getMappedAttributesCollection() as $mappedAttribute) {
                 $this->mappedAttributes[$mappedAttribute->getSkyhubCode()] = $mappedAttribute;
             }
@@ -126,5 +127,17 @@ class Mapping
             ->create(AttributesMappingCollection::class);
         
         return $collection;
+    }
+
+    public function getAttributeMappingOptionMagentoValue($customerAttributesMappingId, $skyhubCode) {
+        /** @var AttributesMappingCollection $collection */
+        $collection = $this->context
+            ->objectManager()
+            ->create(AttributesMappingOptionsCollection::class);
+
+        $collection->addFieldToFilter('customer_attributes_mapping_id', $customerAttributesMappingId)
+            ->addFieldToFilter('skyhub_code', $skyhubCode);
+
+        return $collection->getFirstItem();
     }
 }
