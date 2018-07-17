@@ -94,7 +94,18 @@ class Mapping extends AbstractModel implements CustomerAttributeMappingInterface
         
         return $attribute;
     }
-    
+
+    /**
+     * @return EntityAttribute
+     */
+    public function getAttributeByCode($attributeCode)
+    {
+        /** @var EntityAttribute $attribute */
+        $attribute = $this->helperContext->objectManager()->create(EntityAttribute::class);
+        $attribute->load($attributeCode, 'attribute_code');
+
+        return $attribute;
+    }
     
     /**
      * @return string
@@ -125,7 +136,7 @@ class Mapping extends AbstractModel implements CustomerAttributeMappingInterface
      */
     public function getAttributeInstallConfig()
     {
-        $config = (array) $this->skyhubConfig->getAttributeInstallConfig($this->getSkyhubCode());
+        $config = (array) $this->skyhubConfig->getAttributeInstallConfig($this->getSkyhubCode(), 'customer');
         
         foreach ($config as $key => $value) {
             $config[$key] = ('' == $value) ? null : $value;

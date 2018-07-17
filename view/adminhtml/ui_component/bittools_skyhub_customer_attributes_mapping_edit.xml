@@ -15,10 +15,10 @@
         <item name="template" xsi:type="string">templates/form/collapsible</item>
 
         <item name="buttons" xsi:type="array">
-            <item name="add" xsi:type="array">
-                <item name="name" xsi:type="string">add</item>
+            <item name="save" xsi:type="array">
+                <item name="name" xsi:type="string">save</item>
                 <item name="label" xsi:type="string" translate="true">Save Mapping</item>
-                <item name="class" xsi:type="string">primary</item>
+                <item name="class" xsi:type="string">save</item>
                 <item name="url" xsi:type="string">*/*/save</item>
             </item>
         </item>
@@ -36,8 +36,11 @@
                 <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
             </item>
         </argument>
+        <settings>
+            <submitUrl path="bittools_skyhub/customer_attributes_mapping/save"/>
+        </settings>
         <dataProvider class="BitTools\SkyHub\Ui\Component\Form\Customer"
-                      name="bittools_skyhub_customer_attributes_mapping_data_provider">
+                      name="bittools_skyhub_customer_attributes_mapping_data_source">
             <settings>
                 <requestFieldName>id</requestFieldName>
                 <primaryFieldName>id</primaryFieldName>
@@ -48,11 +51,48 @@
         <settings>
             <label/>
         </settings>
-        <field name="skyhub_code" sortOrder="5" formElement="textarea">
+        <field name="skyhub_code" sortOrder="5" formElement="input">
             <settings>
                 <dataType>text</dataType>
                 <label translate="true">SkyHub Code</label>
+                <disabled>true</disabled>
             </settings>
+        </field>
+        <field name="skyhub_label" sortOrder="5" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">SkyHub Label</label>
+                <disabled>true</disabled>
+            </settings>
+        </field>
+        <field name="skyhub_description" sortOrder="5" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">SkyHub Description</label>
+                <disabled>true</disabled>
+            </settings>
+        </field>
+        <field name="attribute_id" sortOrder="10" formElement="select">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">block</item>
+                    <item name="default" xsi:type="number">0</item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>int</dataType>
+                <label translate="true">Magento Customer Attribute</label>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="BitTools\SkyHub\Ui\Component\Listing\Column\Customer\Attributes"/>
+                    </settings>
+                </select>
+            </formElements>
         </field>
     </fieldset>
 </form>

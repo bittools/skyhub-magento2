@@ -25,7 +25,7 @@ class MappingRepository implements CustomerAttributeMappingRepositoryInterface
      *
      * @param SearchCriteriaInterface $searchCriteria
      *
-     * @return \Magento\Catalog\Api\Data\ProductAttributeSearchResultsInterface
+     * @return mixed
      */
     public function getList(SearchCriteriaInterface $searchCriteria)
     {
@@ -55,11 +55,11 @@ class MappingRepository implements CustomerAttributeMappingRepositoryInterface
     
     
     /**
-     * @param Data\ProductAttributeMappingInterface $mapping
+     * @param Data\CustomerAttributeMappingInterface $mapping
      *
      * @return mixed
      */
-    public function save(Data\ProductAttributeMappingInterface $mapping)
+    public function save(Data\CustomerAttributeMappingInterface $mapping)
     {
         $mapping->save();
         return $this;
@@ -67,11 +67,11 @@ class MappingRepository implements CustomerAttributeMappingRepositoryInterface
     
     
     /**
-     * @param Data\ProductAttributeMappingInterface $mapping
+     * @param Data\CustomerAttributeMappingInterface $mapping
      *
      * @return mixed
      */
-    public function delete(Data\ProductAttributeMappingInterface $mapping)
+    public function delete(Data\CustomerAttributeMappingInterface $mapping)
     {
         $mapping->delete();
         return $this;

@@ -1,0 +1,33 @@
+<?php
+$mappingAttributes = $this->getSubMappingAttributeOptions();
+if (!$mappingAttributes) {
+    return;
+}
+?>
+
+<table>
+    <tbody>
+    <?php foreach ($this->getSubMappingAttributeOptions() as $mappingItem) { ?>
+        <tr>
+            <td>
+                <?php echo $mappingItem['skyhub_label']?>
+            </td>
+            <td>
+                <?php
+                $magentoAttribute = $this->getMagentoAttribute();
+                $isSelectAttribute = ($magentoAttribute->usesSource());
+                if ($isSelectAttribute): ?>
+                    <select name="attributes_mapping_options[<?php echo $mappingItem->getSkyhubCode() ?>]">
+                        <?php foreach ($this->getMagentoAttributeOptions() as $magentoItem) { ?>
+                            <option value="<?php echo $magentoItem['value'] ?>" <?php echo($magentoItem['value'] == $mappingItem->getMagentoValue() ? 'selected' : '') ?>><?php echo $magentoItem['label'] ?></option>
+                        <? } ?>
+                    </select>
+                <?php else: ?>
+                    <input type="text" name="attributes_mapping_options[<?php echo $mappingItem->getSkyhubCode() ?>]"
+                           value="<?php echo $mappingItem->getMagentoValue() ?>"/>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php } ?>
+    </tbody>
+</table>

@@ -42,6 +42,8 @@
 
     <preference for="BitTools\SkyHub\Api\CustomerAttributeMappingRepositoryInterface" type="BitTools\SkyHub\Model\Customer\Attributes\MappingRepository"/>
     <preference for="BitTools\SkyHub\Api\Data\CustomerAttributeMappingInterface" type="BitTools\SkyHub\Model\Customer\Attributes\Mapping"/>
+    <preference for="BitTools\SkyHub\Api\CustomerAttributeMappingOptionsRepositoryInterface" type="BitTools\SkyHub\Model\Customer\Attributes\Mapping\OptionsRepository"/>
+    <preference for="BitTools\SkyHub\Api\Data\CustomerAttributeMappingOptionsInterface" type="BitTools\SkyHub\Model\Customer\Attributes\Mapping\Options"/>
 
     <preference for="BitTools\SkyHub\Api\QueueRepositoryInterface" type="BitTools\SkyHub\Model\QueueRepository"/>
     <preference for="BitTools\SkyHub\Api\Data\Data\QueueInterface" type="BitTools\SkyHub\Model\Queue"/>

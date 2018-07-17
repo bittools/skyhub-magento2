@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:BitTools_SkyHub:etc/skyhub.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:BitTools_SkyHub:etc/skyhub.xsd">
     <skyhub>
         <catalog>
             <product>
@@ -48,7 +49,8 @@
                     </attribute>
                     <attribute code="status" enabled="true" cast_type="boolean" required="true" editable="true">
                         <label>Product Status</label>
-                        <description>The product status that identifies if the product is enabled or disabled.</description>
+                        <description>The product status that identifies if the product is enabled or disabled.
+                        </description>
                         <attribute_install_config>
                             <attribute_code>status</attribute_code>
                             <label>Product Status</label>
@@ -79,7 +81,8 @@
                             <required>true</required>
                         </attribute_install_config>
                     </attribute>
-                    <attribute code="promotional_price" enabled="true" required="true" cast_type="float" editable="true">
+                    <attribute code="promotional_price" enabled="true" required="true" cast_type="float"
+                               editable="true">
                         <label>Product Promotional Price</label>
                         <description>The product's current promotional price.</description>
                         <validation/>
@@ -242,5 +245,97 @@
                 </attributes>
             </product>
         </catalog>
+        <customer>
+            <attributes>
+                <attribute code="person_type" enabled="true" required="true" type="varchar" input="text"
+                           editable="true">
+                    <label>Person Type</label>
+                    <description>The customer's person type.</description>
+                    <validation/>
+                    <attribute_install_config>
+                        <attribute_code>person_type</attribute_code>
+                        <label>Person Type</label>
+                        <backend_model/>
+                        <type>int</type>
+                        <input>select</input>
+                        <source_model/>
+                        <required>false</required>
+                        <source>Magento\Eav\Model\Entity\Attribute\Source\Table</source>
+                    </attribute_install_config>
+                    <has_options>true</has_options>
+                    <options>
+                        <physical_person>
+                            <skyhub_code>physical_person</skyhub_code>
+                            <skyhub_label>Physical Person</skyhub_label>
+                            <default_value>1</default_value>
+                        </physical_person>
+                        <legal_person>
+                            <skyhub_code>legal_person</skyhub_code>
+                            <skyhub_label>Legal Person</skyhub_label>
+                            <default_value>2</default_value>
+                        </legal_person>
+                    </options>
+                </attribute>
+                <attribute code="cpf" enabled="true" required="true" type="varchar" input="text" editable="true">
+                    <label>CPF</label>
+                    <description>The product's valid CPF.</description>
+                    <validation/>
+                    <attribute_install_config>
+                        <attribute_code>cpf</attribute_code>
+                        <label>CPF</label>
+                        <backend_model/>
+                        <type>varchar</type>
+                        <input>text</input>
+                        <source_model/>
+                        <required>false</required>
+                    </attribute_install_config>
+                </attribute>
+                <attribute code="cnpj" enabled="true" required="true" type="varchar" input="text" editable="true">
+                    <label>CNPJ</label>
+                    <description>The product's valid CNPJ.</description>
+                    <validation/>
+                    <attribute_install_config>
+                        <attribute_code>cnpj</attribute_code>
+                        <label>CNPJ</label>
+                        <backend_model/>
+                        <type>varchar</type>
+                        <input>text</input>
+                        <source_model/>
+                        <required>false</required>
+                    </attribute_install_config>
+                </attribute>
+                <attribute code="ie" enabled="true" required="true" type="varchar" input="text" editable="true">
+                    <label>IE</label>
+                    <description>The product's valid IE.</description>
+                    <validation/>
+                    <attribute_install_config>
+                        <attribute_code>ie</attribute_code>
+                        <label>IE</label>
+                        <backend_model/>
+                        <type>varchar</type>
+                        <input>text</input>
+                        <source_model/>
+                        <required>false</required>
+                    </attribute_install_config>
+                </attribute>
+                <attribute code="social_name" enabled="true" required="true" type="varchar" input="text" editable="true">
+                    <label>Social Name</label>
+                    <description>The product's valid Social Name.</description>
+                    <validation/>
+                    <attribute_install_config>
+                        <attribute_code>social_name</attribute_code>
+                        <label>Social Name</label>
+                        <backend_model/>
+                        <type>varchar</type>
+                        <input>text</input>
+                        <source_model/>
+                        <required>false</required>
+                    </attribute_install_config>
+                </attribute>
+                <blacklist>
+                    <attribute code="entity_id"/>
+                </blacklist>
+            </attributes>
+        </customer>
     </skyhub>
 </config>

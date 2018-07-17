@@ -8,9 +8,9 @@
  * @author Tiago Sampaio <tiago@tiagosampaio.com>
  */
 
-namespace BitTools\SkyHub\Controller\Adminhtml\Catalog\Product\Attributes\Mapping;
+namespace BitTools\SkyHub\Controller\Adminhtml\Customer\Attributes\Mapping;
 
-use BitTools\SkyHub\Model\Catalog\Product\Attributes\Mapping;
+use BitTools\SkyHub\Model\Customer\Attributes\Mapping;
 
 class Unassociate extends AbstractMapping
 {
@@ -20,7 +20,7 @@ class Unassociate extends AbstractMapping
      *
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'BitTools_SkyHub::skyhub_product_attributes_mapping_save';
+    const ADMIN_RESOURCE = 'BitTools_SkyHub::skyhub_customer_attributes_mapping_unassociate';
     
     
     /**
@@ -31,10 +31,10 @@ class Unassociate extends AbstractMapping
         $mappingId = $this->getRequest()->getParam('id');
     
         /** @var Mapping $mapping */
-        $mapping = $this->productAttributeMappingRepository->get($mappingId);
+        $mapping = $this->customerAttributeMappingRepository->get($mappingId);
         $mapping->setData('attribute_id', null);
         
-        $this->productAttributeMappingRepository->save($mapping);
+        $this->customerAttributeMappingRepository->save($mapping);
         
         /** @var \Magento\Framework\Controller\Result\Redirect $redirectPage */
         $redirectPage = $this->resultFactory->create(\Magento\Framework\Controller\ResultFactory::TYPE_REDIRECT);

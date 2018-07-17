@@ -4,7 +4,7 @@ namespace BitTools\SkyHub\Api;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
 
-interface CustomerAttributeMappingRepositoryInterface
+interface CustomerAttributeMappingOptionsRepositoryInterface
 {
     /**
      * Retrieve all attributes for entity type
@@ -25,19 +25,19 @@ interface CustomerAttributeMappingRepositoryInterface
 
 
     /**
-     * @param Data\CustomerAttributeMappingInterface $mapping
+     * @param Data\CustomerAttributeMappingOptionsInterface $mapping
      *
      * @return mixed
      */
-    public function save(Data\CustomerAttributeMappingInterface $mapping);
+    public function save(Data\CustomerAttributeMappingOptionsInterface $mapping);
 
 
     /**
-     * @param Data\CustomerAttributeMappingInterface $mapping
+     * @param Data\CustomerAttributeMappingOptionsInterface $mapping
      *
      * @return mixed
      */
-    public function delete(Data\CustomerAttributeMappingInterface $mapping);
+    public function delete(Data\CustomerAttributeMappingOptionsInterface $mapping);
 
 
     /**

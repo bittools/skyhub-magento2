@@ -4,6 +4,7 @@
     <body>
         <referenceContainer name="content">
             <uiComponent name="bittools_skyhub_customer_attributes_mapping_edit"/>
+            <block class="BitTools\SkyHub\Block\Adminhtml\Customer\Attributes\Mapping\Options"/>
         </referenceContainer>
     </body>
 </page>
