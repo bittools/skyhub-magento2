@@ -66,10 +66,12 @@ class Save extends AbstractImport
         /** @var bool|OrderInterface $order */
         $order = $this->getOrderProcessor()->createOrder($orderData);
         
-        if (!$order) {
+        if (!$order || !$order->getEntityId()) {
             $this->messageManager->addWarningMessage($this->message->getNotCreatedOrderMessage($referenceCode));
             return false;
         }
+
+        //@todo remove from queue
     
         $this->messageManager->addSuccessMessage($this->message->getOrderCreationMessage($order, $referenceCode));
         return true;

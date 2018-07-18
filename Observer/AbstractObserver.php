@@ -49,6 +49,9 @@ abstract class AbstractObserver implements \Magento\Framework\Event\ObserverInte
     
     /** @var \Magento\ConfigurableProduct\Model\Product\Type\ConfigurableFactory */
     protected $typeConfigurableFactory;
+
+    /** @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface */
+    protected $timezone;
     
     
     public function __construct(
@@ -64,7 +67,8 @@ abstract class AbstractObserver implements \Magento\Framework\Event\ObserverInte
         \BitTools\SkyHub\Integration\Integrator\Catalog\ProductValidation $productValidation,
         \BitTools\SkyHub\Integration\Integrator\Catalog\CategoryValidation $categoryValidation,
         \BitTools\SkyHub\Model\ResourceModel\QueueFactory $queueResourceFactory,
-        \Magento\ConfigurableProduct\Model\Product\Type\ConfigurableFactory $typeConfigurableFactory
+        \Magento\ConfigurableProduct\Model\Product\Type\ConfigurableFactory $typeConfigurableFactory,
+        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone
     ) {
         $this->context                    = $context;
         $this->storeIterator              = $storeIterator;
@@ -79,6 +83,7 @@ abstract class AbstractObserver implements \Magento\Framework\Event\ObserverInte
         $this->categoryValidation         = $categoryValidation;
         $this->queueResourceFactory       = $queueResourceFactory;
         $this->typeConfigurableFactory    = $typeConfigurableFactory;
+        $this->timezone                   = $timezone;
     }
     
     

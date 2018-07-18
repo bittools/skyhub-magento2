@@ -19,7 +19,7 @@ use Magento\Framework\Event\Observer;
 
 class ProcessCompleteStatusOrder extends AbstractSales
 {
-    
+
     /**
      * @param Observer $observer
      */
@@ -27,12 +27,21 @@ class ProcessCompleteStatusOrder extends AbstractSales
     {
         /** @var \Magento\Sales\Api\Data\OrderInterface $order */
         $order = $observer->getData('order');
-        
+
         if (!$this->validateOrder($order)) {
             return;
         }
-        
-        $this->processDeliveredCustomerStatus($order);
+
+        /** @var \BitTools\SkyHub\StoreConfig\SalesOrderStatus $orderStatus */
+        $orderStatus = $this->context->configContext()->salesOrderStatus();
+
+        switch ($order->getStatus()) {
+            case $orderStatus->getDeliveredOrdersStatus():
+                $this->processDeliveredCustomerStatus($order);
+            case $orderStatus->getShipmentExceptionOrderStatus():
+                $this->processShipmentExceptionCustomerStatus($order);
+        }
+
     }
     
     
@@ -43,15 +52,6 @@ class ProcessCompleteStatusOrder extends AbstractSales
      */
     protected function processDeliveredCustomerStatus(\Magento\Sales\Model\Order $order)
     {
-        $configStatus = $this->context
-            ->configContext()
-            ->salesOrderStatus()
-            ->getDeliveredOrdersStatus();
-        
-        if (!$this->statusMatches($configStatus, $order->getStatus())) {
-            return $this;
-        }
-        
         try {
             $this->storeIterator->call($this->orderIntegrator, 'delivery', [$order->getEntityId()], $order->getStore());
         } catch (\Exception $e) {
@@ -60,7 +60,30 @@ class ProcessCompleteStatusOrder extends AbstractSales
         
         return $this;
     }
-    
+
+
+    protected function processShipmentExceptionCustomerStatus(\Magento\Sales\Model\Order $order)
+    {
+        try {
+
+            $datetime = new \DateTime($this->timezone->date()->format('Y-m-d H:i:s'));
+            $currentTime = $datetime->format(\DateTime::ATOM); // Updated ISO8601
+
+            $lastComment = $order->getStatusHistoryCollection()->getFirstItem();
+
+            $this->storeIterator->call(
+                $this->orderIntegrator,
+                'shipmentException',
+                [$order->getEntityId(), $currentTime, $lastComment->getComment()],
+                $order->getStore()
+            );
+
+        } catch (\Exception $e) {
+            $this->context->logger()->critical($e);
+        }
+
+        return $this;
+    }
     
     /**
      * @param \Magento\Sales\Api\Data\OrderInterface $order
