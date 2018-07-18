@@ -39,11 +39,11 @@ class Queue extends AbstractSales
      */
     public function deleteByOrder(OrderInterface $order)
     {
-        if (!$order->getIncrementId()) {
+        if (!$skyhubOrderCode = $order->getExtensionAttributes()->getSkyhubInfo()->getCode()) {
             return false;
         }
         
-        return $this->delete($order->getIncrementId());
+        return $this->delete($skyhubOrderCode);
     }
     
     

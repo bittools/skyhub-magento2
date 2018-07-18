@@ -21,7 +21,7 @@ class IntegrateInvoiceKey extends AbstractSales
         /** @var \BitTools\SkyHub\Api\Data\OrderInterface $relation */
         $relation = $observer->getData('order_relation');
         
-        if (!$relation || !$relation->getId()) {
+        if (!$relation || !$relation->getId() || !$relation->getInvoiceKey()) {
             return;
         }
         
