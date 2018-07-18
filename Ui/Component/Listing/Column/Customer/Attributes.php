@@ -52,13 +52,13 @@ class Attributes extends AbstractOptions
     protected function generateCurrentOptions()
     {
         $customer_attributes = $this->customerFactory->create()->getAttributes();
-        $attributesArrays = array();
+        $attributesArrays = [];
         foreach ($customer_attributes as $cal => $val) {
             if($val->getAttributeId()) {
-                $attributesArrays[] = array(
+                $attributesArrays[] = [
                     'label' => $val->getFrontendLabel() ? $val->getFrontendLabel() : $cal,
                     'value' => $val->getAttributeId()
-                );
+                ];
             }
         }
         return $attributesArrays;

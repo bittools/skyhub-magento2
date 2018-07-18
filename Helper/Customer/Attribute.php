@@ -32,6 +32,12 @@ class Attribute extends AbstractHelper
     /** @var ModuleDataSetupInterface  */
     protected $moduleDataSetupInterface;
 
+    /**
+     * Attribute constructor.
+     * @param Context $context
+     * @param CustomerSetupFactory $customerSetupFactory
+     * @param ModuleDataSetupInterface $moduleDataSetupInterface
+     */
     public function __construct(Context $context,
                                 CustomerSetupFactory $customerSetupFactory,
                                 ModuleDataSetupInterface $moduleDataSetupInterface)
