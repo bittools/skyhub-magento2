@@ -56,7 +56,7 @@ class InstallData implements InstallDataInterface
         /**
          * Install bseller_skyhub_product_attributes_mapping data.
          */
-        $this->installSkyHubRequiredAttributes();
+        $this->installCatalogProductSkyHubRequiredAttributes();
         $this->createAssociatedSalesOrderStatuses($this->getStatuses());
     
         $this->setup()->endSetup();
@@ -68,7 +68,7 @@ class InstallData implements InstallDataInterface
      *
      * @return $this
      */
-    protected function installSkyHubRequiredAttributes()
+    protected function installCatalogProductSkyHubRequiredAttributes()
     {
         $attributes = (array)  $this->skyhubConfigData->getCatalogProductAttributes();
         $table      = (string) $this->getTable('bittools_skyhub_product_attributes_mapping');

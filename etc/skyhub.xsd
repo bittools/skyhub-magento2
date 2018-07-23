@@ -10,6 +10,7 @@
     <xs:complexType name="skyhubConfig">
         <xs:sequence>
             <xs:element minOccurs="0" maxOccurs="unbounded" name="catalog" type="catalogParameters" />
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="customer" type="customerConfig" />
         </xs:sequence>
     </xs:complexType>
     <!-- CATALOG -->
@@ -23,7 +24,18 @@
             <xs:element minOccurs="1" maxOccurs="unbounded" name="attributes" type="productAttributes"/>
         </xs:sequence>
     </xs:complexType>
+    <xs:complexType name="customerConfig">
+        <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="unbounded" name="attributes" type="customerAttributes"/>
+        </xs:sequence>
+    </xs:complexType>
     <xs:complexType name="productAttributes">
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="attribute" type="attributeData"/>
+            <xs:element minOccurs="1" maxOccurs="unbounded" name="blacklist" type="blacklistedAttributes" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="customerAttributes">
         <xs:sequence>
             <xs:element minOccurs="0" maxOccurs="unbounded" name="attribute" type="attributeData"/>
             <xs:element minOccurs="1" maxOccurs="unbounded" name="blacklist" type="blacklistedAttributes" />
@@ -49,6 +61,8 @@
             <xs:element minOccurs="0" maxOccurs="1" name="description"/>
             <xs:element minOccurs="0" maxOccurs="1" name="validation" nillable="false"/>
             <xs:element minOccurs="0" maxOccurs="1" name="attribute_install_config" type="attributeInstallConfig" />
+            <xs:element minOccurs="0" maxOccurs="1" name="has_options" nillable="true" />
+            <xs:element minOccurs="0" maxOccurs="1" name="options" nillable="true" />
         </xs:sequence>
         <xs:attribute name="code" type="xs:string" use="required"/>
         <xs:attribute name="type" type="attributeTypes" />

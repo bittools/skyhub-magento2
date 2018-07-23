@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">bittools_skyhub_customer_attributes_mapping_listing.bittools_skyhub_customer_attributes_mapping_data_source</item>
+        </item>
+    </argument>
+
+    <settings>
+        <spinner>attributes_mapping_columns</spinner>
+        <deps>
+            <dep>bittools_skyhub_customer_attributes_mapping_listing.bittools_skyhub_customer_attributes_mapping_data_source</dep>
+        </deps>
+    </settings>
+
+    <dataSource name="bittools_skyhub_customer_attributes_mapping_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>BitTools_SkyHub::skyhub_customer_attributes_mapping</aclResource>
+        <dataProvider class="BitTools\SkyHub\Ui\Component\DataProvider" name="bittools_skyhub_customer_attributes_mapping_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>false</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filterSearch name="fulltext"/>
+        <filters name="listing_filters">
+            <argument name="data" xsi:type="array">
+                <item name="observers" xsi:type="array">
+                    <item name="column" xsi:type="string">column</item>
+                </item>
+            </argument>
+            <settings>
+                <templates>
+                    <filters>
+                        <select>
+                            <param name="template" xsi:type="string">ui/grid/filters/elements/ui-select</param>
+                            <param name="component" xsi:type="string">Magento_Ui/js/form/element/ui-select</param>
+                        </select>
+                    </filters>
+                </templates>
+            </settings>
+        </filters>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+
+    <columns name="attributes_mapping_columns">
+        <settings>
+            <childDefaults>
+                <param name="fieldAction" xsi:type="array">
+                    <item name="provider" xsi:type="string">bittools_skyhub_customer_attributes_mapping_listing.bittools_skyhub_customer_attributes_mapping_listing.attributes_mapping_columns_editor</item>
+                    <item name="target" xsi:type="string">startEdit</item>
+                    <item name="params" xsi:type="array">
+                        <item name="0" xsi:type="string">${ $.$data.rowIndex }</item>
+                        <item name="1" xsi:type="boolean">true</item>
+                    </item>
+                </param>
+            </childDefaults>
+        </settings>
+        <selectionsColumn name="ids">
+            <settings>
+                <indexField>id</indexField>
+                <resizeEnabled>true</resizeEnabled>
+                <resizeDefaultWidth>55</resizeDefaultWidth>
+            </settings>
+        </selectionsColumn>
+        <column name="skyhub_code">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">SkyHub Code</label>
+            </settings>
+        </column>
+        <column name="attribute_id">
+            <settings>
+                <options class="BitTools\SkyHub\Model\Config\Source\Customer\Attributes" />
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Magento Attribute ID</label>
+            </settings>
+        </column>
+        <column name="skyhub_label">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">SkyHub Label</label>
+            </settings>
+        </column>
+        <column name="skyhub_description">
+            <settings>
+                <filter>text</filter>
+                <editor>
+                    <validation>
+                        <rule name="required-entry" xsi:type="boolean">true</rule>
+                    </validation>
+                    <editorType>textarea</editorType>
+                </editor>
+                <label translate="true">SkyHub Description</label>
+            </settings>
+        </column>
+        <column name="required" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <options class="Magento\Config\Model\Config\Source\Yesno"/>
+                <filter>select</filter>
+                <!--
+                <editor>
+                    <editorType>select</editorType>
+                </editor>
+                -->
+                <dataType>select</dataType>
+                <label translate="true">Required</label>
+            </settings>
+        </column>
+        <actionsColumn name="actions" class="BitTools\SkyHub\Ui\Component\Listing\Column\Customer\Attributes\MappingActions">
+            <settings>
+                <indexField>id</indexField>
+                <resizeEnabled>false</resizeEnabled>
+                <resizeDefaultWidth>107</resizeDefaultWidth>
+            </settings>
+        </actionsColumn>
+    </columns>
+</listing>
