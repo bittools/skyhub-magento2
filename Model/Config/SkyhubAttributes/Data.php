@@ -31,7 +31,7 @@ class Data extends ConfigData
      */
     public function isAttributeCodeInBlacklist($attributeCode, $entityType = 'catalog_product')
     {
-        $blacklist  = $this->getBlacklistedAttributes();
+        $blacklist  = $this->getEntityBlacklistedAttributes($entityType);
         $attributes = isset($blacklist[$entityType]) ? $blacklist[$entityType] : [];
 
         return in_array($attributeCode, $attributes);
