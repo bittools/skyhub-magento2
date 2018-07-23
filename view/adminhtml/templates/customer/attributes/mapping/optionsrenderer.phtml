@@ -33,7 +33,7 @@ if (!$mappingAttributes) {
                     <select name="attributes_mapping_options[<?php echo $mappingItem->getSkyhubCode() ?>]">
                         <?php foreach ($this->getMagentoAttributeOptions() as $magentoItem) { ?>
                             <option value="<?php echo $magentoItem['value'] ?>" <?php echo($magentoItem['value'] == $mappingItem->getMagentoValue() ? 'selected' : '') ?>><?php echo $magentoItem['label'] ?></option>
-                        <? } ?>
+                        <?php } ?>
                     </select>
                 <?php else: ?>
                     <input type="text" name="attributes_mapping_options[<?php echo $mappingItem->getSkyhubCode() ?>]"
