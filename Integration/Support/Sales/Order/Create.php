@@ -466,9 +466,21 @@ class Create
         /* Just like adding products from Magento admin grid */
         $products = (array) $this->arrayExtract($data, 'products', []);
 
+        $inventoryErrors = [];
+
         /** @var array $product */
         foreach ($products as $item) {
-            $orderCreator->addProductByData($item);
+            try {
+                $orderCreator->addProductByData($item);
+            } catch (\Magento\Framework\Exception\LocalizedException $e) {
+                $inventoryErrors[] = $e->getMessage();
+            }
+        }
+
+        if ($inventoryErrors) {
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __(implode('.\n', $inventoryErrors))
+            );
         }
         
         $this->registerDiscount($orderData);
