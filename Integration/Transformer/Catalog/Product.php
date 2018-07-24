@@ -313,13 +313,13 @@ class Product extends AbstractProduct
          * Add Promotional Price.
          */
         $specialPrice = $this->getProductPrice($product, 'promotional_price');
-        
+
         if ($this->validateProductSpecialPrice($product, $price, $specialPrice)) {
             $specialPrice = (float) $specialPrice;
         } else {
             $specialPrice = null;
         }
-        
+
         $interface->setPromotionalPrice($specialPrice);
         
         return $this;
@@ -358,7 +358,11 @@ class Product extends AbstractProduct
     {
         $price        = (float) $price;
         $specialPrice = (float) $specialPrice;
-        
+
+        if (empty($specialPrice)) {
+            return false;
+        }
+
         if ($specialPrice >= $price) {
             return false;
         }
