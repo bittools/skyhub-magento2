@@ -54,6 +54,8 @@ class IntegrateProduct extends AbstractCatalog
             if (!$product) {
                 continue;
             }
+
+            $product->setData('force_integration', true);
             
             $this->processIntegrationProduct($product, true);
         }
@@ -63,7 +65,7 @@ class IntegrateProduct extends AbstractCatalog
         }
         
         $hasActiveIntegrateOnSaveFlag = $this->context->configContext()->catalog()->hasActiveIntegrateOnSaveFlag();
-        if ($hasActiveIntegrateOnSaveFlag && $this->hasStockOrPriceUpdate($product)) {
+        if ($hasActiveIntegrateOnSaveFlag && ($this->hasStockOrPriceUpdate($product) || $product->getData('force_integration'))) {
             /** Create or Update Product */
             $this->productIntegrator->createOrUpdate($product);
         }

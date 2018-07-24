@@ -5,7 +5,7 @@
     </event>
 
     <!-- CATALOG EVENTS -->
-    <event name="catalog_product_save_after">
+    <event name="catalog_product_save_commit_after">
         <observer name="bittools_skyhub_integrate_catalog_product" instance="BitTools\SkyHub\Observer\Catalog\Product\IntegrateProduct"/>
     </event>
     <!--
