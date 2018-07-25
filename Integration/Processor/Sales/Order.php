@@ -693,7 +693,7 @@ class Order extends AbstractProcessor
             //set the mapped PJ attribute value on customer if exists
             if (isset($mappedCustomerAttributes['cnpj'])) {
                 $mappedAttribute = $mappedCustomerAttributes['cnpj'];
-                $attribute = $this->getAttributeById($mappedAttribute->getAttributeId());
+                $attribute = $mappedAttribute->getAttributeById($mappedAttribute->getAttributeId());
                 $customer->setCustomAttribute($attribute->getAttributeCode(), $vatNumber);
             }
         } else {
