@@ -195,6 +195,23 @@ class Create
     }
 
 
+    public function setSkyhubData($data)
+    {
+        $data = [
+            'order' => [
+                'skyhub_code'       => $this->arrayExtract($data, 'code'),
+                'skyhub_channel'    => $this->arrayExtract($data, 'channel'),
+                'skyhub_data'       => $data,
+                'skyhub_interest'   => $this->arrayExtract($data, 'interest'),
+            ]
+        ];
+
+        $this->merge($data);
+
+        return $this;
+    }
+
+
     /**
      * @param null  $title
      * @param null  $carrier
@@ -482,7 +499,8 @@ class Create
                 __(implode('.\n', $inventoryErrors))
             );
         }
-        
+
+        $this->registerSkyhubData($orderData);
         $this->registerDiscount($orderData);
         $this->registerInterest($orderData);
 
@@ -514,6 +532,22 @@ class Create
 
         $orderCreator->initRuleData()
             ->saveQuote();
+
+        return $this;
+    }
+
+
+    /**
+     * @param $orderData
+     *
+     * @return $this
+     */
+    protected function registerSkyhubData($orderData)
+    {
+        $this->getQuote()->setSkyhubCode($this->arrayExtract($orderData, 'skyhub_code'));
+        $this->getQuote()->setSkyhubChannel($this->arrayExtract($orderData, 'skyhub_channel'));
+        $this->getQuote()->setSkyhubData($this->arrayExtract($orderData, 'skyhub_data'));
+        $this->getQuote()->setSkyhubInterest($this->arrayExtract($orderData, 'skyhub_interest'));
 
         return $this;
     }
