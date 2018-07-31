@@ -195,6 +195,11 @@ class Create
     }
 
 
+    /**
+     * @param $data
+     *
+     * @return $this
+     */
     public function setSkyhubData($data)
     {
         $data = [

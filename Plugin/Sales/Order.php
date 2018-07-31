@@ -30,8 +30,12 @@ class Order
 
     /**
      * Order constructor.
-     *
-     * @param OrderRelationRepositoryInterface $orderRelationRepository
+     * 
+     * @param OrderRepositoryInterface $orderRepository
+     * @param SkyhubOrderRepositoryInterface $orderRelationRepository
+     * @param SkyhubOrderFactory $skyhubOrderFactory
+     * @param SkyhubOrderRepositoryInterface $skyhubOrderRepository
+     * @param Quote $quoteSession
      */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
