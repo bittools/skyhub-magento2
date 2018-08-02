@@ -2,112 +2,52 @@
 
 namespace BitTools\SkyHub\Plugin\Sales;
 
-use BitTools\SkyHub\Api\OrderRepositoryInterface as OrderRelationRepositoryInterface;
-use Magento\Sales\Api\OrderRepositoryInterface;
-use Magento\Sales\Api\Data\OrderInterface;
-use BitTools\SkyHub\Api\Data\OrderInterfaceFactory as SkyhubOrderFactory;
-use BitTools\SkyHub\Api\OrderRepositoryInterface as SkyhubOrderRepositoryInterface;
-use BitTools\SkyHub\Model\Backend\Session\Quote;
-
 class OrderRepository
 {
-    /** @var OrderRepositoryInterface */
-    protected $orderRepository;
-
-    /** @var OrderRelationRepositoryInterface */
-    protected $orderRelationRepository;
-
-    /** @var SkyhubOrderFactory */
-    protected $skyhubOrderFactory;
-
-    /** @var Quote  */
-    protected $quoteSession;
-
-    /** @var SkyhubOrderRepositoryInterface  */
-    protected $skyhubOrderRepository;
+    /** @var \BitTools\SkyHub\Support\Order\ExtensionAttribute */
+    protected $skyhubExtensionAttribute;
 
 
     /**
      * OrderRepository constructor.
      *
-     * @param OrderRelationRepositoryInterface $orderRelationRepository
-     * @param OrderInterfaceFactory $orderFactory
-     * @param Quote $quoteSession
+     * @param \BitTools\SkyHub\Support\Order\ExtensionAttribute $extensionAttribute
      */
     public function __construct(
-        OrderRepositoryInterface $orderRepository,
-        OrderRelationRepositoryInterface $orderRelationRepository,
-        SkyhubOrderFactory $skyhubOrderFactory,
-        SkyhubOrderRepositoryInterface $skyhubOrderRepository,
-        Quote $quoteSession
+        \BitTools\SkyHub\Support\Order\ExtensionAttribute $extensionAttribute
     ) {
-        $this->orderRepository          = $orderRepository;
-        $this->orderRelationRepository  = $orderRelationRepository;
-        $this->skyhubOrderFactory       = $skyhubOrderFactory;
-        $this->skyhubOrderRepository    = $skyhubOrderRepository;
-        $this->quoteSession             = $quoteSession;
+        $this->skyhubExtensionAttribute = $extensionAttribute;
     }
 
 
     /**
-     * @param OrderRepositoryInterface $subject
-     * @param OrderInterface           $result
+     * Set SkyHub data in order extension attributes
      *
-     * @return OrderInterface
+     * @param \Magento\Sales\Api\OrderRepositoryInterface $subject
+     * @param \Magento\Sales\Api\Data\OrderInterface $result
+     *
+     * @return mixed
      */
-    public function afterGet(OrderRepositoryInterface $subject, OrderInterface $result)
-    {
-        /** @var \BitTools\SkyHub\Api\Data\OrderInterface $relation */
-        $relation = $this->orderRelationRepository->getByOrderId($result->getEntityId());
-        $result->getExtensionAttributes()->setSkyhubInfo($relation);
-
-        return $result;
+    public function afterGet(
+        \Magento\Sales\Api\OrderRepositoryInterface $subject,
+        \Magento\Sales\Api\Data\OrderInterface $result
+    ) {
+//        return $subject;
+        return $this->skyhubExtensionAttribute->get($result);
     }
 
 
-    /**
-     * Create SkyHub data in extension attributes
-     *
-     * @param OrderRepositoryInterface $subject
-     * @param OrderInterface $result
 
-     * @return OrderInterface
-     * @throws \Exception
-     */
-    public function afterSave(OrderRepositoryInterface $subject, OrderInterface $result)
-    {
-        try {
+    public function afterGetList(
+        \Magento\Sales\Api\OrderRepositoryInterface $subject,
+        $entities
+    ) {
 
-            $relation = $result->getExtensionAttributes()->getSkyhubInfo();
-
-            if (!$relation) {
-
-                /** @var BitTools\SkyHub\Model\Backend\Session\Quote $sessionQuote */
-                $sessionQuote = $this->quoteSession->getQuote();
-
-                if (!$sessionQuote) {
-                    return $result;
-                }
-
-                /** @var \BitTools\SkyHub\Api\Data\OrderInterface $relation */
-                $relation = $this->skyhubOrderFactory->create();
-                $relation->setOrderId($result->getId())
-                    ->setStoreId($result->getStoreId())
-                    ->setCode($sessionQuote->getSkyhubCode())
-                    ->setChannel($sessionQuote->getSkyhubChannel())
-                    ->setInterest($sessionQuote->getSkyhubInterest())
-                    ->setDataSource(json_encode($sessionQuote->getSkyhubData()));
-
-            }
-
-            $this->skyhubOrderRepository->save($relation);
-            $result->getExtensionAttributes()->setSkyhubInfo($relation);
-
-            return $result;
-
-        } catch (\Magento\Framework\Exception\AlreadyExistsException $e) {
-            throw new \Exception($e);
+        foreach ($entities->getItems() as $entity) {
+//            $entity = $this->skyhubExtensionAttribute->get($entity);
+            $this->afterGet($subject, $entity);
         }
 
+        return $entities;
     }
 }
