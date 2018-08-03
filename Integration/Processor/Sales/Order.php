@@ -214,6 +214,7 @@ class Order extends AbstractProcessor
             ->setPaymentMethod($paymentMethod)
             ->setDiscountAmount($discountAmount)
             ->setInterestAmount($interestAmount)
+            ->setSkyhubData($data)
             ->addOrderAddress($this->getBillingAddress(), self::ADDRESS_TYPE_BILLING)
             ->addOrderAddress($this->getShippingAddress(), self::ADDRESS_TYPE_SHIPPING)
             ->setComment(__('This order was automatically created by SkyHub import process.'));
@@ -246,21 +247,6 @@ class Order extends AbstractProcessor
         if (!$this->validateCreatedOrder($order)) {
             return false;
         }
-
-        /** @var \BitTools\SkyHub\Api\Data\OrderInterface $relation */
-        $relation = $this->orderFactory->create();
-        $relation->setOrderId($order->getId())
-            ->setStoreId($order->getStoreId())
-            ->setCode($code)
-            ->setChannel($channel)
-            ->setInterest($interestAmount)
-            ->setDataSource(json_encode($data));
-
-        $this->skyhubOrderRepository->save($relation);
-
-        $order->getExtensionAttributes()->setSkyhubInfo($relation);
-
-        $this->orderRepository->save($order);
 
         $order->setData('is_created', true);
 
@@ -692,8 +678,7 @@ class Order extends AbstractProcessor
         if ($customerIsPj) {
             //set the mapped PJ attribute value on customer if exists
             if (isset($mappedCustomerAttributes['cnpj'])) {
-                $mappedAttribute = $mappedCustomerAttributes['cnpj'];
-                $attribute = $mappedAttribute->getAttributeById($mappedAttribute->getAttributeId());
+                $attribute = $mappedCustomerAttributes['cnpj']->getAttribute();
                 $customer->setCustomAttribute($attribute->getAttributeCode(), $vatNumber);
             }
         } else {

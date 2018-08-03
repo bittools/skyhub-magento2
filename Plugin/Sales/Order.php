@@ -2,40 +2,37 @@
 
 namespace BitTools\SkyHub\Plugin\Sales;
 
-use BitTools\SkyHub\Api\OrderRepositoryInterface as OrderRelationRepositoryInterface;
-use Magento\Sales\Api\Data\OrderInterface;
-
 class Order
 {
-    
-    /** @var OrderRelationRepositoryInterface */
-    protected $orderRelationRepository;
+
+    /** @var ExtensionAttribute */
+    protected $skyhubExtensionAttribute;
 
 
     /**
      * Order constructor.
      *
-     * @param OrderRelationRepositoryInterface $orderRelationRepository
+     * @param \BitTools\SkyHub\Support\Order\ExtensionAttribute $extensionAttribute
      */
     public function __construct(
-        OrderRelationRepositoryInterface $orderRelationRepository
+        \BitTools\SkyHub\Support\Order\ExtensionAttribute $extensionAttribute
     ) {
-        $this->orderRelationRepository = $orderRelationRepository;
+        $this->skyhubExtensionAttribute = $extensionAttribute;
     }
-    
-    
+
+
     /**
-     * @param OrderInterface $subject
-     * @param OrderInterface $result
+     * Set SkyHub data in order extension attributes
      *
-     * @return OrderInterface
+     * @param \Magento\Sales\Api\Data\OrderInterface $subject
+     * @param \Magento\Sales\Api\Data\OrderInterface $result
+     *
+     * @return \Magento\Sales\Api\Data\OrderInterface
      */
-    public function afterSave(OrderInterface $subject, OrderInterface $result)
-    {
-        /** @var \BitTools\SkyHub\Api\Data\OrderInterface $relation */
-        $relation = $result->getExtensionAttributes()->getSkyhubInfo();
-        $this->orderRelationRepository->save($relation);
-        
-        return $result;
+    public function afterLoad(
+        \Magento\Sales\Api\Data\OrderInterface $subject,
+        \Magento\Sales\Api\Data\OrderInterface $result
+    ) {
+        return $this->skyhubExtensionAttribute->get($result);
     }
 }

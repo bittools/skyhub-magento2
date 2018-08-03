@@ -2,40 +2,52 @@
 
 namespace BitTools\SkyHub\Plugin\Sales;
 
-use BitTools\SkyHub\Api\OrderRepositoryInterface as OrderRelationRepositoryInterface;
-use Magento\Sales\Api\OrderRepositoryInterface;
-use Magento\Sales\Api\Data\OrderInterface;
-
 class OrderRepository
 {
-
-    /** @var OrderRelationRepositoryInterface */
-    protected $orderRelationRepository;
+    /** @var \BitTools\SkyHub\Support\Order\ExtensionAttribute */
+    protected $skyhubExtensionAttribute;
 
 
     /**
-     * Order constructor.
+     * OrderRepository constructor.
      *
-     * @param OrderRelationRepositoryInterface $orderRelationRepository
+     * @param \BitTools\SkyHub\Support\Order\ExtensionAttribute $extensionAttribute
      */
-    public function __construct(OrderRelationRepositoryInterface $orderRelationRepository)
-    {
-        $this->orderRelationRepository = $orderRelationRepository;
+    public function __construct(
+        \BitTools\SkyHub\Support\Order\ExtensionAttribute $extensionAttribute
+    ) {
+        $this->skyhubExtensionAttribute = $extensionAttribute;
     }
 
 
     /**
-     * @param OrderRepositoryInterface $subject
-     * @param OrderInterface           $result
+     * Set SkyHub data in order extension attributes
      *
-     * @return OrderInterface
+     * @param \Magento\Sales\Api\OrderRepositoryInterface $subject
+     * @param \Magento\Sales\Api\Data\OrderInterface $result
+     *
+     * @return mixed
      */
-    public function afterGet(OrderRepositoryInterface $subject, OrderInterface $result)
-    {
-        /** @var \BitTools\SkyHub\Api\Data\OrderInterface $relation */
-        $relation = $this->orderRelationRepository->getByOrderId($result->getEntityId());
-        $result->getExtensionAttributes()->setSkyhubInfo($relation);
+    public function afterGet(
+        \Magento\Sales\Api\OrderRepositoryInterface $subject,
+        \Magento\Sales\Api\Data\OrderInterface $result
+    ) {
+//        return $subject;
+        return $this->skyhubExtensionAttribute->get($result);
+    }
 
-        return $result;
+
+
+    public function afterGetList(
+        \Magento\Sales\Api\OrderRepositoryInterface $subject,
+        $entities
+    ) {
+
+        foreach ($entities->getItems() as $entity) {
+//            $entity = $this->skyhubExtensionAttribute->get($entity);
+            $this->afterGet($subject, $entity);
+        }
+
+        return $entities;
     }
 }
