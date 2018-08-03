@@ -39,18 +39,23 @@ class Create
     /** @var IntegrationContext */
     protected $context;
 
+    /** @var \Magento\Quote\Api\CartRepositoryInterface */
+    protected $quoteRepository;
+
 
     /**
      * Create constructor.
-     *
      * @param IntegrationContext $context
-     * @param null               $store
-     *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @param \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
+     * @param null $store
      */
-    public function __construct(IntegrationContext $context, $store = null)
+    public function __construct(
+        IntegrationContext $context,
+        \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
+        $store = null)
     {
         $this->context = $context;
+        $this->quoteRepository = $quoteRepository;
 
         $data = [
             'session' => [
@@ -423,6 +428,11 @@ class Create
 
                 $eventName = 'bittools_skyhub_order_import_success';
             } catch (\Exception $e) {
+                /** remove quote */
+                $this->quoteRepository->delete($this->getQuote());
+                $this->getSession()->clear();
+                /** end */
+
                 $this->context->helperContext()->logger()->critical($e);
                 $eventName = 'bittools_skyhub_order_import_fail';
             }
