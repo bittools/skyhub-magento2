@@ -94,7 +94,7 @@ class ExtensionAttribute implements ExtensionAttributeInterface
                 /** @var \BitTools\SkyHub\Model\Backend\Session\Quote $sessionQuote */
                 $sessionQuote = $this->quoteSession->getQuote();
 
-                if (!$sessionQuote) {
+                if (!$sessionQuote || !$sessionQuote->getSkyhubCode()) {
                     return $order;
                 }
 
