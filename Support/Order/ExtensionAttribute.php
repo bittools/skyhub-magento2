@@ -2,7 +2,9 @@
 
 namespace BitTools\SkyHub\Support\Order;
 
-class ExtensionAttribute
+use BitTools\SkyHub\Support\Api\ExtensionAttributeInterface;
+
+class ExtensionAttribute implements ExtensionAttributeInterface
 {
 
     /** @var \Magento\Sales\Api\OrderRepositoryInterface  */
@@ -51,7 +53,7 @@ class ExtensionAttribute
      *
      * @return \Magento\Sales\Api\Data\OrderInterface
      */
-    public function get($order)
+    public function get(\Magento\Sales\Api\Data\OrderInterface $order)
     {
         /** @var \BitTools\SkyHub\Api\OrderRepositoryInterface $relation */
         $relation = $this->skyhubOrderRepository->getByOrderId($order->getEntityId());
@@ -80,7 +82,7 @@ class ExtensionAttribute
      * @return \Magento\Sales\Api\Data\OrderInterface
      * @throws \Exception
      */
-    public function save($order)
+    public function save(\Magento\Sales\Api\Data\OrderInterface $order)
     {
         try {
 
