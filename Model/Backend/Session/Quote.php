@@ -56,11 +56,13 @@ class Quote extends \Magento\Backend\Model\Session\Quote
      */
     public function clear()
     {
-        $this->_quote = null;
-        $this->_order = null;
-        $this->_store = null;
+        if ($this->getQuote()->getSkyhubCode()) {
+            $this->_quote = null;
+            $this->_order = null;
+            $this->_store = null;
 
-        $this->clearStorage();
+            $this->clearStorage();
+        }
 
         return $this;
     }

@@ -17,10 +17,10 @@ class Relation implements RelationInterface
     /**
      * Relation constructor.
      *
-     * @param \BitTools\SkyHub\Support\Order\ExtensionAttribute $extensionAttribute
+     * @param \BitTools\SkyHub\Support\Order\ExtensionAttribute\Proxy $extensionAttribute
      */
     public function __construct(
-        \BitTools\SkyHub\Support\Order\ExtensionAttribute $extensionAttribute
+        \BitTools\SkyHub\Support\Order\ExtensionAttribute\Proxy $extensionAttribute
     ) {
         $this->skyhubExtensionAttribute = $extensionAttribute;
     }

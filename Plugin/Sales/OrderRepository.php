@@ -32,7 +32,6 @@ class OrderRepository
         \Magento\Sales\Api\OrderRepositoryInterface $subject,
         \Magento\Sales\Api\Data\OrderInterface $result
     ) {
-//        return $subject;
         return $this->skyhubExtensionAttribute->get($result);
     }
 
@@ -44,7 +43,6 @@ class OrderRepository
     ) {
 
         foreach ($entities->getItems() as $entity) {
-//            $entity = $this->skyhubExtensionAttribute->get($entity);
             $this->afterGet($subject, $entity);
         }
 
