@@ -50,17 +50,14 @@ class Queue extends AbstractCron
             $helper     = $this->createObject(\BitTools\SkyHub\Helper\Sales\Order\Created\Message::class);
             $skyhubCode = $this->arrayExtract($orderData, 'code');
             
-            try {
+
                 /** @var \Magento\Sales\Api\Data\OrderInterface $order */
-                $order = $orderProcessor->createOrder($orderData);
-            } catch (\Exception $e) {
-                /** The log is already created in the createOrder method. */
-                continue;
-            }
-            
+            $order = $orderProcessor->createOrder($orderData);
             if (!$order || !$order->getEntityId()) {
-                $schedule->setMessages($helper->getNotCreatedOrderMessage($skyhubCode));
-                return;
+                $message = $schedule->getMessages();
+                $message .= ($helper->getNotCreatedOrderMessage($skyhubCode));
+                $schedule->setMessages($message);
+                continue;
             }
             
             $message  = $schedule->getMessages();
