@@ -11,11 +11,13 @@ class SkyhubDataSource extends AbstractOrder implements TabInterface
     /** @var string */
     protected $_template = 'order/view/tab/skyhub_data_source.phtml';
 
+
     /**
-     * @return bool|string
+     * @param bool $pretty
+     * @return bool|mixed|string
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function getEncodedJsonDataSource()
+    public function getEncodedJsonDataSource($pretty = false)
     {
         if (!$this->getOrder()) {
             return false;
@@ -29,9 +31,12 @@ class SkyhubDataSource extends AbstractOrder implements TabInterface
         $info = $this->getOrder()->getExtensionAttributes()->getSkyhubInfo();
         
         $decoded = json_decode($info->getDataSource());
-        $pretty  = json_encode($decoded, JSON_PRETTY_PRINT);
-        
-        return $pretty;
+
+        if ($pretty) {
+            $decoded  = json_encode($decoded, JSON_PRETTY_PRINT);
+        }
+
+        return $decoded;
     }
 
     /**
@@ -58,6 +63,10 @@ class SkyhubDataSource extends AbstractOrder implements TabInterface
      */
     public function canShowTab()
     {
+        if (!$this->getEncodedJsonDataSource()) {
+            return false;
+        }
+
         return true;
     }
     
