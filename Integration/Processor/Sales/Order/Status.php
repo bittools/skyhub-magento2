@@ -85,8 +85,12 @@ class Status extends AbstractProcessor
         $order->setState($state)
             ->setData('is_updated', true)
             ->addStatusHistoryComment($message, true);
-        
-        $this->orderRepository->save($order);
+
+        try {
+            $this->orderRepository->save($order);
+        } catch (\Exception $e) {
+            return false;
+        }
 
         return true;
     }
