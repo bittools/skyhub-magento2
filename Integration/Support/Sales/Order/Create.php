@@ -264,8 +264,8 @@ class Create
         $data = [
             'order' => [
                 'account' => [
-                    'group_id' => $customer->getGroupId(),
-                    'email'    => $customer->getEmail()
+                    'group_id'      => $customer->getGroupId(),
+                    'email'         => $customer->getEmail(),
                 ]
             ],
             'session' => [
@@ -422,27 +422,30 @@ class Create
         $order     = null;
 
         if (!empty($orderData)) {
+
+            $this->getSession()->clear();
             $this->initSession($this->arrayExtract($orderData, 'session'));
 
-            $this->processQuote($orderData);
-            $paymentData = $this->arrayExtract($orderData, 'payment');
-
-            if (!empty($paymentData)) {
-                $this->getOrderCreator()
-                    ->setPaymentData($paymentData);
-
-                $this->getQuote()
-                    ->getPayment()
-                    ->addData($paymentData);
-            }
-
-            $this->context->eventManager()->dispatch('bittools_skyhub_order_import_before', [
-                'order'      => $order,
-                'order_data' => $orderData,
-                'creator'    => $this,
-            ]);
-
             try {
+
+                $this->processQuote($orderData);
+                $paymentData = $this->arrayExtract($orderData, 'payment');
+
+                if (!empty($paymentData)) {
+                    $this->getOrderCreator()
+                        ->setPaymentData($paymentData);
+
+                    $this->getQuote()
+                        ->getPayment()
+                        ->addData($paymentData);
+                }
+
+                $this->context->eventManager()->dispatch('bittools_skyhub_order_import_before', [
+                    'order'      => $order,
+                    'order_data' => $orderData,
+                    'creator'    => $this,
+                ]);
+
                 /** @var Order $order */
                 $order = $this->getOrderCreator()
                     ->importPostData($this->arrayExtract($orderData, 'order'))
@@ -452,7 +455,7 @@ class Create
             } catch (\Exception $e) {
                 /** remove quote */
                 $this->quoteRepository->delete($this->getQuote());
-                $this->getSession()->clear();
+//                $this->getSession()->clear();
                 /** end */
 
                 $this->context->helperContext()->logger()->critical($e);

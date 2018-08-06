@@ -161,6 +161,7 @@ class Order extends AbstractProcessor
      */
     protected function processOrderCreation(array $data)
     {
+        $order   = null;
         $code    = $this->arrayExtract($data, 'code');
         $channel = $this->arrayExtract($data, 'channel');
         $orderId = $this->getOrderId($code);

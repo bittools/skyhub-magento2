@@ -51,7 +51,7 @@ class Queue extends AbstractCron
             $skyhubCode = $this->arrayExtract($orderData, 'code');
             
 
-                /** @var \Magento\Sales\Api\Data\OrderInterface $order */
+            /** @var \Magento\Sales\Api\Data\OrderInterface $order */
             $order = $orderProcessor->createOrder($orderData);
             if (!$order || !$order->getEntityId()) {
                 $message = $schedule->getMessages();
