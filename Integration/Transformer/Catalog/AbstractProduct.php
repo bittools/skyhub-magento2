@@ -78,15 +78,16 @@ abstract class AbstractProduct extends AbstractTransformer
      */
     protected function getProductGalleryImages(\Magento\Catalog\Model\Product $product)
     {
+        $images = [];
+
         /** @var array $gallery */
         $gallery = $product->getMediaGalleryEntries();
-    
+
         if (!$gallery || !count($gallery)) {
-            return $this;
+            return $images;
         }
         
-        $images = [];
-    
+
         /** @var \Magento\Catalog\Model\Product\Gallery\Entry $galleryImage */
         foreach ($gallery as $galleryImage) {
             /**

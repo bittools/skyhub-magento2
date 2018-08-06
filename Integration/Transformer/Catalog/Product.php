@@ -271,7 +271,7 @@ class Product extends AbstractProduct
             $status = $stockItem->getIsInStock();
         }
         
-        if (!$status) {
+        if (!$status || !$stockItem) {
             $interface->setQty(0);
             return $this;
         }
