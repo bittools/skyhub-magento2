@@ -71,9 +71,7 @@ class UpgradeData implements UpgradeDataInterface
      */
     public function upgrade(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
-        if ($context->getVersion()
-            && version_compare($context->getVersion(), '1.0.1') < 0
-        ) {
+        if (version_compare($context->getVersion(), '1.0.1') < 0) {
             $this->setup = $setup;
             $this->setup()->startSetup();
 
@@ -93,19 +91,19 @@ class UpgradeData implements UpgradeDataInterface
      */
     protected function installCustomerSkyHubRequiredAttributes()
     {
-        $attributes = (array)  $this->skyhubConfigData->getEntityAttributes(\Magento\Customer\Model\Customer::ENTITY);
-        $table      = (string) $this->getTable('bittools_skyhub_customer_attributes_mapping');
+        $attributes = (array)$this->skyhubConfigData->getEntityAttributes(\Magento\Customer\Model\Customer::ENTITY);
+        $table = (string)$this->getTable('bittools_skyhub_customer_attributes_mapping');
 
         /** @var array $attribute */
         foreach ($attributes as $identifier => $data) {
-            $skyhubCode  = $this->arrayExtract($data, 'code');
-            $label       = $this->arrayExtract($data, 'label');
-            $castType    = $this->arrayExtract($data, 'cast_type', Mapping::DATA_TYPE_STRING);
+            $skyhubCode = $this->arrayExtract($data, 'code');
+            $label = $this->arrayExtract($data, 'label');
+            $castType = $this->arrayExtract($data, 'cast_type', Mapping::DATA_TYPE_STRING);
             $description = $this->arrayExtract($data, 'description');
-            $validation  = $this->arrayExtract($data, 'validation');
-            $enabled     = (bool) $this->arrayExtract($data, 'required', true);
-            $required    = (bool) $this->arrayExtract($data, 'required', true);
-            $editable    = (bool) $this->arrayExtract($data, 'editable', true);
+            $validation = $this->arrayExtract($data, 'validation');
+            $enabled = (bool)$this->arrayExtract($data, 'required', true);
+            $required = (bool)$this->arrayExtract($data, 'required', true);
+            $editable = (bool)$this->arrayExtract($data, 'editable', true);
             $hasOptions = (bool)$this->arrayExtract($data, 'has_options', false);
             $createdAt = $this->now();
 
@@ -114,23 +112,23 @@ class UpgradeData implements UpgradeDataInterface
             }
 
             $attributeData = [
-                'skyhub_code'        => $skyhubCode,
-                'skyhub_label'       => $label,
+                'skyhub_code' => $skyhubCode,
+                'skyhub_label' => $label,
                 'skyhub_description' => $description,
-                'enabled'            => $enabled,
-                'cast_type'          => $castType,
-                'validation'         => $validation,
-                'required'           => $required,
-                'editable'           => $editable,
-                'created_at'         => $createdAt,
-                'has_options'        => $hasOptions
+                'enabled' => $enabled,
+                'cast_type' => $castType,
+                'validation' => $validation,
+                'required' => $required,
+                'editable' => $editable,
+                'created_at' => $createdAt,
+                'has_options' => $hasOptions
             ];
 
-            $installConfig = (array) $this->arrayExtract($data, 'attribute_install_config', []);
-            $magentoCode   = $this->arrayExtract($installConfig, 'attribute_code');
+            $installConfig = (array)$this->arrayExtract($data, 'attribute_install_config', []);
+            $magentoCode = $this->arrayExtract($installConfig, 'attribute_code');
 
             /** @var int $attributeId */
-            if ($attributeId = (int) $this->getAttributeIdByCode($magentoCode)) {
+            if ($attributeId = (int)$this->getAttributeIdByCode($magentoCode)) {
                 $attributeData['attribute_id'] = $attributeId;
             }
 
@@ -183,7 +181,7 @@ class UpgradeData implements UpgradeDataInterface
 
         try {
             /** @var \Magento\Eav\Model\ResourceModel\Entity\Attribute $attribute */
-            $attribute   = $this->attributeFactory->create();
+            $attribute = $this->attributeFactory->create();
             $attributeId = $attribute->getIdByCode(\Magento\Customer\Model\Customer::ENTITY, $code);
         } catch (\Exception $e) {
 
