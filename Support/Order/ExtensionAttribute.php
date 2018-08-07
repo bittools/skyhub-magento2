@@ -86,8 +86,13 @@ class ExtensionAttribute implements ExtensionAttributeInterface
     {
         try {
 
+            $extensionAttribute = $order->getExtensionAttributes();
+            if (!$extensionAttribute) {
+                return $order;
+            }
+
             /** @var \BitTools\SkyHub\Api\Data\OrderInterface $relation */
-            $relation = $order->getExtensionAttributes()->getSkyhubInfo();
+            $relation = $extensionAttribute->getSkyhubInfo();
 
             if (!$relation) {
 
