@@ -70,7 +70,7 @@ class InstallData implements InstallDataInterface
      */
     protected function installCatalogProductSkyHubRequiredAttributes()
     {
-        $attributes = (array)  $this->skyhubConfigData->getCatalogProductAttributes();
+        $attributes = (array)$this->skyhubConfigData->getEntityAttributes(\Magento\Catalog\Model\Product::ENTITY);
         $table      = (string) $this->getTable('bittools_skyhub_product_attributes_mapping');
     
         /** @var array $attribute */
