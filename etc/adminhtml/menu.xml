@@ -34,7 +34,6 @@
         <!-- Orders Importation -->
         <add id="BitTools_SkyHub::orders_import"              title="Orders Importation"        translate="title" module="BitTools_SkyHub" sortOrder="40" parent="BitTools_SkyHub::skyhub"              resource="BitTools_SkyHub::orders_import"/>
         <add id="BitTools_SkyHub::manual_import"              title="Manual Import"             translate="title" module="BitTools_SkyHub" sortOrder="10" parent="BitTools_SkyHub::orders_import"       resource="BitTools_SkyHub::manual_import" action="bittools_skyhub/sales_order_import/manual"/>
-        <add id="BitTools_SkyHub::orders_import_log"          title="Logs"                      translate="title" module="BitTools_SkyHub" sortOrder="20" parent="BitTools_SkyHub::orders_import"       resource="BitTools_SkyHub::orders_import_log"/>
 
         <!-- Configuration -->
         <add id="BitTools_SkyHub::configuration"              title="Configurations"            translate="title" module="BitTools_SkyHub" sortOrder="900" parent="BitTools_SkyHub::skyhub"             resource="BitTools_SkyHub::configuration" />
