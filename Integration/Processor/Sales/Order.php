@@ -230,6 +230,7 @@ class Order extends AbstractProcessor
             $creator->addProduct($productData);
         }
 
+        $order = null;
         try {
             /** @var SalesOrder $order */
             $order = $creator->create();

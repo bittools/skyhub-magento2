@@ -206,7 +206,7 @@ class UpgradeData implements UpgradeDataInterface
                     ];
                 $this->getConnection()->insert($table, $optionData);
                 $this->getConnection()->commit();
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $this->getConnection()->rollBack();
             }
         }
