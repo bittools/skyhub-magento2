@@ -16,11 +16,11 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
     <module name="BitTools_SkyHub" setup_version="1.0.1">
         <sequence>
-            <Magento_Ui/>
-            <Magento_Backend/>
-            <Magento_Sales/>
-            <Magento_Catalog/>
-            <Magento_CatalogInventory/>
+            <module name="Magento_Ui"/>
+            <module name="Magento_Backend"/>
+            <module name="Magento_Sales"/>
+            <module name="Magento_Catalog"/>
+            <module name="Magento_CatalogInventory"/>
         </sequence>
     </module>
 </config>
