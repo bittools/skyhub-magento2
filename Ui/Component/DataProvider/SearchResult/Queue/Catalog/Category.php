@@ -20,7 +20,8 @@ class Category extends Queue
             [
                 'e' => $this->getTable('catalog_category_entity')
             ],
-            'e.entity_id = queue.entity_id'
+            'e.entity_id = queue.entity_id',
+            []
         );
         
         parent::_beforeLoad();

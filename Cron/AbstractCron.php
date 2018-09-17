@@ -85,7 +85,7 @@ abstract class AbstractCron
             /** @var StoreInterface $store */
             $store = $this->context->helperContext()->storeManager()->getStore($storeId);
             
-            if ($store && $store->getId()) {
+            if ($store && ($store->getId() || $store->getId() === '0')) {
                 return $store;
             }
         } catch (\Exception $e) {

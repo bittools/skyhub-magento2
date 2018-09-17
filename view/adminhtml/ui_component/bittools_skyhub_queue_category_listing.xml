@@ -64,7 +64,7 @@
                 <resizeDefaultWidth>50</resizeDefaultWidth>
             </settings>
         </selectionsColumn>
-        <column name="queue.entity_id" sortOrder="10">
+        <column name="entity_id" sortOrder="10">
             <settings>
                 <filter>textRange</filter>
                 <label translate="true">Category ID</label>
