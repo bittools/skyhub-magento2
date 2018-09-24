@@ -20,7 +20,8 @@ class OrderStatus extends Queue
             [
                 'e' => $this->getTable('sales_order')
             ],
-            'e.entity_id = queue.entity_id'
+            'e.entity_id = queue.entity_id',
+            []
         );
         
         parent::_beforeLoad();
