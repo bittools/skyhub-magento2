@@ -22,6 +22,10 @@ class ExtensionAttribute implements ExtensionAttributeInterface
     /** @var \Magento\Sales\Api\Data\OrderExtensionFactory  */
     protected $orderExtensionFactory;
 
+    /**
+     * @var \Magento\Framework\App\State
+     */
+    protected $appState;
 
     /**
      * ExtensionAttribute constructor.
@@ -36,13 +40,15 @@ class ExtensionAttribute implements ExtensionAttributeInterface
         \BitTools\SkyHub\Api\Data\OrderInterfaceFactory $skyhubOrderFactory,
         \BitTools\SkyHub\Api\OrderRepositoryInterface $skyhubOrderRepository,
         \BitTools\SkyHub\Model\Backend\Session\Quote $quoteSession,
-        \Magento\Sales\Api\Data\OrderExtensionFactory $orderExtensionFactory
+        \Magento\Sales\Api\Data\OrderExtensionFactory $orderExtensionFactory,
+        \Magento\Framework\App\State $appState
     ) {
         $this->orderRelationRepository  = $orderRelationRepository;
         $this->skyhubOrderFactory       = $skyhubOrderFactory;
         $this->skyhubOrderRepository    = $skyhubOrderRepository;
         $this->quoteSession             = $quoteSession;
         $this->orderExtensionFactory    = $orderExtensionFactory;
+        $this->appState                 = $appState;
     }
 
 
@@ -84,6 +90,10 @@ class ExtensionAttribute implements ExtensionAttributeInterface
      */
     public function save(\Magento\Sales\Api\Data\OrderInterface $order)
     {
+        if ($order->getPayment()->getMethod() != \BitTools\SkyHub\Model\Payment\Method\Standard::CODE) {
+            return $order;
+        }
+
         try {
 
             $extensionAttribute = $order->getExtensionAttributes();
@@ -98,7 +108,6 @@ class ExtensionAttribute implements ExtensionAttributeInterface
 
                 /** @var \BitTools\SkyHub\Model\Backend\Session\Quote $sessionQuote */
                 $sessionQuote = $this->quoteSession->getQuote();
-
                 if (!$sessionQuote || !$sessionQuote->getSkyhubCode()) {
                     return $order;
                 }
