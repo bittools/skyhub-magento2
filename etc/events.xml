@@ -8,6 +8,9 @@
     <event name="catalog_product_save_commit_after">
         <observer name="bittools_skyhub_integrate_catalog_product" instance="BitTools\SkyHub\Observer\Catalog\Product\IntegrateProduct"/>
     </event>
+    <event name="bittools_skyhub_store_iterate_exception">
+        <observer name="bittools_skyhub_integrate_catalog_product_exception" instance="BitTools\SkyHub\Observer\Catalog\Product\GetExceptionIntegrateProduct"/>
+    </event>
     <!--
     The product cannot be deleted from SkyHub when it's already related to any order.
     <event name="catalog_product_delete_after">

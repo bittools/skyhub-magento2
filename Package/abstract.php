@@ -192,7 +192,7 @@ abstract class PackageAbstract
      */
     protected function loadFiles(array $extensions = [])
     {
-        return glob($this->getFilePattern($extensions), GLOB_BRACE);
+        return @glob($this->getFilePattern($extensions), GLOB_BRACE);
     }
     
     
