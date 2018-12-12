@@ -7,7 +7,7 @@ use BitTools\SkyHub\Controller\Adminhtml\AbstractController;
 class Index extends AbstractController
 {
     
-    const ADMIN_RESOURCE = 'BitTools_SkyHub::skyhub_queues_category';
+    const ADMIN_RESOURCE = 'BitTools_SkyHub::skyhub_queues_catalog_category';
 
     /**
      * @return \Magento\Framework\View\Result\Page
