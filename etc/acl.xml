@@ -22,6 +22,9 @@
                             <resource id="BitTools_SkyHub::manual_import" title="Manual Import" translate="title" sortOrder="10"/>
                             <resource id="BitTools_SkyHub::orders_import_log" title="Log" translate="title" sortOrder="20"/>
                         </resource>
+                        <resource id="BitTools_SkyHub::configuration" title="Configuration" translate="title" sortOrder="40">
+                            <resource id="BitTools_SkyHub::module_configuration" title="Module Configuration" translate="title" sortOrder="10"/>
+                        </resource>
                     </resource>
                 </resource>
                 <resource id="Magento_Backend::stores">
