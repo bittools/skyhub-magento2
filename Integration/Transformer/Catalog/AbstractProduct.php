@@ -30,6 +30,9 @@ abstract class AbstractProduct extends AbstractTransformer
     
     /** @var StockState */
     protected $stockState;
+
+    /** @var  \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry */
+    protected $stockRegistry;
     
     /** @var Data */
     protected $skyhubConfig;
@@ -57,7 +60,8 @@ abstract class AbstractProduct extends AbstractTransformer
         AttributeHelper $attributesHelper,
         AttributeMappingHelper $attributeMappingHelper,
         EavOptionHelper $eavOptionHelper,
-        Data $skyhubConfig
+        Data $skyhubConfig,
+        \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
     ) {
         parent::__construct($context);
         
@@ -68,6 +72,7 @@ abstract class AbstractProduct extends AbstractTransformer
         $this->attributeMappingHelper = $attributeMappingHelper;
         $this->eavOptionHelper        = $eavOptionHelper;
         $this->skyhubConfig           = $skyhubConfig;
+        $this->stockRegistry          = $stockRegistry;
     }
     
     
