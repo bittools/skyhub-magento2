@@ -257,31 +257,24 @@ class Product extends AbstractProduct
      *
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    protected function prepareProductQty(CatalogProduct $product, ProductEntityInterface $interface)
+    protected function prepareProductQty(
+        CatalogProduct $product,
+        ProductEntityInterface $interface)
     {
         /**
-         * This may stop working further once the method getStockData is deprecated.
-         * @todo Change the logic to grab the current and prior stock qty.
-         * @var \Magento\CatalogInventory\Api\Data\StockItemInterface $stockItem
+         * This doesn't work with magento 2.3 multi-source inventory feature (it's working with the global stock quantity);
+         * @todo Change the logic check if the version is magento 2.3 or not (and if it uses the multi-source feature) and handle.
+         * @var \Magento\CatalogInventory\Model\Stock\Item\Interceptor $stockItem
          */
-        $stockItem = $product->getExtensionAttributes()->getStockItem();
-        $status    = $product->getData('stock_data/is_in_stock');
-        
-        if (is_null($status)) {
-            $status = $stockItem->getIsInStock();
-        }
+        $stockItem = $this->stockRegistry->getStockItem($product->getId(), $this->getStore()->getId());
+        $status = $stockItem->getIsInStock();
         
         if (!$status || !$stockItem) {
             $interface->setQty(0);
             return $this;
         }
     
-        $qty = $product->getData('stock_data/qty');
-        
-        if (is_null($qty)) {
-            $qty = $stockItem->getQty();
-        }
-    
+        $qty = $stockItem->getQty();
         $interface->setQty((float) $qty);
         
         return $this;
