@@ -133,7 +133,8 @@ class Product extends AbstractQueue
         /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $collection */
         $collection = $this->getProductCollection()
             ->addStoreFilter($store)
-            ->addFieldToFilter('entity_id', ['in' => $productIds]);
+            ->addFieldToFilter('entity_id', ['in' => $productIds])
+            ->addMediaGalleryData();
         
         /** Set limitation. */
         $limit = abs($this->cronConfig()->catalogProduct()->getQueueExecuteLimit());
