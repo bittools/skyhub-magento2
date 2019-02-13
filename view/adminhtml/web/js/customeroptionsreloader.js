@@ -10,7 +10,7 @@ define([
         var elementSelector = 'select[name=attribute_id]';
         var containerIdSelector = '#customer-options-container';
 
-        $('body').on('change', elementSelector, function () {
+        $('body').on('change', elementSelector, function (event) {
             if (!$(containerIdSelector).length) {
                 $(elementSelector).after('<div id="customer-options-container"></div>');
             }
