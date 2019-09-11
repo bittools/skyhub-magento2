@@ -495,6 +495,7 @@ class Order extends AbstractProcessor
     {
         /** @var AddressInterface $address */
         $address = $this->addressFactory->create();
+        $address->setVatId($customer->getTaxvat());
     
         $streetLinesCount = (int) $this->helperContext()
             ->scopeConfig()
