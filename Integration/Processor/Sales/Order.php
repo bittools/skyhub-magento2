@@ -10,6 +10,7 @@ use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Customer\Model\Data\AddressFactory;
 use Magento\Customer\Api\Data\AddressInterface;
+use Magento\Directory\Model\CountryFactory;
 use Magento\Sales\Model\Order as SalesOrder;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
@@ -54,6 +55,9 @@ class Order extends AbstractProcessor
     /** @var AddressFactory */
     protected $addressFactory;
 
+    /** @var CountryFactory */
+    protected $countryFactory;
+
     /** @var CustomerInterfaceFactory */
     protected $customerFactory;
 
@@ -90,6 +94,7 @@ class Order extends AbstractProcessor
         CustomerRepositoryInterface $customerRepository,
         AddressRepositoryInterface $addressRepository,
         AddressFactory $addressFactory,
+        CountryFactory $countryFactory,
         CustomerInterfaceFactory $customerFactory,
         RegionInterfaceFactory $regionFactory,
         OrderCreatorFactory $orderCreatorFactory,
@@ -107,6 +112,7 @@ class Order extends AbstractProcessor
         $this->customerRepository    = $customerRepository;
         $this->addressRepository     = $addressRepository;
         $this->addressFactory        = $addressFactory;
+        $this->countryFactory        = $countryFactory;
         $this->customerFactory       = $customerFactory;
         $this->regionFactory         = $regionFactory;
         $this->orderCreatorFactory   = $orderCreatorFactory;
@@ -514,6 +520,10 @@ class Order extends AbstractProcessor
         /** @var \Magento\Customer\Api\Data\RegionInterface $region */
         $region = $this->regionFactory->create();
         $region->setRegion($addressObject->getData('region'));
+
+        if (strlen($country) > 2) {
+            $country = $this->countryFactory->create()->loadByCode($country)->getId();
+        }
         
         $address->setFirstname($customer->getFirstname())
             ->setLastname($customer->getLastname())
