@@ -62,6 +62,8 @@
     <preference for="BitTools\SkyHub\Api\Data\OrderInterface" type="BitTools\SkyHub\Model\Order"/>
     <preference for="BitTools\SkyHub\Api\OrderRepositoryInterface" type="BitTools\SkyHub\Model\OrderRepository"/>
 
+    <preference for="BitTools\SkyHub\Api\OrderManagementInterface" type="BitTools\SkyHub\Model\Sales\Order"/>
+
     <preference for="BitTools\SkyHub\Model\StoreIteratorInterface" type="BitTools\SkyHub\Model\StoreIterator"/>
 
     <!-- *********************************************************************************************************** -->
