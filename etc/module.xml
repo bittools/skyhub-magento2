@@ -14,7 +14,7 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="BitTools_SkyHub" setup_version="1.0.4">
+    <module name="BitTools_SkyHub" setup_version="1.0.6">
         <sequence>
             <module name="Magento_Ui"/>
             <module name="Magento_Backend"/>
