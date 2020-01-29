@@ -7,6 +7,13 @@
     </argument>
 
     <settings>
+        <buttons>
+            <button name="clear">
+                <url path="bittools_skyhub/queue/clear/entity_type/catalog_product_attribute"/>
+                <class>primary</class>
+                <label translate="true">Clear integration queue</label>
+            </button>
+        </buttons>
         <spinner>product_attribute_queue_columns</spinner>
         <deps>
             <dep>bittools_skyhub_queue_product_attribute_listing.bittools_skyhub_queue_product_attribute_data_source</dep>

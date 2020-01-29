@@ -7,7 +7,7 @@ use Magento\Framework\Api\SearchCriteriaInterface;
 
 interface QueueRepositoryInterface
 {
-    
+
     /**
      * Retrieve all attributes for entity type
      *
@@ -44,6 +44,13 @@ interface QueueRepositoryInterface
      * @return mixed
      */
     public function deleteById($queueId);
+
+    /**
+     * @param string $entityType
+     *
+     * @return mixed
+     */
+    public function deleteByEntityType($entityType);
 
     /**
      * @param array $data
