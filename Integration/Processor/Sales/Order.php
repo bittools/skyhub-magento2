@@ -8,17 +8,25 @@ use BitTools\SkyHub\Integration\Processor\AbstractProcessor;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\AddressRepositoryInterface;
+use Magento\Customer\Api\Data\RegionInterface;
 use Magento\Customer\Model\Data\AddressFactory;
 use Magento\Customer\Api\Data\AddressInterface;
 use Magento\Directory\Model\CountryFactory;
+use Magento\Directory\Model\RegionFactory;
+use Magento\Customer\Api\Data\RegionInterfaceFactory;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Exception\State\InputMismatchException;
+use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Model\Order as SalesOrder;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Api\Data\CustomerInterfaceFactory;
 use Magento\Framework\DataObject;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Catalog\Model as CatalogModelDir;
 use Magento\Store\Model\Store;
-use Magento\Customer\Api\Data\RegionInterfaceFactory;
 use BitTools\SkyHub\Integration\Support\Sales\Order\CreateFactory as OrderCreatorFactory;
 use BitTools\SkyHub\Helper\Sales\Order as OrderHelper;
 use BitTools\SkyHub\Integration\Processor\Sales\Order\Status as StatusProcessor;
@@ -27,16 +35,16 @@ use BitTools\SkyHub\Helper\Customer\Attribute\Mapping as CustomerAttributeMappin
 
 class Order extends AbstractProcessor
 {
-    
+
     use \BitTools\SkyHub\Traits\Customer;
-    
+
     /** @var string */
     const ADDRESS_TYPE_BILLING  = \BitTools\SkyHub\Integration\Support\Sales\Order\Create::ADDRESS_TYPE_BILLING;
-    
+
     /** @var string */
     const ADDRESS_TYPE_SHIPPING = \BitTools\SkyHub\Integration\Support\Sales\Order\Create::ADDRESS_TYPE_SHIPPING;
-    
-    
+
+
     /** @var OrderRepositoryInterface */
     protected $orderRepository;
 
@@ -61,8 +69,14 @@ class Order extends AbstractProcessor
     /** @var CustomerInterfaceFactory */
     protected $customerFactory;
 
-    /** @var RegionInterfaceFactory */
+    /** @var RegionFactory */
     protected $regionFactory;
+
+    /** @var RegionInterfaceFactory */
+    protected $regionDataFactory;
+
+    /** @var SearchCriteriaBuilder */
+    protected $searchCriteriaBuilder;
 
     /** @var OrderCreatorFactory */
     protected $orderCreatorFactory;
@@ -78,13 +92,22 @@ class Order extends AbstractProcessor
 
     /** @var CustomerAttributeMappingHelper  */
     protected $customerAttributeMappingHelper;
-    
+
     /** @var array|AddressInterface[] */
     protected $addresses = [
         self::ADDRESS_TYPE_BILLING  => null,
         self::ADDRESS_TYPE_SHIPPING => null,
     ];
 
+    /**
+     * @var array
+     */
+    protected $regions = array();
+
+    /**
+     * @var bool
+     */
+    protected $foundByTaxvat = false;
 
     public function __construct(
         IntegrationContext $integrationContext,
@@ -96,7 +119,9 @@ class Order extends AbstractProcessor
         AddressFactory $addressFactory,
         CountryFactory $countryFactory,
         CustomerInterfaceFactory $customerFactory,
-        RegionInterfaceFactory $regionFactory,
+        RegionFactory $regionFactory,
+        RegionInterfaceFactory $regionDataFactory,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
         OrderCreatorFactory $orderCreatorFactory,
         OrderHelper $orderHelper,
         StatusProcessor $statusProcessor,
@@ -115,13 +140,14 @@ class Order extends AbstractProcessor
         $this->countryFactory        = $countryFactory;
         $this->customerFactory       = $customerFactory;
         $this->regionFactory         = $regionFactory;
+        $this->regionDataFactory     = $regionDataFactory;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->orderCreatorFactory   = $orderCreatorFactory;
         $this->orderHelper           = $orderHelper;
         $this->statusProcessor       = $statusProcessor;
         $this->orderFactory          = $orderFactory;
         $this->customerAttributeMappingHelper = $customerAttributeMappingHelper;
     }
-
 
     /**
      * @param array $data
@@ -154,22 +180,20 @@ class Order extends AbstractProcessor
         return $order;
     }
 
-
     /**
      * @param array $data
      *
      * @return bool|SalesOrder
      *
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\State\InputMismatchException
+     * @throws InputException
+     * @throws LocalizedException
+     * @throws InputMismatchException
      * @throws \Exception
      */
     protected function processOrderCreation(array $data)
     {
         $order   = null;
         $code    = $this->arrayExtract($data, 'code');
-        $channel = $this->arrayExtract($data, 'channel');
         $orderId = $this->getOrderId($code);
 
         if ($orderId) {
@@ -179,8 +203,6 @@ class Order extends AbstractProcessor
              * Order already exists.
              */
             $order = $this->orderRepository->get($orderId);
-            $order->setData('already_exists', true);
-            return $order;
         }
 
         $billingAddress  = new DataObject($this->arrayExtract($data, 'billing_address'));
@@ -205,7 +227,25 @@ class Order extends AbstractProcessor
         $shippingCost    = (float)  $this->arrayExtract($data, 'shipping_cost', 0.0000);
         $discountAmount  = (float)  $this->arrayExtract($data, 'discount', 0.0000);
         $interestAmount  = (float)  $this->arrayExtract($data, 'interest', 0.0000);
-        
+
+        if ($order && $this->foundByTaxvat) {
+            $order
+                ->setCustomerEmail($customer->getEmail())
+                ->setCustomerFirstname($customer->getFirstname())
+                ->setCustomerMiddlename($customer->getMiddlename())
+                ->setCustomerLastname($customer->getLastname())
+                ->setCustomerGender($customer->getGender());
+
+            $this->updateOrderAddressData($customer, $order->getBillingAddress(), $this->getBillingAddress());
+            $this->updateOrderAddressData($customer, $order->getShippingAddress(), $this->getShippingAddress());
+
+            $this->orderRepository->save($order);
+        }
+
+        if ($order) {
+            return $order;
+        }
+
         /** @var \BitTools\SkyHub\Integration\Support\Sales\Order\Create $creator */
         $creator = $this->orderCreatorFactory->create();
 
@@ -242,7 +282,7 @@ class Order extends AbstractProcessor
             $order = $creator->create();
         } catch (\Exception $exception) {
             $this->logger()->critical($exception);
-    
+
             /**
              * An exception can be thrown here but in some cases the order might be created.
              * If the order was not created let's throw the exception again and hand over the exception treatment.
@@ -251,7 +291,7 @@ class Order extends AbstractProcessor
                 throw $exception;
             }
         }
-    
+
         if (!$this->validateCreatedOrder($order)) {
             return false;
         }
@@ -261,6 +301,28 @@ class Order extends AbstractProcessor
         return $order;
     }
 
+    /**
+     * @param CustomerInterface $customer
+     * @param OrderAddressInterface $orderAddress
+     * @param AddressInterface $address
+     */
+    protected function updateOrderAddressData(
+        CustomerInterface $customer,
+        OrderAddressInterface $orderAddress,
+        AddressInterface $address
+    ) {
+        $orderAddress
+            ->setEmail($customer->getEmail())
+            ->setFirstname($address->getFirstname())
+            ->setMiddlename($address->getMiddlename())
+            ->setLastname($address->getLastname())
+            ->setStreet($address->getStreet())
+            ->setTelephone($address->getTelephone())
+            ->setPostcode($address->getPostcode())
+            ->setCity($address->getCity())
+            ->setRegion($address->getRegion()->getRegionCode())
+            ->setRegionId($address->getRegionId());
+    }
 
     /**
      * @param array      $skyhubOrderData
@@ -274,12 +336,11 @@ class Order extends AbstractProcessor
     {
         $skyhubStatusCode = $this->arrayExtract($skyhubOrderData, 'code');
         $skyhubStatusType = $this->arrayExtract($skyhubOrderData, 'status/type');
-        
+
         $this->statusProcessor->processOrderStatus($skyhubStatusCode, $skyhubStatusType, $order);
 
         return $this;
     }
-
 
     /**
      * @param array $items
@@ -329,24 +390,6 @@ class Order extends AbstractProcessor
         return $products;
     }
 
-
-    /**
-     * @param string $sku
-     *
-     * @return bool|CatalogModelDir\Product
-     */
-    protected function getProductBySku($sku)
-    {
-        try {
-            /** @var CatalogModelDir\Product $product */
-            $product = $this->productRepository->get($sku);
-            return $product;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-
     /**
      * @param string $sku
      *
@@ -356,55 +399,95 @@ class Order extends AbstractProcessor
     {
         /** @var CatalogModelDir\ResourceModel\Product $resource */
         $resource  = $this->objectManager()->create(CatalogModelDir\ResourceModel\Product::class);
-        $productId = $resource->getIdBySku($sku);
-
-        return $productId;
+        return $resource->getIdBySku($sku);
     }
-    
-    
+
+    /**
+     * @param string $email
+     * @param string $taxvat
+     * @param int $storeId
+     *
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     * @return CustomerInterface
+     */
+    protected function getCustomerByEmailOrTaxvat($email, $taxvat, $storeId = null)
+    {
+        $this->foundByTaxvat = false;
+        $websiteId = $this->getStore($storeId)->getWebsiteId();
+
+        try {
+            return $this->customerRepository->get($email, $websiteId);
+        } catch(NoSuchEntityException $e) {
+        }
+
+        try {
+            $customer = $this->customerRepository->get($taxvat . '@email.com.br', $websiteId);
+        } catch(NoSuchEntityException $e) {
+            $this->searchCriteriaBuilder
+                ->addFilter('taxvat', $taxvat)
+                ->addFilter('website_id', $websiteId);
+
+            $customers = $this->customerRepository->getList($this->searchCriteriaBuilder->create())->getItems();
+
+            if (empty($customers)) {
+                throw $e;
+            }
+
+            $customer = $customers[0];
+        }
+
+        $this->foundByTaxvat = true;
+
+        return $customer;
+    }
+
     /**
      * @param array $data
      * @param null  $storeId
      *
      * @return CustomerInterface
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\State\InputMismatchException
+     * @throws InputException
+     * @throws LocalizedException
+     * @throws InputMismatchException
      * @throws \Exception
      */
     protected function getCustomer(array $data, $storeId = null)
     {
         $email = $this->arrayExtract($data, 'email');
+        $taxvat = $this->arrayExtract($data, 'vat_number');
 
         try {
-            /** @var CustomerInterface $customer */
-            $customer = $this->customerRepository->get($email, $this->getStore($storeId)->getWebsiteId());
-            $addresses = $customer->getAddresses();
-            
-            $defaultBilling  = $customer->getDefaultBilling();
-            $defaultShipping = $customer->getDefaultShipping();
-            
-            /** @var AddressInterface $address */
-            foreach ($addresses as $address) {
-                /** Try to match the billing address. */
-                if ($defaultBilling && ($defaultBilling == $address->getId())) {
-                    $this->pushAddress($address, self::ADDRESS_TYPE_BILLING);
-                    continue;
-                }
-    
-                /** Try to match the shipping address. */
-                if ($defaultShipping && ($defaultShipping == $address->getId())) {
-                    $this->pushAddress($address, self::ADDRESS_TYPE_SHIPPING);
-                    continue;
-                }
-    
-                /** Otherwise use the first for both. */
-                $this->pushAddress($address, self::ADDRESS_TYPE_BILLING);
-                $this->pushAddress($address, self::ADDRESS_TYPE_SHIPPING);
-                
-                break;
+            $customer = $this->getCustomerByEmailOrTaxvat($email, $taxvat, $storeId);
+
+            if ($this->foundByTaxvat) {
+                $this->setCustomerData($customer, $data);
             }
-        } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+
+            if ($billing = $this->arrayExtract($data, 'billing_address')) {
+                $address = $this->addCustomerAddress($billing, $customer, self::ADDRESS_TYPE_BILLING);
+                $this->pushAddress($address, self::ADDRESS_TYPE_BILLING);
+            }
+
+            if ($shipping = $this->arrayExtract($data, 'shipping_address')) {
+                $address = $this->addCustomerAddress($shipping, $customer, self::ADDRESS_TYPE_SHIPPING);
+                $this->pushAddress($address, self::ADDRESS_TYPE_SHIPPING);
+            }
+
+            $addresses = $customer->getAddresses();
+
+            foreach ($this->addresses as $address) {
+                if (!$address || $address->getId()) {
+                    continue;
+                }
+
+                $addresses[] = $address;
+            }
+
+            $customer->setAddresses($addresses);
+            $this->customerRepository->save($customer);
+
+        } catch (NoSuchEntityException $e) {
             $customer = $this->createCustomer($data, $storeId);
         } catch (\Exception $e) {
             $this->logger()->critical($e);
@@ -414,22 +497,14 @@ class Order extends AbstractProcessor
         return $customer;
     }
 
-
     /**
+     * @param CustomerInterface $customer
      * @param array $data
-     * @param array $storeId
      *
-     * @return CustomerInterface
-     *
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\State\InputMismatchException
+     * @throws LocalizedException
      */
-    protected function createCustomer(array $data, $storeId = null)
+    protected function setCustomerData(CustomerInterface $customer, array $data)
     {
-        $customer = $this->customerFactory->create();
-        $customer->setStoreId($this->getStore($storeId)->getId());
-
         $dateOfBirth = $this->arrayExtract($data, 'date_of_birth');
         $email       = $this->arrayExtract($data, 'email');
         $gender      = $this->arrayExtract($data, 'gender');
@@ -447,12 +522,16 @@ class Order extends AbstractProcessor
 
         $this->setPersonTypeInformation($data, $customer);
 
+        if (!$customer->getEmail() || strpos($customer->getEmail(), '@') === false) {
+            $customer->setEmail($customer->getTaxvat() . '@email.com.br');
+        }
+
         /** @var string $phone */
         foreach ($phones as $phone) {
             $customer->setData('telephone', $phone);
             break;
         }
-    
+
         switch ($gender) {
             case 'male':
                 $customer->setGender(1);
@@ -461,86 +540,158 @@ class Order extends AbstractProcessor
                 $customer->setGender(2);
                 break;
         }
-        
-        $addresses = [];
+    }
+
+    /**
+     * @param array $data
+     * @param array $storeId
+     *
+     * @return CustomerInterface
+     *
+     * @throws InputException
+     * @throws LocalizedException
+     * @throws InputMismatchException
+     */
+    protected function createCustomer(array $data, $storeId = null)
+    {
+        $customer = $this->customerFactory->create();
+        $customer->setStoreId($this->getStore($storeId)->getId());
+
+        $this->setCustomerData($customer, $data);
 
         /** @var DataObject $billing */
         if ($billing = $this->arrayExtract($data, 'billing_address')) {
-            $address = $this->createCustomerAddress($billing, $customer, self::ADDRESS_TYPE_BILLING);
-            $addresses[] = $address;
+            $this->addCustomerAddress($billing, $customer, self::ADDRESS_TYPE_BILLING);
         }
 
         /** @var DataObject $billing */
         if ($shipping = $this->arrayExtract($data, 'shipping_address')) {
-            $address = $this->createCustomerAddress($shipping, $customer, self::ADDRESS_TYPE_SHIPPING);
-            $addresses[] = $address;
+            $this->addCustomerAddress($shipping, $customer, self::ADDRESS_TYPE_SHIPPING);
         }
-        
-        $customer->setAddresses($this->addresses);
+
+        $billingAddress = $this->getBillingAddress()->setIsDefaultBilling(1);
+        $shippingAddress = $this->getShippingAddress()->setIsDefaultShipping(1);
+
+        $customer->setAddresses([$billingAddress, $shippingAddress]);
+
         $customer = $this->customerRepository->save($customer);
 
         return $customer;
     }
-    
-    
+
     /**
      * @param DataObject        $addressObject
      * @param CustomerInterface $customer
+     * @param string            $type
      *
      * @return AddressInterface
-     *
-     * @throws \Magento\Framework\Exception\LocalizedException
      */
-    protected function createCustomerAddress(DataObject $addressObject, CustomerInterface $customer, $type)
+    protected function addCustomerAddress(DataObject $addressObject, CustomerInterface $customer, $type)
     {
         /** @var AddressInterface $address */
         $address = $this->addressFactory->create();
+
+        /** @var AddressInterface $currentAddress */
+        foreach ($customer->getAddresses() ?: [] as $currentAddress) {
+            if (!$currentAddress->isDefaultBilling() && $type === self::ADDRESS_TYPE_BILLING) {
+                continue;
+            }
+
+            if (!$currentAddress->isDefaultShipping() && $type === self::ADDRESS_TYPE_SHIPPING) {
+                continue;
+            }
+
+            if ($currentAddress->getPostcode() === $addressObject->getData('postcode')) {
+                return $currentAddress;
+            }
+
+            if ($currentAddress->getPostcode() === '00000000') {
+                $address = $currentAddress;
+                break;
+            }
+        }
+
         $address->setVatId($customer->getTaxvat());
-    
+
         $streetLinesCount = (int) $this->helperContext()
             ->scopeConfig()
             ->getValue('customer/address/street_lines');
-    
+
+        $street         = $addressObject->getData('street');
+        $number         = $addressObject->getData('number');
+        $neighborhood   = $addressObject->getData('neighborhood');
+        $postcode       = $addressObject->getData('postcode');
+        $complement     = $this->getComplement($addressObject);
+        $phone          = $addressObject->getData('phone');
+        $country        = $addressObject->getData('country');
+        $city           = $addressObject->getData('city');
+
         /**
          * The customer configuration can be set to use 2 fields only.
          */
-        $street = $this->prepareAddressStreetLines(
-            $addressObject->getData('street'),
-            $addressObject->getData('number'),
-            $addressObject->getData('neighborhood'),
-            $addressObject->getData('complement'),
-            $streetLinesCount
-        );
-        
-        $reference = $addressObject->getData('reference');
-        $postcode  = $addressObject->getData('postcode');
-        $phone     = $addressObject->getData('phone');
-        $country   = $addressObject->getData('country');
-        $city      = $addressObject->getData('city');
-        
-        /** @var \Magento\Customer\Api\Data\RegionInterface $region */
-        $region = $this->regionFactory->create();
-        $region->setRegion($addressObject->getData('region'));
+        $street = $this->prepareAddressStreetLines($street, $number, $neighborhood, $complement, $streetLinesCount);
 
         if (strlen($country) > 2) {
             $country = $this->countryFactory->create()->loadByCode($country)->getId();
         }
-        
+
         $address->setFirstname($customer->getFirstname())
             ->setLastname($customer->getLastname())
             ->setTelephone($phone)
             ->setStreet($street)
             ->setCity($city)
-            ->setRegion($region)
+            ->setRegion($this->getRegion($addressObject))
+            ->setRegionId($this->getRegion($addressObject)->getRegionId())
             ->setPostcode($postcode)
             ->setCountryId($country ?: 'BR');
-        
+
         $this->pushAddress($address, $type);
-        
+
         return $address;
     }
-    
-    
+
+    /**
+     * @param DataObject $addressObject
+     *
+     * @return RegionInterface
+     */
+    protected function getRegion(DataObject $addressObject)
+    {
+        if (!isset($this->regions[$addressObject->getData('region')])) {
+            $regionModel = $this->regionFactory->create();
+            $region = $regionModel->loadByCode($addressObject->getData('region'), 'BR');
+
+            if (!$region->getId()) {
+                $region = $regionModel->loadByCode('AC', 'BR');
+            }
+
+            $this->regions[$addressObject->getData('region')] = $this->regionDataFactory->create()
+                ->setRegion($region->getName())
+                ->setRegionCode($region->getCode())
+                ->setRegionId($region->getRegionId());
+        }
+
+        return $this->regions[$addressObject->getData('region')];
+    }
+
+    /**
+     * @param DataObject $addressObject
+     *
+     * @return string|null
+     */
+    protected function getComplement(DataObject $addressObject)
+    {
+        if ($addressObject->getData('complement')) {
+            return $addressObject->getData('complement');
+        }
+
+        if($addressObject->getData('reference')) {
+            return $addressObject->getData('reference');
+        }
+
+        return $addressObject->getData('detail');
+    }
+
     /**
      * @param AddressInterface $address
      * @param string           $type
@@ -552,8 +703,8 @@ class Order extends AbstractProcessor
         $this->addresses[$type] = $address;
         return $this;
     }
-    
-    
+
+
     /**
      * @return AddressInterface|mixed
      */
@@ -561,15 +712,15 @@ class Order extends AbstractProcessor
     {
         /** @todo Create a logic to retrieve this address when address was not created in this process. */
         $address = $this->addresses[self::ADDRESS_TYPE_BILLING];
-        
+
         if (empty($address)) {
             $address = $this->addresses[self::ADDRESS_TYPE_SHIPPING];
         }
-        
+
         return $address;
     }
-    
-    
+
+
     /**
      * @return AddressInterface|mixed
      */
@@ -577,11 +728,11 @@ class Order extends AbstractProcessor
     {
         /** @todo Create a logic to retrieve this address when address was not created in this process. */
         $address = $this->addresses[self::ADDRESS_TYPE_SHIPPING];
-        
+
         if (empty($address)) {
             $address = $this->addresses[self::ADDRESS_TYPE_BILLING];
         }
-        
+
         return $address;
     }
 
@@ -601,9 +752,9 @@ class Order extends AbstractProcessor
     /**
      * @param int|null $storeId
      *
-     * @return \Magento\Store\Api\Data\StoreInterface
+     * @throws NoSuchEntityException
+     *@return \Magento\Store\Api\Data\StoreInterface
      *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     protected function getStore($storeId = null)
     {
@@ -617,7 +768,7 @@ class Order extends AbstractProcessor
      *
      * @return int|bool
      *
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     protected function getOrderId($skyhubCode, $storeId = null)
     {
@@ -650,22 +801,22 @@ class Order extends AbstractProcessor
 
         return null;
     }
-    
-    
+
+
     /**
      * @param array             $data
      * @param CustomerInterface $customer
      *
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     protected function setPersonTypeInformation(array $data, CustomerInterface $customer)
     {
         //get the vat number
         $vatNumber = $this->arrayExtract($data, 'vat_number');
-        
+
         //the taxvat is filled anyway
         $customer->setTaxvat($vatNumber);
-        
+
         //check if is a PJ customer (if not, it's a PF customer)
         $customerIsPj = $this->customerIsPj($vatNumber);
 
@@ -714,8 +865,8 @@ class Order extends AbstractProcessor
             $customer->setCustomAttribute($attribute->getAttributeCode(), $this->arrayExtract($data, 'name'));
         }
     }
-    
-    
+
+
     /**
      * @param \Magento\Sales\Api\Data\OrderInterface|null $order
      *
@@ -726,11 +877,11 @@ class Order extends AbstractProcessor
         if (!$order) {
             return false;
         }
-        
+
         if (!$order->getEntityId()) {
             return false;
         }
-        
+
         return true;
     }
 }
