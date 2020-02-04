@@ -7,6 +7,13 @@
     </argument>
 
     <settings>
+        <buttons>
+            <button name="clear">
+                <url path="bittools_skyhub/queue/clear/entity_type/sales_order_status"/>
+                <class>primary</class>
+                <label translate="true">Clear integration queue</label>
+            </button>
+        </buttons>
         <spinner>order_status_queue_columns</spinner>
         <deps>
             <dep>bittools_skyhub_queue_sales_order_status_listing.bittools_skyhub_queue_sales_order_status_data_source</dep>

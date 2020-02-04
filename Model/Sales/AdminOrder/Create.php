@@ -35,14 +35,6 @@ class Create extends \Magento\Sales\Model\AdminOrder\Create
             return false;
         }
 
-        $stockData = $this->stockRegistry->getStockItem($product->getId());
-
-        if ($productData['qty'] > $stockData->getQty()) {
-            throw new \Magento\Framework\Exception\LocalizedException(
-                __('Product %1 is not available in the requested quantity.', $product->getName())
-            );
-        }
-        
         $this->registerCurrentData($product, $productData);
     
         $config = $this->prepareProductConfig($product, $productData);

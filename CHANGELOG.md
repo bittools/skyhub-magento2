@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## 1.0.7 - 2020-02-04
+### Changed
+- Bugfix: integrate orders with configurable products
+- Save customer taxvat on sales_order table
+- Add Clear Queue action to all queue pages
+- Improvement to update customer and address data on order integration process
+
 ## 1.0.6 - 2019-12-10
 ### Changed
 - Send order requests without status field
