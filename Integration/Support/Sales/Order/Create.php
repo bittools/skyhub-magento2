@@ -273,6 +273,10 @@ class Create
             ]
         ];
 
+        if ($customer->getTaxvat()) {
+            $data['order']['account']['taxvat'] = $customer->getTaxvat();
+        }
+
         $this->merge($data);
 
         return $this;
