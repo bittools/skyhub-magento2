@@ -6,21 +6,18 @@ namespace BitTools\SkyHub\Model\ResourceModel;
 use BitTools\SkyHub\Functions;
 use BitTools\SkyHub\Helper\Context as HelperContext;
 use BitTools\SkyHub\Model\Queue as QueueModel;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Model\Store;
 
 class Queue extends AbstractResourceModel
 {
-    
     use Functions;
-    
-    
+
     const MAIN_TABLE = 'bittools_skyhub_queue';
-    
-    
+
     /** @var HelperContext */
     protected $helperContext;
-    
-    
+
     /**
      * Initialize database relation.
      *
@@ -30,8 +27,7 @@ class Queue extends AbstractResourceModel
     {
         $this->_init(self::MAIN_TABLE, 'id');
     }
-    
-    
+
     /**
      * @param           $entityIds
      * @param           $entityType
@@ -51,29 +47,29 @@ class Queue extends AbstractResourceModel
         $processAfter = null
     ) {
         $entityIds = $this->filterEntityIds((array) $entityIds);
-        
+
         if (empty($entityIds)) {
             return $this;
         }
-        
+
         $items = [];
-        
+
         $deleteSets = array_chunk($entityIds, 1000);
-        
+
         foreach ($deleteSets as $deleteIds) {
             $this->beginTransaction();
-            
+
             try {
                 $where = $this->getCondition($deleteIds, $entityType, $storeId);
                 $this->getConnection()->delete($this->getMainTable(), $where);
-                
+
                 $this->commit();
             } catch (\Exception $e) {
                 $this->logger()->critical($e);
                 $this->rollBack();
             }
         }
-        
+
         foreach ($entityIds as $entityId) {
             $items[] = [
                 'entity_id'     => (int) $entityId,
@@ -86,11 +82,11 @@ class Queue extends AbstractResourceModel
                 'created_at'    => $this->now(),
             ];
         }
-        
+
         /** @var array $item */
         foreach ($items as $item) {
             $this->beginTransaction();
-            
+
             try {
                 $this->getConnection()->insert($this->getMainTable(), $item);
                 $this->commit();
@@ -99,11 +95,10 @@ class Queue extends AbstractResourceModel
                 $this->rollBack();
             }
         }
-        
+
         return $this;
     }
-    
-    
+
     /**
      * @param      $entityType
      * @param int  $processType
@@ -112,7 +107,7 @@ class Queue extends AbstractResourceModel
      *
      * @return array
      *
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function getPendingEntityIds(
         $entityType,
@@ -124,7 +119,7 @@ class Queue extends AbstractResourceModel
             QueueModel::STATUS_PENDING,
             QueueModel::STATUS_RETRY
         ];
-        
+
         /** @var \Magento\Framework\DB\Select $select */
         $select = $this->getConnection()
             ->select()
@@ -135,17 +130,16 @@ class Queue extends AbstractResourceModel
             ->where('store_id IN (?)', $this->getStoreIds($storeId))
             ->where('process_after <= ?', $this->now())
             ->where('entity_type = ?', (string) $entityType);
-        
+
         if (!is_null($limit)) {
             $select->limit((int) $limit);
         }
-        
+
         $ids = $this->getConnection()->fetchCol($select);
-        
+
         return (array) $ids;
     }
-    
-    
+
     /**
      * @param      $entityIds
      * @param      $entityType
@@ -153,47 +147,59 @@ class Queue extends AbstractResourceModel
      *
      * @return $this
      *
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function removeFromQueue($entityIds, $entityType, $storeId = null)
     {
         $entityIds = $this->filterEntityIds((array) $entityIds);
-        
+
         if (empty($entityIds)) {
             return $this;
         }
-        
+
         $where = $this->getCondition($entityIds, $entityType, $storeId);
         $this->getConnection()->delete($this->getMainTable(), $where);
-        
+
         return $this;
     }
-    
-    
+
+    /**
+     * @param string $entityType
+     *
+     * @throws LocalizedException
+     * @return bool
+     */
+    public function truncateQueue($entityType)
+    {
+        return $this->getConnection()->delete(
+            $this->getMainTable(),
+            new \Zend_Db_Expr("entity_type = '{$entityType}'")
+        );
+    }
+
     /**
      * @param int|array $queueIds
      *
      * @return $this
      *
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function deleteByQueueIds($queueIds)
     {
         $queueIds = (array) $this->filterEntityIds($queueIds);
-        
+
         if (empty($queueIds)) {
             return $this;
         }
-        
+
         $queueIds = implode(',', $queueIds);
         $where    = new \Zend_Db_Expr("id IN ({$queueIds})");
-        
+
         $this->getConnection()->delete($this->getMainTable(), $where);
-        
+
         return $this;
     }
-    
-    
+
     /**
      * @param integer|array $entityIds
      * @param string        $entityType
@@ -207,8 +213,7 @@ class Queue extends AbstractResourceModel
         $this->updateQueueStatus($entityIds, $entityType, QueueModel::STATUS_FAIL, $message, $storeId);
         return $this;
     }
-    
-    
+
     /**
      * @param integer|array $entityIds
      * @param string        $entityType
@@ -222,8 +227,7 @@ class Queue extends AbstractResourceModel
         $this->updateQueueStatus($entityIds, $entityType, QueueModel::STATUS_PENDING, $message, $storeId);
         return $this;
     }
-    
-    
+
     /**
      * @param integer|array $entityIds
      * @param string        $entityType
@@ -237,8 +241,7 @@ class Queue extends AbstractResourceModel
         $this->updateQueueStatus($entityIds, $entityType, QueueModel::STATUS_RETRY, $message, $storeId);
         return $this;
     }
-    
-    
+
     /**
      * @param int|array   $entityIds
      * @param string      $entityType
@@ -254,12 +257,11 @@ class Queue extends AbstractResourceModel
             'status'   => $status,
             'messages' => $message,
         ];
-        
+
         $this->updateQueues($entityIds, $entityType, $binds, $storeId);
         return $this;
     }
-    
-    
+
     /**
      * @param integer|array $entityIds
      * @param string        $entityType
@@ -271,23 +273,22 @@ class Queue extends AbstractResourceModel
     public function updateQueues($entityIds, $entityType, array $binds = [], $storeId = null)
     {
         $entityIds = $this->filterEntityIds((array) $entityIds);
-        
+
         if (empty($entityIds)) {
             return $this;
         }
-        
+
         $where = $this->getCondition($entityIds, $entityType, $storeId);
-        
+
         try {
             $this->getConnection()->update($this->getMainTable(), $binds, $where);
         } catch (\Exception $e) {
             $this->logger()->critical($e);
         }
-        
+
         return $this;
     }
-    
-    
+
     /**
      * @param array $entityIds
      *
@@ -299,11 +300,10 @@ class Queue extends AbstractResourceModel
             $value = (int) $value;
             return $value;
         });
-        
+
         return $entityIds;
     }
-    
-    
+
     /**
      * @param array  $entityIds
      * @param string $entityType
@@ -320,11 +320,10 @@ class Queue extends AbstractResourceModel
             "entity_type = '{$entityType}'",
             "store_id IN ({$storeIds})"
         ];
-        
+
         return new \Zend_Db_Expr(implode(' AND ', $conditions));
     }
-    
-    
+
     /**
      * @param int $storeId
      *
@@ -333,14 +332,13 @@ class Queue extends AbstractResourceModel
     protected function getStoreIds($storeId = null)
     {
         $storeId = (int) $this->getStoreId($storeId);
-        
+
         $storeIds = [0, $storeId];
         $storeIds = array_unique($storeIds);
-        
+
         return $storeIds;
     }
-    
-    
+
     /**
      * @param null|int $storeId
      *
@@ -350,8 +348,7 @@ class Queue extends AbstractResourceModel
     {
         return $this->getStore($storeId)->getId();
     }
-    
-    
+
     /**
      * @param null|int $storeId
      *
@@ -364,7 +361,7 @@ class Queue extends AbstractResourceModel
         } catch (\Exception $e) {
             $this->logger()->critical($e);
         }
-        
+
         return $this->storeManager()->getDefaultStoreView();
     }
 }

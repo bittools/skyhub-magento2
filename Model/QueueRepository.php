@@ -113,6 +113,17 @@ class QueueRepository implements QueueRepositoryInterface
         $queue = $this->get($queueId);
         return $this->delete($queue);
     }
+
+    /**
+     * @param string $entityType
+     *
+     * @throws \Exception
+     * @return bool
+     */
+    public function deleteByEntityType($entityType)
+    {
+        return $this->getResource()->truncateQueue($entityType);
+    }
     
     
     /**
