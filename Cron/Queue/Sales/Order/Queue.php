@@ -3,6 +3,7 @@
 namespace BitTools\SkyHub\Cron\Queue\Sales\Order;
 
 use BitTools\SkyHub\Cron\AbstractCron;
+use Exceptions\UnprocessableException;
 use Magento\Cron\Model\Schedule;
 use Magento\Store\Api\Data\StoreInterface;
 
@@ -50,9 +51,19 @@ class Queue extends AbstractCron
             $helper     = $this->createObject(\BitTools\SkyHub\Helper\Sales\Order\Created\Message::class);
             $skyhubCode = $this->arrayExtract($orderData, 'code');
             
+            try {
+                /** @var \Magento\Sales\Api\Data\OrderInterface $order */
+                $order = $orderProcessor->createOrder($orderData);
+            } catch (UnprocessableException $e) {
+                $isDeleted = $queueIntegrator->delete($skyhubCode);
+                $message = $e->getMessage();
+                if ($isDeleted) {
+                    $message .= ' ' . __('It was also removed from queue.');
+                }
+                $schedule->setMessages($message);
+                continue;
+            }
 
-            /** @var \Magento\Sales\Api\Data\OrderInterface $order */
-            $order = $orderProcessor->createOrder($orderData);
             if (!$order || !$order->getEntityId()) {
                 $message = $schedule->getMessages();
                 $message .= ($helper->getNotCreatedOrderMessage($skyhubCode));

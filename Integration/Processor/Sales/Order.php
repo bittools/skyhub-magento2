@@ -32,6 +32,7 @@ use BitTools\SkyHub\Helper\Sales\Order as OrderHelper;
 use BitTools\SkyHub\Integration\Processor\Sales\Order\Status as StatusProcessor;
 use BitTools\SkyHub\Api\Data\OrderInterfaceFactory;
 use BitTools\SkyHub\Helper\Customer\Attribute\Mapping as CustomerAttributeMappingHelper;
+use BitTools\SkyHub\Exceptions\UnprocessableException;
 
 class Order extends AbstractProcessor
 {
@@ -161,6 +162,14 @@ class Order extends AbstractProcessor
         try {
             /** @var SalesOrder $order */
             $order = $this->processOrderCreation($data);
+        }  catch (UnprocessableException $e) {
+            $this->eventManager()
+                ->dispatch('bittools_skyhub_order_import_exception', [
+                    'exception' => $e,
+                    'order_data' => $data,
+                ]);
+
+            return false;
         } catch (\Exception $e) {
             $this->eventManager()
                 ->dispatch('bittools_skyhub_order_import_exception', [
@@ -195,6 +204,9 @@ class Order extends AbstractProcessor
         $order   = null;
         $code    = $this->arrayExtract($data, 'code');
         $orderId = $this->getOrderId($code);
+        $status = $this->statusProcessor->getStateBySkyhubStatusType(
+            $this->arrayExtract($data, 'status/type')
+        );
 
         if ($orderId) {
             /**
@@ -203,6 +215,9 @@ class Order extends AbstractProcessor
              * Order already exists.
              */
             $order = $this->orderRepository->get($orderId);
+        } else if ($status == SalesOrder::STATE_CANCELED) {
+            $exceptText = $code . " Order doesn't create, because status is " . SalesOrder::STATE_CANCELED;
+            throw new UnprocessableException($exceptText);
         }
 
         $billingAddress  = new DataObject($this->arrayExtract($data, 'billing_address'));
