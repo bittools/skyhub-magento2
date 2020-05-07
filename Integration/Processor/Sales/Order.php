@@ -474,10 +474,8 @@ class Order extends AbstractProcessor
                 $this->pushAddress($address, self::ADDRESS_TYPE_SHIPPING);
             }
 
-            $addresses = $customer->getAddresses();
-
             foreach ($this->addresses as $address) {
-                if (!$address || $address->getId()) {
+                if (!$address) {
                     continue;
                 }
 
@@ -590,7 +588,7 @@ class Order extends AbstractProcessor
     {
         /** @var AddressInterface $address */
         $address = $this->addressFactory->create();
-
+        $addressExist = false;
         /** @var AddressInterface $currentAddress */
         foreach ($customer->getAddresses() ?: [] as $currentAddress) {
             if (!$currentAddress->isDefaultBilling() && $type === self::ADDRESS_TYPE_BILLING) {
@@ -602,7 +600,9 @@ class Order extends AbstractProcessor
             }
 
             if ($currentAddress->getPostcode() === $addressObject->getData('postcode')) {
-                return $currentAddress;
+                $addressExist = true;
+                $address = $currentAddress;
+                break;
             }
 
             if ($currentAddress->getPostcode() === '00000000') {
@@ -629,7 +629,13 @@ class Order extends AbstractProcessor
         /**
          * The customer configuration can be set to use 2 fields only.
          */
-        $street = $this->prepareAddressStreetLines($street, $number, $neighborhood, $complement, $streetLinesCount);
+        $street = $this->prepareAddressStreetLines(
+            $this->removeLineTabString($street), 
+            $this->removeLineTabString($number), 
+            $this->removeLineTabString($neighborhood), 
+            $this->removeLineTabString($complement), 
+            $streetLinesCount
+        );
 
         if (strlen($country) > 2) {
             $country = $this->countryFactory->create()->loadByCode($country)->getId();
@@ -645,9 +651,25 @@ class Order extends AbstractProcessor
             ->setPostcode($postcode)
             ->setCountryId($country ?: 'BR');
 
-        $this->pushAddress($address, $type);
+        if (!$addressExist) {
+            $this->pushAddress($address, $type);
+        }
 
         return $address;
+    }
+
+    /**
+     * Remove \n\t\r the string
+     *
+     * @param string $value
+     * @return string
+     */
+    protected function removeLineTabString(string $value): string
+    {
+        $value = str_replace('\n', ' ', $value);
+        $value = str_replace('\t', ' ', $value);
+        $value = str_replace('\r', ' ', $value);
+        return $value;
     }
 
     /**
