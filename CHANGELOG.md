@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## 1.0.8 - 2020-05-07
+### Changed
+- Bugfix: skip some observers when order is updated by queue
+- Ignore canceled order in queue if it not exists on store
+
 ## 1.0.7 - 2020-02-04
 ### Changed
 - Bugfix: integrate orders with configurable products
