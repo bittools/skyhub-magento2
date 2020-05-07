@@ -467,18 +467,32 @@ class Order extends AbstractProcessor
             if ($billing = $this->arrayExtract($data, 'billing_address')) {
                 $address = $this->addCustomerAddress($billing, $customer, self::ADDRESS_TYPE_BILLING);
                 $this->pushAddress($address, self::ADDRESS_TYPE_BILLING);
+                $this->getBillingAddress()->setIsDefaultBilling(1);
             }
 
             if ($shipping = $this->arrayExtract($data, 'shipping_address')) {
                 $address = $this->addCustomerAddress($shipping, $customer, self::ADDRESS_TYPE_SHIPPING);
                 $this->pushAddress($address, self::ADDRESS_TYPE_SHIPPING);
+                $this->getShippingAddress()->setIsDefaultShipping(1);
             }
 
+            $addressIds = [];
+            $addresses = [];
             foreach ($this->addresses as $address) {
                 if (!$address) {
                     continue;
                 }
+                $addressIds[] = $address->getId();
+                $addresses[] = $address;
+            }
 
+            $addressesDataBase = $customer->getAddresses();
+            foreach ($addressesDataBase as $address) {
+                if (in_array($address->getId(), $addressIds)) {
+                    continue;
+                }
+                $address->setIsDefaultBilling(0);
+                $address->setIsDefaultShipping(0);
                 $addresses[] = $address;
             }
 
@@ -591,14 +605,6 @@ class Order extends AbstractProcessor
         $addressExist = false;
         /** @var AddressInterface $currentAddress */
         foreach ($customer->getAddresses() ?: [] as $currentAddress) {
-            if (!$currentAddress->isDefaultBilling() && $type === self::ADDRESS_TYPE_BILLING) {
-                continue;
-            }
-
-            if (!$currentAddress->isDefaultShipping() && $type === self::ADDRESS_TYPE_SHIPPING) {
-                continue;
-            }
-
             if ($currentAddress->getPostcode() === $addressObject->getData('postcode')) {
                 $addressExist = true;
                 $address = $currentAddress;
