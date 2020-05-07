@@ -2,69 +2,73 @@
 
 namespace BitTools\SkyHub\Observer\Sales\Order;
 
+use BitTools\SkyHub\Model\ResourceModel\Queue;
 use BitTools\SkyHub\Observer\Sales\AbstractSales;
+use Exception;
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\Event\Observer;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Item;
 
 class ReIntegrateOrderProducts extends AbstractSales
 {
-    
     /**
      * @param Observer $observer
      *
+     * @throws Exception
      * @return void
      *
-     * @throws \Exception
      */
     public function execute(Observer $observer)
     {
-        /** @var \Magento\Sales\Model\Order $order */
+        /** @var Order $order */
         $order = $observer->getData('order');
-    
+
         if (!$order || !$order->getEntityId()) {
             return;
         }
-    
-        $items      = $order->getAllVisibleItems();
+
+        $items = $order->getAllVisibleItems();
         $productIds = [];
-    
-        /** @var \Magento\Sales\Model\Order\Item $item */
+
+        /** @var Item $item */
         foreach ($items as $item) {
-            /** @var \Magento\Catalog\Api\Data\ProductInterface $product */
+            /** @var ProductInterface $product */
             $product = $item->getProduct();
-            
+
             if (!$this->productValidation->canIntegrateProduct($product)) {
                 continue;
             }
-        
+
             $success = true;
             $integrateProductOnSave = $this->context
                 ->configContext()
                 ->catalog()
                 ->hasActiveIntegrateOnSaveFlag();
-            
+
             if ($integrateProductOnSave) {
                 /**
                  * integrate all order items on skyhub (mainly to update stock qty)
                  */
                 $response = $this->productIntegrator->createOrUpdate($product);
-            
+
                 if ($response && $response->exception()) {
                     $success = false;
                 }
             }
-        
+
             if (!$success || !$integrateProductOnSave) {
                 $productIds[] = $product->getId();
             }
         }
-        
+
         if (empty($productIds)) {
             return;
         }
-    
-        /** @var \BitTools\SkyHub\Model\ResourceModel\Queue $queueResource */
+
+        /** @var Queue $queueResource */
         $queueResource = $this->queueResourceFactory->create();
-        
+
         /** Queue product. */
         $queueResource->queue(
             $productIds,

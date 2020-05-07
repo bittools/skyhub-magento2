@@ -14,28 +14,35 @@
 
 namespace BitTools\SkyHub\Observer\Sales\Order\Creditmemo;
 
+use BitTools\SkyHub\Cron\Queue\Sales\Order\Queue;
 use BitTools\SkyHub\Observer\Sales\AbstractSales;
 use Magento\Framework\Event\Observer;
+use Magento\Sales\Model\Order\Creditmemo;
+use Magento\Store\Model\Store;
 
 class CancelOrderAfterRefund extends AbstractSales
 {
-    
+
     /**
      * @param Observer $observer
      */
     public function execute(Observer $observer)
     {
-        /** @var \Magento\Sales\Model\Order\Creditmemo $creditmemo */
+        if ($this->context->registryManager()->registry(Queue::QUEUE_PROCESS)) {
+            return;
+        }
+
+        /** @var Creditmemo $creditmemo */
         $creditmemo = $observer->getData('creditmemo');
-        
+
         if (!$creditmemo || !$creditmemo->getEntityId()) {
             return;
         }
-        
-        /** @var \Magento\Store\Model\Store $store */
-        $store   = $creditmemo->getStore();
+
+        /** @var Store $store */
+        $store = $creditmemo->getStore();
         $orderId = $creditmemo->getOrderId();
-        
+
         $this->storeIterator->call($this->orderIntegrator, 'cancel', [$orderId], $store);
     }
 }

@@ -5,6 +5,7 @@ namespace BitTools\SkyHub\Integration\Processor\Sales;
 use BitTools\SkyHub\Api\OrderRepositoryInterface as SkyhubOrderRepositoryInterface;
 use BitTools\SkyHub\Integration\Context as IntegrationContext;
 use BitTools\SkyHub\Integration\Processor\AbstractProcessor;
+use Exception;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\AddressRepositoryInterface;
@@ -155,7 +156,8 @@ class Order extends AbstractProcessor
      *
      * @return bool|SalesOrder
      *
-     * @throws \Exception
+     * @throws Exception
+     * @throws UnprocessableException
      */
     public function createOrder(array $data)
     {
@@ -169,8 +171,8 @@ class Order extends AbstractProcessor
                     'order_data' => $data,
                 ]);
 
-            return false;
-        } catch (\Exception $e) {
+            throw $e;
+        } catch (Exception $e) {
             $this->eventManager()
                 ->dispatch('bittools_skyhub_order_import_exception', [
                     'exception' => $e,
@@ -197,7 +199,8 @@ class Order extends AbstractProcessor
      * @throws InputException
      * @throws LocalizedException
      * @throws InputMismatchException
-     * @throws \Exception
+     * @throws Exception
+     * @throws UnprocessableException
      */
     protected function processOrderCreation(array $data)
     {
@@ -283,7 +286,7 @@ class Order extends AbstractProcessor
 
         $products = $this->getProducts((array) $this->arrayExtract($data, 'items'));
         if (empty($products)) {
-            throw new \Exception(__('The SkyHub products cannot be matched with Magento products.'));
+            throw new Exception(__('The SkyHub products cannot be matched with Magento products.'));
         }
 
         /** @var array $productData */
@@ -295,7 +298,7 @@ class Order extends AbstractProcessor
         try {
             /** @var SalesOrder $order */
             $order = $creator->create();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->logger()->critical($exception);
 
             /**
@@ -345,7 +348,7 @@ class Order extends AbstractProcessor
      *
      * @return $this
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function updateOrderStatus(array $skyhubOrderData, SalesOrder $order)
     {
@@ -465,7 +468,7 @@ class Order extends AbstractProcessor
      * @throws InputException
      * @throws LocalizedException
      * @throws InputMismatchException
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getCustomer(array $data, $storeId = null)
     {
@@ -504,7 +507,7 @@ class Order extends AbstractProcessor
 
         } catch (NoSuchEntityException $e) {
             $customer = $this->createCustomer($data, $storeId);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->logger()->critical($e);
             throw $e;
         }
