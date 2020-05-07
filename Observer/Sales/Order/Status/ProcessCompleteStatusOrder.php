@@ -14,25 +14,32 @@
 
 namespace BitTools\SkyHub\Observer\Sales\Order\Status;
 
+use BitTools\SkyHub\Cron\Queue\Sales\Order\Queue;
 use BitTools\SkyHub\Observer\Sales\AbstractSales;
+use BitTools\SkyHub\StoreConfig\SalesOrderStatus;
 use Magento\Framework\Event\Observer;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Model\Order;
 
 class ProcessCompleteStatusOrder extends AbstractSales
 {
-
     /**
      * @param Observer $observer
      */
     public function execute(Observer $observer)
     {
-        /** @var \Magento\Sales\Api\Data\OrderInterface $order */
+        if ($this->context->registryManager()->registry(Queue::QUEUE_PROCESS)) {
+            return;
+        }
+
+        /** @var OrderInterface $order */
         $order = $observer->getData('order');
 
         if (!$this->validateOrder($order)) {
             return;
         }
 
-        /** @var \BitTools\SkyHub\StoreConfig\SalesOrderStatus $orderStatus */
+        /** @var SalesOrderStatus $orderStatus */
         $orderStatus = $this->context->configContext()->salesOrderStatus();
 
         switch ($order->getStatus()) {
@@ -43,26 +50,29 @@ class ProcessCompleteStatusOrder extends AbstractSales
         }
 
     }
-    
-    
+
     /**
-     * @param \Magento\Sales\Api\Data\OrderInterface $order
+     * @param Order $order
      *
      * @return $this
      */
-    protected function processDeliveredCustomerStatus(\Magento\Sales\Model\Order $order)
+    protected function processDeliveredCustomerStatus(Order $order)
     {
         try {
             $this->storeIterator->call($this->orderIntegrator, 'delivery', [$order->getEntityId()], $order->getStore());
         } catch (\Exception $e) {
             $this->context->logger()->critical($e);
         }
-        
+
         return $this;
     }
 
-
-    protected function processShipmentExceptionCustomerStatus(\Magento\Sales\Model\Order $order)
+    /**
+     * @param Order $order
+     *
+     * @return $this
+     */
+    protected function processShipmentExceptionCustomerStatus(Order $order)
     {
         try {
 
@@ -84,22 +94,22 @@ class ProcessCompleteStatusOrder extends AbstractSales
 
         return $this;
     }
-    
+
     /**
-     * @param \Magento\Sales\Api\Data\OrderInterface $order
+     * @param Order $order
      *
      * @return bool
      */
-    protected function validateOrder(\Magento\Sales\Model\Order $order)
+    protected function validateOrder(Order $order)
     {
         if (!$order || !$order->getEntityId()) {
             return false;
         }
-        
-        if ($order->getState() != \Magento\Sales\Model\Order::STATE_COMPLETE) {
+
+        if ($order->getState() != Order::STATE_COMPLETE) {
             return false;
         }
-        
+
         return true;
     }
 }
