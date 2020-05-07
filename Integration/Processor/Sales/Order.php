@@ -630,10 +630,10 @@ class Order extends AbstractProcessor
          * The customer configuration can be set to use 2 fields only.
          */
         $street = $this->prepareAddressStreetLines(
-            $this->removeLineTabString($street), 
-            $this->removeLineTabString($number), 
-            $this->removeLineTabString($neighborhood), 
-            $this->removeLineTabString($complement), 
+            $this->removeLineTabString($street),
+            $this->removeLineTabString($number),
+            $this->removeLineTabString($neighborhood),
+            $this->removeLineTabString($complement),
             $streetLinesCount
         );
 
@@ -666,9 +666,9 @@ class Order extends AbstractProcessor
      */
     protected function removeLineTabString(string $value): string
     {
-        $value = str_replace('\n', ' ', $value);
-        $value = str_replace('\t', ' ', $value);
-        $value = str_replace('\r', ' ', $value);
+        $value = str_replace("\n", ' ', $value);
+        $value = str_replace("\t", '', $value);
+        $value = str_replace("\r", '', $value);
         return $value;
     }
 
