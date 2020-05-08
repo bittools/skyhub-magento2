@@ -275,7 +275,11 @@
 
             <group id="method_shipping" translate="label comment" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Method Shipping Default</label>
-                <field id="">
+                <field id="marketplaces" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Marketplaces</label>
+                    <comment>When selected, is created a order with selected shipping method and ignore skyhub data</comment>
+                    <frontend_model>BitTools\SkyHub\Block\Adminhtml\Sales\Order\Shipment\Marketplace\Channel</frontend_model>
+                </field>
             </group>
         </section>
     </system>

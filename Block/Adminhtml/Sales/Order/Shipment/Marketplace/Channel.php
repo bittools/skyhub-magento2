@@ -12,9 +12,101 @@
 
 namespace BitTools\SkyHub\Block\Adminhtml\Sales\Order\Shipment\Marketplace;
 
-use Magento\Sales\Block\Adminhtml\Order\AbstractOrder;
+use Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray;
+use BitTools\SkyHub\Model\Source\Order\Marketplaces;
+use Magento\Backend\Block\Template\Context;
+use BitTools\SkyHub\Block\Adminhtml\Sales\Order\Shipment\Marketplace\Field\Channel as FieldChannel;
+use \Magento\Framework\DataObject;
 
-class Channel extends AbstractOrder
+class Channel extends AbstractFieldArray
 {
-    
+    /** @var string */
+    protected $render;
+
+    /** @var Marketplaces */
+    private $marketplaces;
+
+    /**
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param array $data
+     */
+    public function __construct(Context $context, Marketplaces $marketplaces, array $data = [])
+    {
+        parent::__construct($context, $data);
+        $this->marketplaces = $marketplaces;
+    }
+
+    /**
+     * Prepare to render
+     *
+     * @return void
+     */
+    protected function _prepareToRender()
+    {
+        $this->addColumn(
+            'channel',
+            [
+                'label'    => __('Channel'),
+                'class'    => 'input-text required-entry',
+                'renderer' => $this->getRendererChannels()
+            ]
+        );
+
+        $this->addColumn(
+            'method_shipping_default',
+            [
+                'label'    => __('Method Shipping Default'),
+                'class'    => 'input-text required-entry'
+            ]
+        );
+
+        $this->addColumn(
+            'carrier_shipping_default',
+            [
+                'label'    => __('Carrier Shipping Default'),
+                'class'    => 'input-text required-entry'
+            ]
+        );
+    }
+
+     /**
+     * Return renderer by type
+     *
+     * @return array
+     */
+    protected function getRendererChannels()
+    {
+        if (!$this->render) {
+            $options = $this->getChannels();
+            $this->render = $this->getLayout()
+                ->createBlock(FieldChannel::class)
+                ->setIsRenderToJsTemplate(true)
+                ->setOptions($options);
+        }
+
+        return $this->render;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getChannels(): array
+    {
+        return $this->marketplaces->toOptionArray();
+    }
+
+    /**
+     * Prepare row and set option selected
+     *
+     * @param DataObject $row
+     * @return void
+     */
+    protected function _prepareArrayRow(DataObject $row)
+    {
+        $row->setData(
+            'option_extra_attr_' . $this->getRendererChannels()
+                ->calcOptionHash($row->getData('channel')),
+            'selected="selected"'
+        );
+    }
 }
