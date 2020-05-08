@@ -272,6 +272,11 @@
                     </depends>
                 </field>
             </group>
+
+            <group id="method_shipping" translate="label comment" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Method Shipping Default</label>
+                <field id="">
+            </group>
         </section>
     </system>
 </config>
