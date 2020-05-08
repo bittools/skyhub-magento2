@@ -161,7 +161,7 @@ class Product extends AbstractProduct
             try {
                 $value = $this->extractProductData($product, $attribute);
                 
-                if (empty($value)) {
+                if (trim($value) == '') {
                     continue;
                 }
                 
