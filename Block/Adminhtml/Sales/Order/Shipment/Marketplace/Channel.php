@@ -50,7 +50,7 @@ class Channel extends AbstractFieldArray
             'channel',
             [
                 'label'    => __('Channel'),
-                'class'    => 'input-text required-entry',
+                'class'    => 'required-entry',
                 'renderer' => $this->getRendererChannels()
             ]
         );
