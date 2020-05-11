@@ -279,6 +279,7 @@
                     <label>Marketplaces</label>
                     <comment>When selected, is created a order with selected shipping method and ignore skyhub data</comment>
                     <frontend_model>BitTools\SkyHub\Block\Adminhtml\Sales\Order\Shipment\Marketplace\Channel</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
                 </field>
             </group>
         </section>

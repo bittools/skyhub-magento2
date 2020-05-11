@@ -59,14 +59,6 @@ class Channel extends AbstractFieldArray
                 'class'    => 'input-text required-entry'
             ]
         );
-
-        $this->addColumn(
-            'carrier_shipping_default',
-            [
-                'label'    => __('Carrier Shipping Default'),
-                'class'    => 'input-text required-entry'
-            ]
-        );
     }
 
      /**
@@ -103,10 +95,8 @@ class Channel extends AbstractFieldArray
      */
     protected function _prepareArrayRow(DataObject $row)
     {
-        $row->setData(
-            'option_extra_attr_' . $this->getRendererChannels()
-                ->calcOptionHash($row->getData('channel')),
-            'selected="selected"'
-        );
+        $channelHash = $this->getRendererChannels()->calcOptionHash($row->getData('channel'));
+        $option = ['option_' . $channelHash => 'selected="selected"'];
+        $row->setData('option_extra_attrs', $option);
     }
 }
