@@ -27,7 +27,10 @@ class Channel extends AbstractFieldArray
     private $marketplaces;
 
     /**
-     * @param \Magento\Backend\Block\Template\Context $context
+     * Channel Constructor
+     *
+     * @param Context $context
+     * @param Marketplaces $marketplaces
      * @param array $data
      */
     public function __construct(Context $context, Marketplaces $marketplaces, array $data = [])
