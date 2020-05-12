@@ -161,11 +161,10 @@ class Product extends AbstractProduct
             try {
                 $value = $this->extractProductData($product, $attribute);
                 
-                if (trim($value) == '') {
+                if (empty($value) && $value !== 0 && $value !== .0 && $value !== '0') {
                     continue;
                 }
                 
-                //                $interface->addSpecification($attribute->getFrontend()->getLabel(), $value);
                 $interface->addSpecification($attribute->getAttributeCode(), $value);
             } catch (\Exception $e) {
                 $this->context->helperContext()->logger()->critical($e);
