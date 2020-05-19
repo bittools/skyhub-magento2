@@ -206,6 +206,7 @@ class Order extends AbstractProcessor
     {
         $order   = null;
         $code    = $this->arrayExtract($data, 'code');
+        $channel = $this->arrayExtract($data, 'channel');
         $orderId = $this->getOrderId($code);
         $status = $this->statusProcessor->getStateBySkyhubStatusType(
             $this->arrayExtract($data, 'status/type')
@@ -242,6 +243,7 @@ class Order extends AbstractProcessor
 
         $shippingCarrier = \BitTools\SkyHub\Model\Shipping\Carrier\Standard::CODE;
         $shippingTitle   = (string) $this->arrayExtract($data, 'shipping_method');
+        $shippingTitle  = $this->getShippingMethodConfig($shippingTitle, $channel);
         $shippingCost    = (float)  $this->arrayExtract($data, 'shipping_cost', 0.0000);
         $discountAmount  = (float)  $this->arrayExtract($data, 'discount', 0.0000);
         $interestAmount  = (float)  $this->arrayExtract($data, 'interest', 0.0000);
@@ -317,6 +319,42 @@ class Order extends AbstractProcessor
         $order->setData('is_created', true);
 
         return $order;
+    }
+
+    /**
+     * Return Config methodShipping
+     *
+     * @return bool|array
+     */
+    protected function getMethodShippingConfig()
+    {
+        $config = $this->helperContext()->scopeConfig()->getValue('bittools_skyhub/method_shipping/marketplaces');
+        if (!$config) {
+            return false;
+        }
+        return json_decode($config, true);
+    }
+
+    /**
+     * Return Method Shipping Default
+     *
+     * @param string $shippingMethod
+     * @return string
+     */
+    protected function getShippingMethodConfig($shippingMethod, $channel)
+    {
+        $config = $this->getMethodShippingConfig();
+        if (!$config) {
+            return $shippingMethod;
+        }
+
+        foreach ($config as $value) {
+            if ($channel != $value['channel']) {
+                continue;
+            }
+            return $value['method_shipping_default'];
+        }
+        return $shippingMethod;
     }
 
     /**
