@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## 1.0.9 - 2020-05-19
+### Changed
+- Fix bug with attribute = 0
+- Set method shipping default to ('Extra', 'Casas Bahia', 'Ponto Frio')
+- Fix bug when address have \n.
+
 ## 1.0.8 - 2020-05-07
 ### Changed
 - Bugfix: skip some observers when order is updated by queue
