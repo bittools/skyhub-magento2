@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## 1.0.10 - 2020-05-20
+### Changed
+- Fix bug on integrate order when customer address does not have complement
+
 ## 1.0.9 - 2020-05-19
 ### Changed
 - Fix bug with attribute = 0
