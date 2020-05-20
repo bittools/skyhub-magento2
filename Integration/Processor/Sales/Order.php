@@ -695,7 +695,7 @@ class Order extends AbstractProcessor
             $this->removeLineTabString($street),
             $this->removeLineTabString($number),
             $this->removeLineTabString($neighborhood),
-            $this->removeLineTabString($complement),
+            $this->removeLineTabString($complement ?: ''),
             $streetLinesCount
         );
 
@@ -726,8 +726,12 @@ class Order extends AbstractProcessor
      * @param string $value
      * @return string
      */
-    protected function removeLineTabString(string $value): string
+    protected function removeLineTabString(string $value = null): string
     {
+        if (empty($value)) {
+            return '';
+        }
+
         $value = str_replace("\n", ' ', $value);
         $value = str_replace("\t", '', $value);
         $value = str_replace("\r", '', $value);
