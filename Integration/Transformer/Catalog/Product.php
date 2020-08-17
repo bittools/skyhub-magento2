@@ -219,7 +219,7 @@ class Product extends AbstractProduct
                 case 'qty':
                 case 'price':
                 case 'promotional_price':
-                    continue;
+                    break;
                 default:
                     /** @var AttributeHelper $helper */
                     $helper = $this->context->objectManager()->get(AttributeHelper::class);
@@ -230,7 +230,7 @@ class Product extends AbstractProduct
                     }
                     
                     if (!$attribute) {
-                        continue;
+                        break;
                     }
                     
                     $value = $this->getProductAttributeValue($product, $attribute, $mappedAttribute->getCastType());
