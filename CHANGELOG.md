@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## 1.0.11 - 2020-10-17
+### Changed
+- Fix bug in transformers
+
 ## 1.0.10 - 2020-05-20
 ### Changed
 - Fix bug on integrate order when customer address does not have complement
