@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## 1.0.12 - 2021-02-02
+### Changed
+- Change documentation with email in files. If you need help, Access https://ajuda.skyhub.com.br/hc/pt-br/requests/new for questions and other requests.
+
 ## 1.0.11 - 2020-10-17
 ### Changed
 - Fix bug in transformers

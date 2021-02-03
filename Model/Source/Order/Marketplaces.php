@@ -7,7 +7,7 @@
  *
  * @copyright Copyright (c) 2020 B2W Digital - BIT Tools.
  *
- * @author    Tiago Tescaro <tiago.tescaro@b2wdigital.com>
+ * Access https://ajuda.skyhub.com.br/hc/pt-br/requests/new for questions and other requests.
  */
 
 namespace BitTools\SkyHub\Model\Source\Order;
