@@ -5,7 +5,7 @@
  * Version v0.1.0
  * Official Repository: http://github.com/tiagosampaio/magentor
  *
- * @author Tiago Sampaio <tiago@tiagosampaio.com>
+ * Access https://ajuda.skyhub.com.br/hc/pt-br/requests/new for questions and other requests.
  */
 
 namespace BitTools\SkyHub\Model\ResourceModel\Entity;
