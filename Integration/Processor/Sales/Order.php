@@ -544,11 +544,14 @@ class Order extends AbstractProcessor
         $taxvat = $this->arrayExtract($data, 'vat_number');
 
         try {
+            /** @var CustomerInterface $customer */
             $customer = $this->getCustomerByEmailOrTaxvat($email, $taxvat, $storeId);
 
             if ($this->foundByTaxvat) {
                 $this->setCustomerData($customer, $data);
             }
+            $websiteId = $this->getStore($storeId)->getWebsiteId();
+            $customer->setWebsiteId($websiteId);
 
             if ($billing = $this->arrayExtract($data, 'billing_address')) {
                 $address = $this->addCustomerAddress($billing, $customer, self::ADDRESS_TYPE_BILLING);
