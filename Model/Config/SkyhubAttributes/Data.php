@@ -3,9 +3,34 @@
 namespace BitTools\SkyHub\Model\Config\SkyhubAttributes;
 
 use Magento\Framework\Config\Data as ConfigData;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Serialize\SerializerInterface;
+use Magento\Framework\Config\ReaderInterface;
+use Magento\Framework\Config\CacheInterface;
 
 class Data extends ConfigData
 {
+    /** @var ScopeConfigInterface */
+    protected $config;
+
+    /**
+     * Constructor
+     *
+     * @param ReaderInterface $reader
+     * @param CacheInterface $cache
+     * @param string $cacheId
+     * @param SerializerInterface|null $serializer
+     */
+    public function __construct(
+        ReaderInterface $reader,
+        CacheInterface $cache,
+        $cacheId,
+        ScopeConfigInterface $config,
+        SerializerInterface $serializer = null
+    ) {
+        parent::__construct($reader, $cache, $cacheId, $serializer);
+        $this->config = $config;
+    }
     
     /**
      * @return array
@@ -20,7 +45,21 @@ class Data extends ConfigData
      */
     public function getEntityBlacklistedAttributes($entityType)
     {
-        return $this->get("blacklist/{$entityType}");
+        $blacklist = $this->config->getValue("bittools_skyhub/blacklist_{$entityType}/attributes");
+        if (!$blacklist) {
+            return [];
+        }
+
+        $blacklist = json_decode($blacklist, true);
+        if (!$blacklist) {
+            return [];
+        }
+
+        $return = [];
+        foreach($blacklist as $value) {
+            $return[$value['field']] = $value['field'];
+        }
+        return $return;
     }
     
     /**
@@ -31,10 +70,8 @@ class Data extends ConfigData
      */
     public function isAttributeCodeInBlacklist($attributeCode, $entityType = 'catalog_product')
     {
-        $blacklist  = $this->getEntityBlacklistedAttributes($entityType);
-        $attributes = isset($blacklist[$entityType]) ? $blacklist[$entityType] : [];
-
-        return in_array($attributeCode, $attributes);
+        $attributes  = $this->getEntityBlacklistedAttributes($entityType);
+        return isset($attributes[$attributeCode]);
     }
     
     

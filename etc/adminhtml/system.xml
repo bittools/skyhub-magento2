@@ -282,6 +282,24 @@
                     <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
                 </field>
             </group>
+
+            <group id="customer_address" translate="label comment" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Customer Address</label>
+                <field id="concat_complement" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Concat fields (complement, reference, detail) in Complement Customer Address</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+
+            <group id="blacklist_catalog_product" translate="label comment" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Blacklist Catalog Product Attributes</label>
+                <field id="attributes" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Attributes</label>
+                    <comment>When selected, this attributes don't send skyhub.</comment>
+                    <frontend_model>BitTools\SkyHub\Block\Adminhtml\Attributes\Blacklist</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                </field>
+            </group>
         </section>
     </system>
 </config>

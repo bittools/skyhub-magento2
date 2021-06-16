@@ -34,7 +34,11 @@ use BitTools\SkyHub\Integration\Processor\Sales\Order\Status as StatusProcessor;
 use BitTools\SkyHub\Api\Data\OrderInterfaceFactory;
 use BitTools\SkyHub\Helper\Customer\Attribute\Mapping as CustomerAttributeMappingHelper;
 use BitTools\SkyHub\Exceptions\UnprocessableException;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
+/**
+ * Order class
+ */
 class Order extends AbstractProcessor
 {
 
@@ -95,6 +99,9 @@ class Order extends AbstractProcessor
     /** @var CustomerAttributeMappingHelper  */
     protected $customerAttributeMappingHelper;
 
+    /** @var ScopeConfigInterface */
+    protected $config;
+
     /** @var array|AddressInterface[] */
     protected $addresses = [
         self::ADDRESS_TYPE_BILLING  => null,
@@ -111,6 +118,28 @@ class Order extends AbstractProcessor
      */
     protected $foundByTaxvat = false;
 
+    /**
+     * Order Constructor
+     *
+     * @param IntegrationContext $integrationContext
+     * @param OrderRepositoryInterface $orderRepository
+     * @param SkyhubOrderRepositoryInterface $skyhubOrderRepository
+     * @param ProductRepositoryInterface $productRepository
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param AddressRepositoryInterface $addressRepository
+     * @param AddressFactory $addressFactory
+     * @param CountryFactory $countryFactory
+     * @param CustomerInterfaceFactory $customerFactory
+     * @param RegionFactory $regionFactory
+     * @param RegionInterfaceFactory $regionDataFactory
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param OrderCreatorFactory $orderCreatorFactory
+     * @param OrderHelper $orderHelper
+     * @param StatusProcessor $statusProcessor
+     * @param OrderInterfaceFactory $orderFactory
+     * @param CustomerAttributeMappingHelper $customerAttributeMappingHelper
+     * @param ScopeConfigInterface $config
+     */
     public function __construct(
         IntegrationContext $integrationContext,
         OrderRepositoryInterface $orderRepository,
@@ -128,9 +157,9 @@ class Order extends AbstractProcessor
         OrderHelper $orderHelper,
         StatusProcessor $statusProcessor,
         OrderInterfaceFactory $orderFactory,
-        CustomerAttributeMappingHelper $customerAttributeMappingHelper
-    )
-    {
+        CustomerAttributeMappingHelper $customerAttributeMappingHelper,
+        ScopeConfigInterface $config
+    ) {
         parent::__construct($integrationContext);
 
         $this->orderRepository       = $orderRepository;
@@ -148,6 +177,7 @@ class Order extends AbstractProcessor
         $this->orderHelper           = $orderHelper;
         $this->statusProcessor       = $statusProcessor;
         $this->orderFactory          = $orderFactory;
+        $this->config                = $config;
         $this->customerAttributeMappingHelper = $customerAttributeMappingHelper;
     }
 
@@ -514,11 +544,14 @@ class Order extends AbstractProcessor
         $taxvat = $this->arrayExtract($data, 'vat_number');
 
         try {
+            /** @var CustomerInterface $customer */
             $customer = $this->getCustomerByEmailOrTaxvat($email, $taxvat, $storeId);
 
             if ($this->foundByTaxvat) {
                 $this->setCustomerData($customer, $data);
             }
+            $websiteId = $this->getStore($storeId)->getWebsiteId();
+            $customer->setWebsiteId($websiteId);
 
             if ($billing = $this->arrayExtract($data, 'billing_address')) {
                 $address = $this->addCustomerAddress($billing, $customer, self::ADDRESS_TYPE_BILLING);
@@ -769,6 +802,10 @@ class Order extends AbstractProcessor
      */
     protected function getComplement(DataObject $addressObject)
     {
+        if ($this->config->getValue('bittools_skyhub/customer_address/concat_complement')) {
+            return $this->getComplementConcat($addressObject);
+        }
+
         if ($addressObject->getData('complement')) {
             return $addressObject->getData('complement');
         }
@@ -778,6 +815,52 @@ class Order extends AbstractProcessor
         }
 
         return $addressObject->getData('detail');
+    }
+
+    /**
+     * @param DataObject $addressObject
+     *
+     * @return string|null
+     */
+    protected function getComplementConcat(DataObject $addressObject)
+    {
+        $complement = [];
+        if ($this->verifyComplement($addressObject->getData('complement'))) {
+            $complement[] = $addressObject->getData('complement');
+        }
+
+        if($this->verifyComplement($addressObject->getData('reference'))) {
+            $complement[] = $addressObject->getData('reference');
+        }
+
+        if ($this->verifyComplement($addressObject->getData('detail'))){
+            $complement[] = $addressObject->getData('detail');
+        }        
+
+        return implode('-', $complement);
+    }
+
+    /**
+     * Verify complement
+     *
+     * @param string $complement
+     * @return string|null
+     */
+    protected function verifyComplement(string $complement = null): ?string
+    {
+        if (!$complement) {
+            null;
+        }
+
+        if ($complement == 'N\u00e3o informado') {
+            return null;
+        }
+
+        if ($complement == 'Não informado') {
+            return null;
+        }
+
+        return $complement;
     }
 
     /**

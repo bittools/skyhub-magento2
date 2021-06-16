@@ -25,6 +25,48 @@
                 <shipment_exception_order_status>shipment_exception</shipment_exception_order_status>
             </sales_order_status>
 
+            <blacklist_catalog_product>
+                <attributes>
+                    <item1><field>entity_id</field></item1>
+                    <item2><field>attribute_set_id</field></item2>
+                    <item3><field>options_container</field></item3>
+                    <item4><field>media_gallery</field></item4>
+                    <item5><field>thumbnail</field></item5>
+                    <item6><field>small_image</field></item6>
+                    <item7><field>image</field></item7>
+                    <item8><field>msrp_display_actual_price_type</field></item8>
+                    <item9><field>msrp_enabled</field></item9>
+                    <item10><field>special_from_date</field></item10>
+                    <item11><field>special_to_date</field></item11>
+                    <item12><field>updated_at</field></item12>
+                    <item13><field>created_at</field></item13>
+                    <item14><field>visibility</field></item14>
+                    <item15><field>url_path</field></item15>
+                    <item16><field>url_key</field></item16>
+                    <item17><field>entity_type_id</field></item17>
+                    <item18><field>type_id</field></item18>
+                    <item19><field>custom_design</field></item19>
+                    <item20><field>custom_design_from</field></item20>
+                    <item21><field>custom_design_to</field></item21>
+                    <item22><field>custom_layout_update</field></item22>
+                    <item23><field>is_recurring</field></item23>
+                    <item24><field>recurring_profile</field></item24>
+                    <item25><field>gift_message_available</field></item25>
+                    <item26><field>has_options</field></item26>
+                    <item27><field>required_options</field></item27>
+                    <item28><field>tax_class_id</field></item28>
+                    <item29><field>msrp</field></item29>
+                    <item30><field>msrp_enabled</field></item30>
+                    <item31><field>msrp_display_actual_price_type</field></item31>
+                </attributes>
+            </blacklist_catalog_product>
+
+            <blacklist_customer>
+                <attributes>
+                    <item1><field>entity_id</field></item1>
+                </attributes>
+            </blacklist_customer>
+
             <!-- CATALOG PRODUCT ATTRIBUTES -->
             <cron_catalog_product_attribute>
                 <enabled>1</enabled>

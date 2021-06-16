@@ -42,6 +42,8 @@ class Create
     /** @var \Magento\Quote\Api\CartRepositoryInterface */
     protected $quoteRepository;
 
+    /** @var \Magento\Framework\App\State */
+    protected $state;
 
     /**
      * Create constructor.
@@ -52,6 +54,7 @@ class Create
     public function __construct(
         IntegrationContext $context,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
+        \Magento\Framework\App\State $state,
         $store = null)
     {
         $this->context = $context;
@@ -65,6 +68,7 @@ class Create
                 'currency' => $this->getStore($store)->getCurrentCurrencyCode(),
             ],
         ];
+        $this->state = $state;
 
         $this->merge($data);
     }
@@ -488,6 +492,8 @@ class Create
      */
     protected function processQuote($data = [])
     {
+        $this->initArea();
+        
         $orderData = (array) $this->arrayExtract($data, 'order', []);
 
         /** @var \BitTools\SkyHub\Model\Sales\AdminOrder\Create $orderCreator */
@@ -558,6 +564,25 @@ class Create
         return $this;
     }
 
+    /**
+     * @return $this
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Exception
+     */
+    protected function initArea()
+    {
+        try {
+            $this->state->getAreaCode();
+        } catch (\Magento\Framework\Exception\LocalizedException $e) {
+            $this->state->setAreaCode(\Magento\Framework\App\Area::AREA_CRONTAB);
+        } catch (\Exception $e) {
+            $this->context->helperContext()->logger()->critical($e);
+            throw $e;
+        }
+        
+        return $this;
+    }
 
     /**
      * @param $orderData

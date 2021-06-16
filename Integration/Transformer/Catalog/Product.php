@@ -229,7 +229,7 @@ class Product extends AbstractProduct
                         $attribute = $mappedAttribute->getAttribute();
                     }
                     
-                    if (!$attribute) {
+                    if (!$attribute || !$this->validateSpecificationAttribute($attribute)) {
                         break;
                     }
                     
