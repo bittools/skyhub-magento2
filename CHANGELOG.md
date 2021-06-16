@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## 1.0.13 - 2021-06-15
+### Changed
+- Add blacklist the product attributes
+- Add concat attributes complement (complement, reference, detail)
+
 ## 1.0.12 - 2021-02-02
 ### Changed
 - Change documentation with email in files. If you need help, Access https://ajuda.skyhub.com.br/hc/pt-br/requests/new for questions and other requests.
