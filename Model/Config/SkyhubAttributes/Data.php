@@ -50,6 +50,13 @@ class Data extends ConfigData
             return [];
         }
 
+        if (!is_string($blacklist)) {
+            if (is_array($blacklist)) {
+                return $blacklist;
+            }
+            return [];
+        }
+
         $blacklist = json_decode($blacklist, true);
         if (!$blacklist) {
             return [];

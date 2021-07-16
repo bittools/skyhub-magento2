@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## 1.0.14 - 2021-07-16
+### Changed
+- Hotfix in blacklist
+
 ## 1.0.13 - 2021-06-15
 ### Changed
 - Add blacklist the product attributes
