@@ -25,6 +25,13 @@ class UpgradeSchema implements UpgradeSchemaInterface
 {
     use SetupHelper;
 
+    /**
+     * Upgrade schema
+     *
+     * @param SchemaSetupInterface $setup
+     * @param ModuleContextInterface $context
+     * @return void
+     */
     public function upgrade(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
         $this->setup = $setup;
@@ -37,7 +44,43 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $this->installQueueTable();
         }
 
+        if (version_compare($context->getVersion(), '1.0.15', '<=')) {
+            $this->installAddColumnsSalesOrder();
+        }
+
         $setup->endSetup();
+    }
+
+    /**
+     * @return $this
+     *
+     * @throws \Zend_Db_Exception
+     */
+    protected function installAddColumnsSalesOrder()
+    {
+        $tableName = $this->getTable(\BitTools\SkyHub\Model\ResourceModel\Order::MAIN_TABLE);
+        $this->getConnection()->addColumn(
+            $tableName,
+            'skyhub_status',
+            [
+                'type'     => Table::TYPE_TEXT,
+                'size'     => 255,
+                'nullable' => true,
+                'default'  => false,
+                'comment'  => 'SkyHub Status'
+            ]
+        );
+
+        $this->getConnection()->addColumn(
+            $tableName,
+            'skyhub_nfe_xml',
+            [
+                'type'     => Table::TYPE_BOOLEAN,
+                'nullable' => true,
+                'default'  => false,
+                'comment'  => 'SkyHub Nfe XML'
+            ]
+        );
     }
 
     /**

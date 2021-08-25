@@ -107,4 +107,12 @@ abstract class AbstractIntegrator implements IntegratorInterface
     {
         return $this->context->service((bool) $new)->api();
     }
+
+    /**
+     * @return \SkyHub\Api
+     */
+    protected function apiMultipart($new = false)
+    {
+        return $this->context->serviceMultiPart((bool) $new)->api();
+    }
 }

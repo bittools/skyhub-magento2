@@ -1,0 +1,40 @@
+<?php
+/** @var BitTools\SkyHub\Block\Adminhtml\Sales\Order\View\Tab\B2wDirectInvoiced $block */
+/** @var \BitTools\SkyHub\Api\Data\OrderInterface $info */
+$info = $this->getOrder()->getExtensionAttributes()->getSkyhubInfo();
+?>
+<div id="<?php echo $block->getContainerId() ?>">
+    <div class="admin__page-section-title">
+        <span class="title"><?php echo $block->getTabTitle(); ?></span>
+    </div>
+    <div id="skyhub_order_invoice_key">
+        <div class="skyhub-order-sendXmlForm-block">
+            <form id="sendXmlForm" action="<?=$block->getSubmitUrl();?>" method="POST" enctype='multipart/form-data'>
+                <input type="hidden" name="form_key" value="<?php echo $block->getFormKey();?>"/>
+                <input type="hidden" name="bseller_skyhub_code" value="<?php echo $info->getCode();?>"/>
+                <input type="hidden" name="order_id" value="<?php echo $this->getOrder()->getId();?>"/>
+                <div class="admin__field">
+                    <label for='volume_qty' class="admin__field-label"><?=__('Volume Qty')?>: </label>
+                    <div class="admin__field-control">
+                        <input type="text" class="admin__control-text" name="volume_qty" id="volume_qty" class="required-entry validate-number"/>
+                    </div>
+                    <label for='file' class="admin__field-label"><?=__('File Xml')?>: </label>
+                    <div class="admin__field-control">
+                        <input type="file" name="file" id="file"/>
+                    </div>
+                    <div class="admin__field-control">
+                        <input type="submit" class="action-default scalable action-save action-primary" value="<?=__('Send Xml to SkyHub')?>"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('volume_qty').onkeypress = function(event){
+        if (/^\s*-?\d*(\.\d*)?\s*$/.test(event.key)== false) {
+            return false;
+        }
+    }
+</script>

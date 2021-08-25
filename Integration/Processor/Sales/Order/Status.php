@@ -48,6 +48,9 @@ class Status extends AbstractProcessor
             return false;
         }
 
+        $extensionAttributes = $order->getExtensionAttributes();
+        $extensionAttributes->getSkyhubInfo()->setSkyhubStatus($skyhubStatusType)->save();
+        $order->setExtensionAttributes($extensionAttributes);
         $state = $this->getStateBySkyhubStatusType($skyhubStatusType);
 
         if ($order->getState() == $state) {

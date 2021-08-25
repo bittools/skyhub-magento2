@@ -13,6 +13,11 @@
                 <argument name="block" xsi:type="string">BitTools\SkyHub\Block\Adminhtml\Sales\Order\View\Tab\InvoiceKey</argument>
                 <argument name="afterId" xsi:type="string">order_history</argument>
             </action>
+            <action method="addTabAfter">
+                <argument name="name" xsi:type="string">bittools_skyhub__b2wDirectInvoiced</argument>
+                <argument name="block" xsi:type="string">BitTools\SkyHub\Block\Adminhtml\Sales\Order\View\Tab\B2wDirectInvoiced</argument>
+                <argument name="afterId" xsi:type="string">order_history</argument>
+            </action>
         </referenceBlock>
         <referenceBlock name="order_info">
             <block name="bittools_skyhub.skyhub_info" class="BitTools\SkyHub\Block\Adminhtml\Sales\Order\View\SkyhubInfo" template="BitTools_SkyHub::order/view/skyhub_info.phtml"/>

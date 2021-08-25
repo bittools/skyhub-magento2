@@ -51,6 +51,16 @@ interface OrderInterface
     public function getInterest();
 
     /**
+     * @return string
+     */
+    public function getSkyhubStatus();
+
+    /**
+     * @return string
+     */
+    public function getSkyhubNfeXml();
+
+    /**
      * @param int $storeId
      *
      * @return $this
@@ -98,4 +108,14 @@ interface OrderInterface
      * @return $this
      */
     public function setInterest($interest = 0.0000);
+
+    /**
+     * @return string
+     */
+    public function setSkyhubStatus($status);
+
+    /**
+     * @return string
+     */
+    public function setSkyhubNfeXml($nfeXml);
 }

@@ -25,7 +25,8 @@ class Order extends AbstractModel implements OrderInterface
     const KEY_INTEREST    = 'interest';
     const KEY_INVOICE_KEY = 'invoice_key';
     const KEY_DATA_SOURCE = 'data_source';
-    
+    const KEY_SKYHUB_STATUS = 'skyhub_status';
+    const KEY_SKYHUB_NFE_XML = 'skyhub_nfe_xml';    
     
     /** @var string */
     protected $_eventPrefix = 'bittools_skyhub_order_relation';
@@ -139,6 +140,22 @@ class Order extends AbstractModel implements OrderInterface
     }
 
     /**
+     * @return string
+     */
+    public function getSkyhubStatus()
+    {
+        return $this->_getData(self::KEY_SKYHUB_STATUS);
+    }
+
+    /**
+     * @return string
+     */
+    public function getSkyhubNfeXml()
+    {
+        return $this->_getData(self::KEY_SKYHUB_NFE_XML);
+    }
+
+    /**
      * @param int $storeId
      *
      * @return $this
@@ -180,6 +197,22 @@ class Order extends AbstractModel implements OrderInterface
     {
         $this->setData(self::KEY_CHANNEL, $channel);
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function setSkyhubStatus($status)
+    {
+        return $this->setData(self::KEY_SKYHUB_STATUS, $status);
+    }
+
+    /**
+     * @return string
+     */
+    public function setSkyhubNfeXml($nfeXml)
+    {
+        return $this->setData(self::KEY_SKYHUB_NFE_XML, $nfeXml);
     }
     
     
