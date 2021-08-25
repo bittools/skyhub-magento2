@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## 1.0.15 - 2021-08-24
+### Changed
+- add send invoice xml to skyhub
+
 ## 1.0.14 - 2021-07-16
 ### Changed
 - Hotfix in blacklist
