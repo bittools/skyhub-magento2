@@ -274,12 +274,37 @@ class Product extends AbstractProduct
             return $this;
         }
     
-        $qty = $stockItem->getQty();
+        $qty = $stockItem->getQty() - $this->getStockReservation($product);
         $interface->setQty((float) $qty);
         
         return $this;
     }
     
+    /**
+     * Get stock reservation
+     *
+     * @param CatalogProduct $product
+     * @return void
+     */
+    public function getStockReservation(CatalogProduct $product)
+    {
+        $connection = $this->resourceConnection->getConnection();
+        $reservationTable = $this->resourceConnection->getTableName('inventory_reservation');
+        if (!$connection->isTableExists($reservationTable)) {
+            return 0;
+        }
+
+        $sku = $product->getSku();
+        $select = $connection->select()
+            ->from($reservationTable, ['quantity' => 'SUM(quantity)'])
+            ->where('sku = ?', $sku)
+            ->limit(1);
+        $reservationQty = $connection->fetchOne($select);
+        if (false === $reservationQty) {
+            $reservationQty = 0;
+        }
+        return abs((float)$reservationQty);
+    }
     
     /**
      * @param CatalogProduct         $product

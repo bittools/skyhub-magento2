@@ -24,6 +24,7 @@ use Magento\Catalog\Helper\ImageFactory;
 use BitTools\SkyHub\Integration\Context;
 use BitTools\SkyHub\Model\Config\SkyhubAttributes\Data;
 use Magento\CatalogInventory\Model\StockState;
+use Magento\Framework\App\ResourceConnection;
 
 abstract class AbstractProduct extends AbstractTransformer
 {
@@ -51,6 +52,9 @@ abstract class AbstractProduct extends AbstractTransformer
     
     /** @var EavOptionHelper */
     protected $eavOptionHelper;
+
+    /** @var ResourceConnection */
+    protected $resourceConnection;
     
     public function __construct(
         Context $context,
@@ -61,6 +65,7 @@ abstract class AbstractProduct extends AbstractTransformer
         AttributeMappingHelper $attributeMappingHelper,
         EavOptionHelper $eavOptionHelper,
         Data $skyhubConfig,
+        ResourceConnection $resourceConnection,
         \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
     ) {
         parent::__construct($context);
@@ -73,6 +78,7 @@ abstract class AbstractProduct extends AbstractTransformer
         $this->eavOptionHelper        = $eavOptionHelper;
         $this->skyhubConfig           = $skyhubConfig;
         $this->stockRegistry          = $stockRegistry;
+        $this->resourceConnection     = $resourceConnection;
     }
     
     

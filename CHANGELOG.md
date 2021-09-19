@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## 1.0.16 - 2021-09-19
+### Changed
+- Fix salable quantity and reservation to send skyhub
+
 ## 1.0.15 - 2021-08-24
 ### Changed
 - add send invoice xml to skyhub
