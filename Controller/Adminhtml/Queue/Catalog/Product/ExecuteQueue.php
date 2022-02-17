@@ -30,7 +30,7 @@ class ExecuteQueue extends Action
     /**
      * @var string
      */
-    const ADMIN_RESOURCE = 'BitTools_SkyHub::skyhub_queues_add_product';
+    const ADMIN_RESOURCE = 'BitTools_SkyHub::skyhub_queues_execute_queue_product';
 
     /**
      * @var QueueFactory
