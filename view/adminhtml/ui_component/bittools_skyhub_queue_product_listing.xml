@@ -8,6 +8,11 @@
 
     <settings>
         <buttons>
+            <button name="execute">
+                <url path="bittools_skyhub/queue_catalog_product/executeAllQueue"/>
+                <class>primary</class>
+                <label translate="true">Execute integration queue</label>
+            </button>
             <button name="clear">
                 <url path="bittools_skyhub/queue/clear/entity_type/catalog_product"/>
                 <class>primary</class>
@@ -60,9 +65,23 @@
                 </templates>
             </settings>
         </filters>
+        <massaction name="listing_massaction"
+                    component="Magento_Ui/js/grid/tree-massactions"
+                    class="\Magento\Catalog\Ui\Component\Product\MassAction">
+            <action name="execute-selected_items">
+                <settings>
+                    <confirm>
+                        <message translate="true">Integration selected items?</message>
+                        <title translate="true">Execute integration queue selected</title>
+                    </confirm>
+                    <url path="bittools_skyhub/queue_catalog_product/executeQueue"/>
+                    <type>execute-selected_items</type>
+                    <label translate="true">Execute integration queue selected</label>
+                </settings>
+            </action>
+        </massaction>
         <paging name="listing_paging"/>
     </listingToolbar>
-
     <columns name="product_queue_columns">
         <selectionsColumn name="ids">
             <settings>

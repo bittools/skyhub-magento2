@@ -17,6 +17,7 @@
                             <resource id="BitTools_SkyHub::skyhub_queues_catalog_category" title="View Catalog Category Queue" translate="title" sortOrder="30"/>
                             <resource id="BitTools_SkyHub::skyhub_queues_sales_order" title="View Sales Order Queue" translate="title" sortOrder="40"/>
                             <resource id="BitTools_SkyHub::skyhub_queues_sales_order_status" title="View Sales Order Status Queue" translate="title" sortOrder="40"/>
+                            <resource id="BitTools_SkyHub::skyhub_queues_add_product" title="Add Product to Queue" translate="title" sortOrder="40"/>
                         </resource>
                         <resource id="BitTools_SkyHub::orders_import" title="Orders Importation" translate="title" sortOrder="40">
                             <resource id="BitTools_SkyHub::manual_import" title="Manual Import" translate="title" sortOrder="10"/>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <listingToolbar name="listing_top">
+        <massaction name="listing_massaction"
+                    component="Magento_Ui/js/grid/tree-massactions"
+                    class="\Magento\Catalog\Ui\Component\Product\MassAction">
+            <action name="add-product-queue">
+                <settings>
+                    <confirm>
+                        <message translate="true">Add in Queue selected items?</message>
+                        <title translate="true">Add Product to Queue</title>
+                    </confirm>
+                    <url path="bittools_skyhub/queue_catalog_product/massAddQueue"/>
+                    <type>add-product-queue</type>
+                    <label translate="true">Add Product to Queue</label>
+                </settings>
+            </action>
+        </massaction>
+    </listingToolbar>
+</listing>

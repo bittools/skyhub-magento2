@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## 1.0.17 - 2022-02-16
+- Translate Module
+- Add products selected to Queue
+- Execute Product Queue selected
+- Execute All Product Queue
+
 ## 1.0.16 - 2021-09-19
 ### Changed
 - Fix salable quantity and reservation to send skyhub
